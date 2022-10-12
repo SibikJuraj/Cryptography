@@ -14,8 +14,8 @@ void imGuiRender();
 
 //TODO VYMAZAT
     //GLFWwindow* window = nullptr;
-    const unsigned int SCR_WIDTH = 1600;
-    const unsigned int SCR_HEIGHT = 900;
+    const unsigned int SCR_WIDTH = 1000;
+    const unsigned int SCR_HEIGHT = 600;
     unsigned int framebuffer;
     unsigned int VBO, VAO, IBO;
     std::vector<float> vertices;
@@ -66,20 +66,12 @@ void Application::run()
     bool drawTriangle{ false };
     bool drawTerrain{ true };
 
-    float position[3]{ 1.0f, 1.0f, 1.0f };
-    float rotation[3]{ 0.0f, 0.0f, 0.0f };
-    float size[3]{ 1.0f, 1.0f, 1.0f };
-    float tall[2]{ 0.0f, 10.0f };
-    float color[4]{ 0.8f, 0.7f , 0.1f , 1.0f };
-
-    float testing = 1.0f;
-    float movement{ 1.0f };
-
+    std::vector<const char*> items { "Caesar", "Affine", "Viegener" };
+    const char* current_item = items[0];
     // render loop
     // -----------
     while (!glfwWindowShouldClose(m_Window->getWindow()))
     {
-        movement = abs(sin(glfwGetTime()));
 
         // render
         // ------
@@ -97,13 +89,28 @@ void Application::run()
         if (showImGuiDemoWindow)
             ImGui::ShowDemoWindow(&showImGuiDemoWindow);
 
-        ImGui::Begin("My name is window");
-        ImGui::Checkbox("Show triangle", &drawTriangle);
-        ImGui::Checkbox("Show terrain", &drawTerrain);
-        ImGui::Checkbox("Show demo window", &showImGuiDemoWindow);
-        ImGui::DragFloat("Test", &testing, 0.01f);
+        ImGui::Begin("Ciphers");
+        
+        if (ImGui::BeginCombo("Cipher", current_item)) // The second parameter is the label previewed before opening the combo.
+        {
+            for (int i{0}; i < items.size(); ++i)
+            {
+                bool is_selected = (current_item == items[i]);
+                if (ImGui::Selectable(items[i], is_selected))
+                    current_item = items[i];
+                if (is_selected)
+                {
+                    ImGui::SetItemDefaultFocus();
+                }
+            }
+            ImGui::EndCombo();
+        }
+        int fKeyInput{};
+        ImGui::InputInt("First Key", &fKeyInput);
+        ImGui::End();
 
-        ImGui::Text("Hello");
+        ImGui::Begin("Text");
+        ImGui::Text("LIYGTOGDPOAUPDFQNVPVDAQV");
         ImGui::End();
 
         // per-frame time logic
