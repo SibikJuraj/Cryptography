@@ -59,7 +59,7 @@ void Application::run()
     std::vector<const char*> items { "Caesar", "Affine", "Viegener" };
     const char* current_item = items[m_SelectedOption];
 
-    const char* input_buffer = new char(100000);
+    std::string output;
     // render loop
     // -----------
     while (!glfwWindowShouldClose(m_Window->getWindow()))
@@ -92,21 +92,21 @@ void Application::run()
                 if (static_cast<Caesar*>(m_Cipher.get()))
                 {
                     ImGui::InputInt("First Key", &(*static_cast<Caesar*>(m_Cipher.get())).m_K1);
-                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+                    output.assign(m_Cipher->decrypt(m_File->getFile()));
                 }
 
                 if (ImGui::Button("Decrypt"))
-                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+                    output.assign(m_Cipher->decrypt(m_File->getFile()));
                 if (ImGui::Button("Encrypt"))
-                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+                    output.assign(m_Cipher->decrypt(m_File->getFile()));
 
             ImGui::End();
 
             ImGui::Begin("Text");
-                ImGui::InputTextMultiline(" ", const_cast<char*>(m_File->getFile()), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputTextMultiline(" ", const_cast<char*>(m_File->getFile().data()), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
                 ImGui::End();
                 ImGui::Begin("Output");
-                ImGui::InputTextMultiline(" ", const_cast<char*>(input_buffer), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputTextMultiline(" ", output.data(), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
             ImGui::End();
         }
 
