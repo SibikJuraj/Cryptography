@@ -1,9 +1,10 @@
 #pragma once
 #include <vector>
+#include <string_view>
 
 class Cipher
 {
 public:
-	virtual const char* encrypt(const char* text) = 0;
-	virtual const char* decrypt(const char* text) = 0;
+	virtual std::string encrypt(const std::string_view& text) = 0;
+	virtual std::string decrypt(const std::string_view& text) = 0;
 };

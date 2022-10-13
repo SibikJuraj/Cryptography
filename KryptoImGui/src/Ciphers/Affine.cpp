@@ -8,12 +8,12 @@ Affine::~Affine()
 {
 }
 
-const char* Affine::encrypt(const char* text)
+std::string Affine::encrypt(const std::string_view& text)
 {
-    return nullptr;
+    return text.data();
 }
 
-const char* Affine::decrypt(const char* text)
+std::string Affine::decrypt(const std::string_view& text)
 {
-    return nullptr;
+    return text.data();
 }

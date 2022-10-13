@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <string>
+#include <string_view>
 
 class FileLoader
 {
@@ -8,8 +8,7 @@ public:
 	FileLoader();
 	~FileLoader();
 	
-	std::string* loadFile();
-	const char* getFile();
+	std::string_view getFile();
 private:
-	const char* m_File;
+	std::string m_File;
 };

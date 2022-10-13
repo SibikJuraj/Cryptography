@@ -10,20 +10,18 @@ Caesar::~Caesar()
 {
 }
 
-const char* Caesar::encrypt(const char* text)
+std::string Caesar::encrypt(const std::string_view& text)
 {
-    return text;
+    return text.data();
 }
 
-const char* Caesar::decrypt(const char* text)
+std::string Caesar::decrypt(const std::string_view& text)
 {
-    std::string* decryptedText = new std::string{};
-    int size = 0;
-    while (text[size] != '\0')
+    std::string decryptedText;
+    for (int i{ 0 }; i < text.size(); ++i)
     {
-        decryptedText->push_back(text[size] - 'A' - m_K1 % 26  + 'A');
-        ++size;
+        decryptedText.push_back(text[i] - 'A' - m_K1 % 26 + 'A');
     }
 
-    return decryptedText->c_str();
+    return decryptedText;
 }

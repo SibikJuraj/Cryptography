@@ -8,12 +8,12 @@ Viegener::~Viegener()
 {
 }
 
-const char* Viegener::encrypt(const char* text)
+std::string Viegener::encrypt(const std::string_view& text)
 {
-    return nullptr;
+    return text.data();
 }
 
-const char* Viegener::decrypt(const char* text)
+std::string Viegener::decrypt(const std::string_view& text)
 {
-    return nullptr;
+    return text.data();
 }
