@@ -14,6 +14,7 @@ OpenGLWindow::OpenGLWindow(int width, int height)
 
 OpenGLWindow::~OpenGLWindow()
 {
+    glfwDestroyWindow(m_Window);
     m_Window = nullptr;
 }
 

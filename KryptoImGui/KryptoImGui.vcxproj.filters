@@ -1293,6 +1293,11 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\FileLoader.h" />
+    <ClInclude Include="src\Ciphers\Affine.h" />
+    <ClInclude Include="src\Ciphers\Caesar.h" />
+    <ClInclude Include="src\Ciphers\Cipher.h" />
+    <ClInclude Include="src\Ciphers\Viegener.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Engine\Core\Application.cpp">
@@ -1307,5 +1312,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\FileLoader.cpp" />
+    <ClCompile Include="src\Ciphers\Affine.cpp" />
+    <ClCompile Include="src\Ciphers\Caesar.cpp" />
+    <ClCompile Include="src\Ciphers\Viegener.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="src\text.txt" />
   </ItemGroup>
 </Project>

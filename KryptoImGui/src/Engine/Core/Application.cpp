@@ -8,24 +8,13 @@
 #include <vector>
 
 #include "Application.h"
+#include "Ciphers/Caesar.h"
+#include "Ciphers/Affine.h"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void imGuiRender();
 
-//TODO VYMAZAT
-    //GLFWwindow* window = nullptr;
-    const unsigned int SCR_WIDTH = 1000;
-    const unsigned int SCR_HEIGHT = 600;
-    unsigned int framebuffer;
-    unsigned int VBO, VAO, IBO;
-    std::vector<float> vertices;
-    int numStrips;
-    int numTrisPerStrip;
-    // timing
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
-
-Application::Application()
+Application::Application() : 
+    m_Cipher{ std::make_unique<Caesar>() }, m_File{ std::make_unique<FileLoader>() }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -36,16 +25,16 @@ Application::Application()
 
     // glfw window creation
     // --------------------
-    m_Window = std::make_unique<OpenGLWindow>(SCR_WIDTH, SCR_HEIGHT);
+    m_Window = std::make_unique<OpenGLWindow>(1000, 600);
     glfwMakeContextCurrent(m_Window->getWindow());
-    glfwSetFramebufferSizeCallback(m_Window->getWindow(), framebuffer_size_callback);
+    glfwSwapInterval(1); //Enable vsync
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return; //-1;
+        return;
     }
 
     IMGUI_CHECKVERSION();
@@ -61,87 +50,79 @@ Application::Application()
 
 void Application::run()
 {
+
     bool showImGuiDemoWindow{ true };
 
     bool drawTriangle{ false };
     bool drawTerrain{ true };
 
     std::vector<const char*> items { "Caesar", "Affine", "Viegener" };
-    const char* current_item = items[0];
+    const char* current_item = items[m_SelectedOption];
+
+    const char* input_buffer = new char(100000);
     // render loop
     // -----------
     while (!glfwWindowShouldClose(m_Window->getWindow()))
     {
-
-        // render
-        // ------
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glfwPollEvents();
 
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
         imGuiRender();
-
-        if (showImGuiDemoWindow)
-            ImGui::ShowDemoWindow(&showImGuiDemoWindow);
-
-        ImGui::Begin("Ciphers");
-        
-        if (ImGui::BeginCombo("Cipher", current_item)) // The second parameter is the label previewed before opening the combo.
+        //Update();
         {
-            for (int i{0}; i < items.size(); ++i)
-            {
-                bool is_selected = (current_item == items[i]);
-                if (ImGui::Selectable(items[i], is_selected))
-                    current_item = items[i];
-                if (is_selected)
+            ImGui::Begin("Ciphers");
+                if (ImGui::BeginCombo("Cipher", current_item)) // The second parameter is the label previewed before opening the combo.
                 {
-                    ImGui::SetItemDefaultFocus();
+                    for (int i{ 0 }; i < items.size(); ++i)
+                    {
+                        bool is_selected = (current_item == items[i]);
+                        if (ImGui::Selectable(items[i], is_selected))
+                            current_item = items[i];
+                        if (is_selected)
+                        {
+                            ImGui::SetItemDefaultFocus();
+                            m_SelectedOption = i;
+                        }
+                    }
+                    ImGui::EndCombo();
                 }
-            }
-            ImGui::EndCombo();
+                if (static_cast<Caesar*>(m_Cipher.get()))
+                {
+                    ImGui::InputInt("First Key", &(*static_cast<Caesar*>(m_Cipher.get())).m_K1);
+                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+                }
+
+                if (ImGui::Button("Decrypt"))
+                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+                if (ImGui::Button("Encrypt"))
+                    input_buffer = m_Cipher->decrypt(m_File->getFile());
+
+            ImGui::End();
+
+            ImGui::Begin("Text");
+                ImGui::InputTextMultiline(" ", const_cast<char*>(m_File->getFile()), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::End();
+                ImGui::Begin("Output");
+                ImGui::InputTextMultiline(" ", const_cast<char*>(input_buffer), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+            ImGui::End();
         }
-        int fKeyInput{};
-        ImGui::InputInt("First Key", &fKeyInput);
-        ImGui::End();
-
-        ImGui::Begin("Text");
-        ImGui::Text("LIYGTOGDPOAUPDFQNVPVDAQV");
-        ImGui::End();
-
-        // per-frame time logic
-        // --------------------
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
 
         // render
         // ------
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // render the cube
-        glBindVertexArray(VAO);
-        //        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        for (unsigned strip = 0; strip < numStrips; strip++)
-        {
-            glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
-                numTrisPerStrip + 2,   // number of indices to render
-                GL_UNSIGNED_INT,     // index data type
-                (void*)(sizeof(unsigned) * (numTrisPerStrip + 2) * strip)); // offset to starting index
-        }
-
         ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(m_Window->getWindow(), &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         glfwSwapBuffers(m_Window->getWindow());
-        glfwPollEvents();
     }
 }
 
@@ -151,23 +132,7 @@ Application::~Application()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext();
 
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
     glfwTerminate();
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and 
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
 }
 
 void imGuiRender()
@@ -224,29 +189,15 @@ void imGuiRender()
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
 
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("Options"))
-        {
-            // Disabling fullscreen would allow the window to be moved to the front of other windows,
-            // which we can't undo at the moment without finer window depth/z control.
-            ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen);
-            ImGui::MenuItem("Padding", NULL, &opt_padding);
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Flag: NoSplit", "", (dockspace_flags & ImGuiDockNodeFlags_NoSplit) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoSplit; }
-            if (ImGui::MenuItem("Flag: NoResize", "", (dockspace_flags & ImGuiDockNodeFlags_NoResize) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoResize; }
-            if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
-            if (ImGui::MenuItem("Flag: AutoHideTabBar", "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0)) { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
-            if (ImGui::MenuItem("Flag: PassthruCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
-            ImGui::Separator();
-
-            if (ImGui::MenuItem("Close", NULL, false))
-                dockspaceOpen = false;
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenuBar();
-    }
-
     ImGui::End();
+}
+
+std::unique_ptr<Cipher> Application::createCipherClass()
+{
+    switch (m_SelectedOption)
+    {
+        case 0:		return std::make_unique<Caesar>();
+        case 1:		return std::make_unique<Affine>();
+        default:	return nullptr;
+    }
 }
