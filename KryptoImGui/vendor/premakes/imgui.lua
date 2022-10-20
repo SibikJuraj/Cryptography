@@ -20,5 +20,11 @@ project "imgui"
 		"%{prj.location}/imstb_rectpack.h",
 		"%{prj.location}/imstb_textedit.h",
 		"%{prj.location}/imstb_truetype.h",
-		"%{prj.location}/imgui_demo.cpp"
+		"%{prj.location}/imgui_demo.cpp",
+		
+		"%{prj.location}/implot.h",
+		"%{prj.location}/implot_internal.h",
+		"%{prj.location}/implot.cpp",
+		"%{prj.location}/implot_items.cpp",
+		"%{prj.location}/implot_demo.cpp"
 	}

@@ -4,6 +4,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Ciphers">
+      <UniqueIdentifier>{AAAA8A2F-1660-0325-9F54-FDFB0B09FA28}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Engine">
       <UniqueIdentifier>{12A1320E-FE58-745B-6760-4DB753370F4C}</UniqueIdentifier>
     </Filter>
@@ -36,17 +39,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Engine\Core\Application.h">
-      <Filter>src\Engine\Core</Filter>
+    <ClInclude Include="src\Ciphers\Affine.h">
+      <Filter>src\Ciphers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Core\Camera.h">
+    <ClInclude Include="src\Ciphers\Caesar.h">
+      <Filter>src\Ciphers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ciphers\Viegener.h">
+      <Filter>src\Ciphers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Application.h">
       <Filter>src\Engine\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\OpenGLWindow.h">
       <Filter>src\Engine\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Shader.h">
-      <Filter>src\Engine</Filter>
     </ClInclude>
     <ClInclude Include="vendor\submodules\glm\glm\common.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
@@ -1293,13 +1299,21 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\FileLoader.h" />
-    <ClInclude Include="src\Ciphers\Affine.h" />
-    <ClInclude Include="src\Ciphers\Caesar.h" />
+    <ClInclude Include="src\CryptingMode.h" />
+    <ClInclude Include="src\Alphabet.h" />
+    <ClInclude Include="src\Engine\Text.h" />
     <ClInclude Include="src\Ciphers\Cipher.h" />
-    <ClInclude Include="src\Ciphers\Viegener.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Ciphers\Affine.cpp">
+      <Filter>src\Ciphers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ciphers\Caesar.cpp">
+      <Filter>src\Ciphers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ciphers\Viegener.cpp">
+      <Filter>src\Ciphers</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Core\Application.cpp">
       <Filter>src\Engine\Core</Filter>
     </ClCompile>
@@ -1312,12 +1326,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\FileLoader.cpp" />
-    <ClCompile Include="src\Ciphers\Affine.cpp" />
-    <ClCompile Include="src\Ciphers\Caesar.cpp" />
-    <ClCompile Include="src\Ciphers\Viegener.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="src\text.txt" />
+    <ClCompile Include="src\Engine\Text.cpp" />
+    <ClCompile Include="src\Ciphers\Cipher.cpp" />
   </ItemGroup>
 </Project>

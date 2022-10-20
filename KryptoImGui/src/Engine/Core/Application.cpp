@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <imgui.h>
+#include <implot.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <vector>
@@ -14,7 +15,7 @@
 void imGuiRender();
 
 Application::Application() : 
-    m_Cipher{ std::make_unique<Caesar>() }, m_File{ std::make_unique<FileLoader>() }, m_SelectedOption{ 0 }
+    m_Cipher{ std::make_unique<Caesar>(std::vector<int>(1), decrypt) }, m_Text{ std::make_unique<Text>("texts/Alphabet.txt") }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -25,7 +26,7 @@ Application::Application() :
 
     // glfw window creation
     // --------------------
-    m_Window = std::make_unique<OpenGLWindow>(1000, 600);
+    m_Window = std::make_unique<OpenGLWindow>(1600, 900);
     glfwMakeContextCurrent(m_Window->getWindow());
     glfwSwapInterval(1); //Enable vsync
 
@@ -38,7 +39,9 @@ Application::Application() :
     }
 
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
+    ImGui::CreateContext(); 
+    ImPlot::CreateContext();
+    
     ImGui::StyleColorsDark();
     ImGuiIO& io{ ImGui::GetIO() };
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -60,6 +63,9 @@ void Application::run()
     const char* current_item = items[m_SelectedOption];
 
     std::string output{};
+
+    Text oText{*m_Text.get()};
+
     // render loop
     // -----------
     while (!glfwWindowShouldClose(m_Window->getWindow()))
@@ -69,6 +75,7 @@ void Application::run()
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+
 
         imGuiRender();
         //Update();
@@ -89,24 +96,61 @@ void Application::run()
                     }
                     ImGui::EndCombo();
                 }
-                if (static_cast<Caesar*>(m_Cipher.get()))
+                for (int i{0}; i < m_Cipher->getKeys().size(); ++i)
                 {
-                    ImGui::InputInt("First Key", &(*static_cast<Caesar*>(m_Cipher.get())).m_K1);
-                    output.assign(m_Cipher->decrypt(m_File->getFile()));
+                    ImGui::InputInt("Key", &(m_Cipher->getKeys()[i]));
                 }
-
                 if (ImGui::Button("Decrypt"))
-                    output.assign(m_Cipher->decrypt(m_File->getFile()));
+                    m_Cipher->execute(oText, CryptingMode::decrypt);
                 if (ImGui::Button("Encrypt"))
-                    output.assign(m_Cipher->decrypt(m_File->getFile()));
+                    m_Cipher->execute(oText, CryptingMode::encrypt);
+                output.assign(oText.getText());
 
             ImGui::End();
 
             ImGui::Begin("Text");
-                ImGui::InputTextMultiline(" ", const_cast<char*>(m_File->getFile().data()), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputTextMultiline(" ", const_cast<char*>(m_Text->getText().data()), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
                 ImGui::End();
                 ImGui::Begin("Output");
-                ImGui::InputTextMultiline(" ", output.data(), 10'000, ImVec2(1000, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputTextMultiline(" ", output.data(), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
+            ImGui::End();
+
+            ImPlot::ShowDemoWindow();
+            ImGui::Begin("FrekvencnaAnalyza");
+            
+            {
+                char alphabet[26];
+                double alphabetN[26];
+                int i{ 0 };
+                for (auto a : m_Text->getAlphabet().m_Alphabet)
+                {
+                    alphabet[i] = a.first;
+                    alphabetN[i] = a.second;
+                    ++i;
+                }
+                if (ImPlot::BeginPlot("Histogram Text"))
+                {
+                    ImPlot::PlotBars("", &alphabetN[0], 26);
+                    ImPlot::EndPlot();
+                }
+            }
+            {
+                char alphabet[26];
+                double alphabetN[26];
+                int i{ 0 };
+                for (auto a : oText.getAlphabet().m_Alphabet)
+                {
+                    alphabet[i] = a.first;
+                    alphabetN[i] = a.second;
+                    ++i;
+                }
+                if (ImPlot::BeginPlot("Histogram Output"))
+                {
+                    ImPlot::PlotBars("", &alphabetN[0], 26);
+                    ImPlot::EndPlot();
+                }
+            }
+
             ImGui::End();
         }
 
@@ -130,6 +174,7 @@ Application::~Application()
 {
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 
     glfwTerminate();
@@ -196,8 +241,8 @@ std::unique_ptr<Cipher> Application::createCipherClass()
 {
     switch (m_SelectedOption)
     {
-        case 0:		return std::make_unique<Caesar>();
-        case 1:		return std::make_unique<Affine>();
+        case 0:		return std::make_unique<Caesar>(std::vector<int>(1), decrypt);
+        //case 1:		return std::make_unique<Affine>();
         default:	return nullptr;
     }
 }
