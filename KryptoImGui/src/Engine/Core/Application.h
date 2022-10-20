@@ -12,7 +12,7 @@ public:
 	void run();
 	~Application();
 
-	std::unique_ptr<Cipher> createCipherClass();
+	void createCipherClass();
 private:
 	std::unique_ptr<OpenGLWindow> m_Window;
 	std::unique_ptr<Text> m_Text;

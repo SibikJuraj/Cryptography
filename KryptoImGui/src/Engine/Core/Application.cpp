@@ -76,7 +76,6 @@ void Application::run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
-
         imGuiRender();
         //Update();
         {
@@ -87,19 +86,21 @@ void Application::run()
                     {
                         bool is_selected = (current_item == items[i]);
                         if (ImGui::Selectable(items[i], is_selected))
+                        {
                             current_item = items[i];
+                            m_SelectedOption = i;
+                            createCipherClass();
+                        }
                         if (is_selected)
                         {
                             ImGui::SetItemDefaultFocus();
-                            m_SelectedOption = i;
-                            //createCipherClass();
                         }
                     }
                     ImGui::EndCombo();
                 }
                 for (int i{0}; i < m_Cipher->getKeys().size(); ++i)
                 {
-                    ImGui::InputInt("Key", &(m_Cipher->getKeys()[i]));
+                    ImGui::InputInt("Key" + i, &(m_Cipher->getKeys()[i]));
                 }
                 if (ImGui::Button("Decrypt"))
                     m_Cipher->execute(oText, CryptingMode::decrypt);
@@ -215,12 +216,15 @@ void imGuiRender()
     ImGui::End();
 }
 
-std::unique_ptr<Cipher> Application::createCipherClass()
+void Application::createCipherClass()
 {
     switch (m_SelectedOption)
     {
-        case 0:		return std::make_unique<Caesar>(decrypt);
-        case 1:		return std::make_unique<Affine>(decrypt);
-        default:	return nullptr;
+        case 0:		
+            m_Cipher = std::move(std::make_unique<Caesar>(decrypt));
+            break;
+        case 1:		
+            m_Cipher = std::move(std::make_unique<Affine>(decrypt));
+            break;
     }
 }
