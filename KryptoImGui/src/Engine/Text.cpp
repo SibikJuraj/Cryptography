@@ -1,16 +1,29 @@
 #include "Text.h"
 #include <fstream>
 #include <sstream>
+#include <array>
 
-Text::Text(int alphabetLength)
-    : m_Alphabet{ loadAlphabet(alphabetLength) }
+Text::Text()
+    : m_Text{}, m_Alphabet{}
 {
+    m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
 }
 
-Text::Text(std::string_view pathToAlphabet)
-    : m_Alphabet{ loadAlphabet(pathToAlphabet) }
+Text::Text(std::string_view path)
+    : m_Alphabet{}
 {
-    loadText("texts/text.txt");
+    m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
+
+    std::ifstream fs(path.data());
+
+    fs.seekg(0, std::ios::end);
+    m_Text.reserve(10000);
+    fs.seekg(0, std::ios::beg);
+    m_Text.assign((std::istreambuf_iterator<char>(fs)),
+        std::istreambuf_iterator<char>());
+
+    removeSpaces();
+    analyzeText();
 }
 
 Text::Text(const Text& other)
@@ -18,49 +31,24 @@ Text::Text(const Text& other)
 {
 }
 
-bool Text::loadText(std::string_view path)
+void Text::analyzeText()
 {
-    try
+    if (m_Text.size() == 0)
+        return;
+
+    for (char letter : m_Text)
     {
-        std::ifstream fs(path.data());
-
-        fs.seekg(0, std::ios::end);
-        m_Text.reserve(10000);
-        fs.seekg(0, std::ios::beg);
-        m_Text.assign((std::istreambuf_iterator<char>(fs)),
-            std::istreambuf_iterator<char>());
-        return true;
+        if (letter - 'A' < 0 || letter - 'A' >= Alphabet::alphabet_length )
+            continue;
+        ++m_Alphabet.m_LetterIC[letter - 'A'];
     }
-    catch (...)
+    for (int i{0}; i < m_Alphabet.m_LetterIC.size(); ++i)
     {
-        return false;
+        m_Alphabet.m_LetterIC[i] = ((double)m_Alphabet.m_LetterIC[i] / m_Text.size()) *
+            ((double)(m_Alphabet.m_LetterIC[i] - 1) / (m_Text.size() - 1));
+
+        m_Alphabet.m_IC += m_Alphabet.m_LetterIC[i];
     }
-}
-
-Alphabet Text::loadAlphabet(int alphabetLength)
-{
-    double ic{};
-    std::vector<std::pair<char, double>> alphabet(alphabetLength);
-    return Alphabet{ alphabet, ic };
-}
-
-Alphabet Text::loadAlphabet(std::string_view path)
-{
-    double ic{};
-    std::vector<std::pair<char, double>> alphabet{};
-
-    std::string line;
-    std::ifstream myfile(path.data());
-    while (std::getline(myfile, line)) {       // cache the line
-        if (line.size() >= 2 && line[1] == ';')
-        {
-            double c{ stod(line.substr(2, line.size() - 2)) };
-            alphabet.push_back(std::make_pair(line[0], c));
-        }
-        else
-            ic = stod(line);
-    }
-    return Alphabet{ alphabet, ic };
 }
 
 bool Text::saveText(std::string_view path)
@@ -77,15 +65,15 @@ void Text::removeSpaces()
         m_Text.end());
 }
 
-void Text::sliceText(std::vector<std::string>& parts)
+void Text::sliceText(std::vector<Text>& parts)
 {
     for (int i{ 0 }; i < parts.size(); ++i)
-        parts[i].reserve(std::ceil((double)m_Text.size() / parts.size()));
+        parts[i].getText().reserve(std::ceil((double)m_Text.size() / parts.size()));
 
     int part{ 0 };
     for (auto letter : m_Text)
     {
-        parts[part] += letter;
+        parts[part].getText() += letter;
         part = ++part % parts.size();
     }
 }

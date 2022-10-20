@@ -20,6 +20,6 @@ protected:
 
 	virtual void encrypt(Text& output, bool fineTuning) = 0;
 	virtual void decrypt(Text& output, bool fineTuning) = 0;
-	virtual char cryptingFormula(char letter, int alphabetLength) = 0;
+	virtual char cryptingFormula(char letter) = 0;
 
 };
