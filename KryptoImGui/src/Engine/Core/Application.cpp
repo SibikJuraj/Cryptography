@@ -98,14 +98,15 @@ void Application::run()
                     }
                     ImGui::EndCombo();
                 }
+                const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4" };
                 for (int i{0}; i < m_Cipher->getKeys().size(); ++i)
                 {
-                    ImGui::InputInt("Key" + i, &(m_Cipher->getKeys()[i]));
+                    ImGui::InputInt(keyNames[i], &(m_Cipher->getKeys()[i]));
                 }
                 if (ImGui::Button("Decrypt"))
-                    m_Cipher->execute(oText, CryptingMode::decrypt);
+                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::decrypt);
                 if (ImGui::Button("Encrypt"))
-                    m_Cipher->execute(oText, CryptingMode::encrypt);
+                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::encrypt);
                 output.assign(oText.getText());
                 oText.analyzeText();
 
@@ -113,19 +114,21 @@ void Application::run()
 
             ImGui::Begin("Text");
                 ImGui::InputTextMultiline(" ", const_cast<char*>(m_Text->getText().data()), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
-                ImGui::End();
-                ImGui::Begin("Output");
+            ImGui::End();
+            ImGui::Begin("Output");
                 ImGui::InputTextMultiline(" ", output.data(), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
             ImGui::End();
 
             ImPlot::ShowDemoWindow();
-            ImGui::Begin("FrekvencnaAnalyza");
-            if (ImPlot::BeginPlot("Histogram Text"))
+            ImGui::Begin("FrekvencnaAnalyza Text");
+            if (ImPlot::BeginPlot("Text"))
             {
                 ImPlot::PlotBars("", m_Text->getAlphabet().m_LetterIC.data(), 26);
                 ImPlot::EndPlot();
             }
-            if (ImPlot::BeginPlot("Histogram Output"))
+            ImGui::End();
+            ImGui::Begin("FrekvencnaAnalyza Output");
+            if (ImPlot::BeginPlot("Output"))
             {
                 ImPlot::PlotBars("", oText.getAlphabet().m_LetterIC.data(), 26);
                 ImPlot::EndPlot();

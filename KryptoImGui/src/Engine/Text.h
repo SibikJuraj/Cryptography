@@ -17,7 +17,9 @@ public:
 	void sliceText(std::vector<Text>& parts);
 
 	std::string& getText();
+	const std::string& getText() const;
 	Alphabet& getAlphabet();
+	const Alphabet& getAlphabet() const;
 private:
 	Alphabet m_Alphabet;
 	std::string m_Text;

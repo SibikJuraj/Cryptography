@@ -7,20 +7,33 @@ Caesar::Caesar(CryptingMode mode)
 {
 }
 
-void Caesar::encrypt(Text& output, bool fineTuning)
+Text Caesar::encrypt(const Text& input, bool fineTuning)
 {
+    Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
         output.getText()[i] = cryptingFormula(output.getText()[i]);
     }
+    return output;
 }
 
-void Caesar::decrypt(Text& output, bool fineTuning)
+Text Caesar::decrypt(const Text& input, bool fineTuning)
 {
+    Text output(input);
+    double max{-1.0};
+    for (int i{0}; i < output.getAlphabet().m_LetterIC.size(); ++i)
+    {
+        if (max < output.getAlphabet().m_LetterIC[i])
+        {
+            max = output.getAlphabet().m_LetterIC[i];
+            m_Keys[0] = i;
+        }
+    }
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
         output.getText()[i] = cryptingFormula(output.getText()[i]);
     }
+    return output;
 }
 
 char Caesar::cryptingFormula(char letter)

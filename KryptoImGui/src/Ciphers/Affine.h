@@ -1,13 +1,16 @@
 #pragma once
+#include <string_view>
+#include <array>
+#include <utility>
+
 #include "Cipher.h"
 #include "Engine/Text.h"
-#include <string_view>
-
 class Affine : public Cipher
 {
 public:
 	Affine(CryptingMode mode);
-	virtual void encrypt(Text& output, bool fineTuning) override;
-	virtual void decrypt(Text& output, bool fineTuning) override;
+	virtual Text encrypt(const Text& input, bool fineTuning) override;
+	virtual Text decrypt(const Text& input, bool fineTuning) override;
 	virtual char cryptingFormula(char letter) override;
+private:
 };

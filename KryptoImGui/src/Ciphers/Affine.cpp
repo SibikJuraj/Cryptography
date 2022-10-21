@@ -5,29 +5,39 @@ Affine::Affine(CryptingMode mode)
 {
 }
 
-void Affine::encrypt(Text& output, bool fineTuning)
+Text Affine::encrypt(const Text& input, bool fineTuning)
 {
+    Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
         output.getText()[i] = cryptingFormula(output.getText()[i]);
     }
+    return output;
 }
 
-void Affine::decrypt(Text& output, bool fineTuning)
+Text Affine::decrypt(const Text& input, bool fineTuning)
 {
+    Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
         output.getText()[i] = cryptingFormula(output.getText()[i]);
     }
+    return output;
 }
 
 char Affine::cryptingFormula(char letter)
 {
     letter -= 'A';
-    if (m_Mode == CryptingMode::encrypt)
-        letter = (m_Keys[0] * letter + m_Keys[1]) % Alphabet::alphabet_length;
-    else
-        letter = (m_Keys[0] * letter - m_Keys[1]) % Alphabet::alphabet_length;
+    if (Alphabet::alphabet_length == 26)
+    {
+        if (m_Mode == CryptingMode::encrypt)
+            letter = (m_Keys[0] * letter + m_Keys[1]) % Alphabet::alphabet_length;
+        else
+        {
+            if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
+                letter = (m_Keys[0] * (letter - m_Keys[1])) % Alphabet::alphabet_length;
+        }
+    }
 
     if (letter < 0)
         letter += Alphabet::alphabet_length;

@@ -87,3 +87,13 @@ Alphabet& Text::getAlphabet()
 {
     return m_Alphabet;
 }
+
+const std::string& Text::getText() const
+{
+    return m_Text;
+}
+
+const Alphabet& Text::getAlphabet() const
+{
+    return m_Alphabet;
+}

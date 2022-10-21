@@ -5,17 +5,17 @@ Cipher::Cipher(std::vector<int> keys, CryptingMode mode)
 {
 }
 
-void Cipher::execute(Text& output, const CryptingMode& mode, bool fineTuning)
+Text Cipher::execute(const Text& input, const CryptingMode& mode, bool fineTuning)
 {
 	if (mode == CryptingMode::encrypt)
 	{
 		m_Mode = CryptingMode::encrypt;
-		encrypt(output, fineTuning);
+		return encrypt(input, fineTuning);
 	}
 	else
 	{
 		m_Mode = CryptingMode::decrypt;
-		decrypt(output, fineTuning);
+		return decrypt(input, fineTuning);
 	}
 }
 

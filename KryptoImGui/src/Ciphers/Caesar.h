@@ -7,7 +7,7 @@ class Caesar : public Cipher
 {
 public:
 	Caesar(CryptingMode mode);
-	virtual void encrypt(Text& output, bool fineTuning) override;
-	virtual void decrypt(Text& output, bool fineTuning) override;
+	virtual Text encrypt(const Text& input, bool fineTuning) override;
+	virtual Text decrypt(const Text& input, bool fineTuning) override;
 	virtual char cryptingFormula(char letter) override;
 };
