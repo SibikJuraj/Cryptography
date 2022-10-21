@@ -11,11 +11,12 @@
 #include "Application.h"
 #include "Ciphers/Caesar.h"
 #include "Ciphers/Affine.h"
+#include "Ciphers/Viegener.h"
 
 void imGuiRender();
 
 Application::Application() : 
-    m_Cipher{ std::make_unique<Caesar>(decrypt) }, m_Text{ std::make_unique<Text>("texts/text.txt") }, m_SelectedOption{ 0 }
+    m_Cipher{ std::make_unique<Caesar>() }, m_Text{ std::make_unique<Text>("texts/text.txt") }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -100,7 +101,13 @@ void Application::run()
                 ImGui::Checkbox("Fine Tuning", &fineTuning);
                 if (fineTuning)
                 {
-                    const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4" };
+                    const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4", "Key 5",
+                                        "Key 6", "Key 7", "Key 8", "Key 9", "Key 10",
+                                        "Key 11", "Key 12", "Key 13", "Key 14", "Key 15",
+                                        "Key 16", "Key 17", "Key 18", "Key 19", "Key 20",
+                                        "Key 21", "Key 22", "Key 23", "Key 24", "Key 25",
+                                        "Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
+                    };
                     for (int i{ 0 }; i < m_Cipher->getKeys().size(); ++i)
                     {
                         ImGui::InputInt(keyNames[i], &(m_Cipher->getKeys()[i]));
@@ -110,12 +117,11 @@ void Application::run()
                 oText.analyzeText();
 
             ImGui::End();
-
             ImGui::Begin("Text");
-                ImGui::InputTextMultiline(" ", const_cast<char*>(m_Text->getText().data()), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::TextWrapped(m_Text->getText().data());
             ImGui::End();
             ImGui::Begin("Output");
-                ImGui::InputTextMultiline(" ", oText.getText().data(), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::TextWrapped(oText.getText().data());
             ImGui::End();
 
             ImGui::Begin("FrekvencnaAnalyza Text");
@@ -222,10 +228,13 @@ void Application::createCipherClass()
     switch (m_SelectedOption)
     {
         case 0:		
-            m_Cipher = std::move(std::make_unique<Caesar>(decrypt));
+            m_Cipher = std::move(std::make_unique<Caesar>());
             break;
         case 1:		
-            m_Cipher = std::move(std::make_unique<Affine>(decrypt));
+            m_Cipher = std::move(std::make_unique<Affine>());
+            break;
+        case 2:
+            m_Cipher = std::move(std::make_unique<Viegener>());
             break;
     }
 }

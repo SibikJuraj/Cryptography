@@ -4,12 +4,12 @@
 #include <string_view>
 
 #include "CryptingMode.h"
-#include "Engine/Text.h"
+#include "Text/Text.h"
 
 class Cipher
 {
 public:
-	Cipher(std::vector<int> keys, CryptingMode mode);
+	Cipher(std::vector<int> keys);
 	Text execute(const Text& input, const CryptingMode& mode, bool fineTuning = false);
 	void setKey(int index, int value);
 	int getKey(int index);

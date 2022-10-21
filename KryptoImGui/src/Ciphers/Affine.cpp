@@ -1,7 +1,7 @@
 #include "Affine.h"
 
-Affine::Affine(CryptingMode mode)
-    : Cipher(std::vector<int>(2), mode)
+Affine::Affine()
+    : Cipher(std::vector<int>(2))
 {
 }
 

@@ -14,7 +14,7 @@ public:
 	void analyzeText();
 	bool saveText(std::string_view path);
 	void removeSpaces();
-	void sliceText(std::vector<Text>& parts);
+	void sliceText(std::vector<Text>& parts) const;
 
 	std::string& getText();
 	const std::string& getText() const;

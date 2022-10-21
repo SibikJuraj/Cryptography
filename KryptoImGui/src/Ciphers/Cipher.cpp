@@ -1,7 +1,7 @@
 #include "Cipher.h"
 
-Cipher::Cipher(std::vector<int> keys, CryptingMode mode)
-	:  m_Keys{keys}, m_Mode{mode}
+Cipher::Cipher(std::vector<int> keys)
+	:  m_Keys{keys}, m_Mode{CryptingMode::decrypt}
 {
 }
 

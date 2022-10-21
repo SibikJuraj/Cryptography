@@ -2,8 +2,8 @@
 
 #include <memory>
 #include "OpenGLWindow.h"
-#include "../Text.h"
-#include "../../Ciphers/Cipher.h"
+#include "Text/Text.h"
+#include "Ciphers/Cipher.h"
 
 class Application
 {

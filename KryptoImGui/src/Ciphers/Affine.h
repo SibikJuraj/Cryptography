@@ -4,13 +4,13 @@
 #include <utility>
 
 #include "Cipher.h"
-#include "Engine/Text.h"
+#include "Text/Text.h"
+
 class Affine : public Cipher
 {
 public:
-	Affine(CryptingMode mode);
+	Affine();
 	virtual Text encrypt(const Text& input, bool fineTuning) override;
 	virtual Text decrypt(const Text& input, bool fineTuning) override;
 	virtual char cryptingFormula(char letter) override;
-private:
 };

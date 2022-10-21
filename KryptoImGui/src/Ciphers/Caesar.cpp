@@ -2,8 +2,8 @@
 #include <string>
 
 
-Caesar::Caesar(CryptingMode mode)
-    : Cipher(std::vector<int>(1), mode)
+Caesar::Caesar()
+    : Cipher(std::vector<int>(1))
 {
 }
 

@@ -65,7 +65,7 @@ void Text::removeSpaces()
         m_Text.end());
 }
 
-void Text::sliceText(std::vector<Text>& parts)
+void Text::sliceText(std::vector<Text>& parts) const
 {
     for (int i{ 0 }; i < parts.size(); ++i)
         parts[i].getText().reserve(std::ceil((double)m_Text.size() / parts.size()));
