@@ -53,18 +53,11 @@ Application::Application() :
 
 void Application::run()
 {
-
-    bool showImGuiDemoWindow{ true };
-
-    bool drawTriangle{ false };
-    bool drawTerrain{ true };
-
     std::vector<const char*> items { "Caesar", "Affine", "Viegener" };
     const char* current_item = items[m_SelectedOption];
 
-    std::string output{};
-
     Text oText{*m_Text.get()};
+    bool fineTuning{ false };
 
     // render loop
     // -----------
@@ -98,16 +91,22 @@ void Application::run()
                     }
                     ImGui::EndCombo();
                 }
-                const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4" };
-                for (int i{0}; i < m_Cipher->getKeys().size(); ++i)
-                {
-                    ImGui::InputInt(keyNames[i], &(m_Cipher->getKeys()[i]));
-                }
+                
                 if (ImGui::Button("Decrypt"))
-                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::decrypt);
+                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::decrypt, fineTuning);
                 if (ImGui::Button("Encrypt"))
-                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::encrypt);
-                output.assign(oText.getText());
+                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::encrypt, fineTuning);
+
+                ImGui::Checkbox("Fine Tuning", &fineTuning);
+                if (fineTuning)
+                {
+                    const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4" };
+                    for (int i{ 0 }; i < m_Cipher->getKeys().size(); ++i)
+                    {
+                        ImGui::InputInt(keyNames[i], &(m_Cipher->getKeys()[i]));
+                    }
+                    oText = m_Cipher->execute(*m_Text.get(), m_Cipher->getMode(), fineTuning);
+                }
                 oText.analyzeText();
 
             ImGui::End();
@@ -116,10 +115,9 @@ void Application::run()
                 ImGui::InputTextMultiline(" ", const_cast<char*>(m_Text->getText().data()), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
             ImGui::End();
             ImGui::Begin("Output");
-                ImGui::InputTextMultiline(" ", output.data(), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
+                ImGui::InputTextMultiline(" ", oText.getText().data(), 10'000, ImVec2(800, 400), ImGuiInputTextFlags_ReadOnly);
             ImGui::End();
 
-            ImPlot::ShowDemoWindow();
             ImGui::Begin("FrekvencnaAnalyza Text");
             if (ImPlot::BeginPlot("Text"))
             {

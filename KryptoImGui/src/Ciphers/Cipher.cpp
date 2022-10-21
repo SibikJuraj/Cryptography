@@ -32,6 +32,11 @@ int Cipher::getKey(int index)
 	return -1;
 }
 
+CryptingMode Cipher::getMode()
+{
+	return m_Mode;
+}
+
 std::vector<int>& Cipher::getKeys()
 {
 	return m_Keys;

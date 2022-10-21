@@ -13,6 +13,7 @@ public:
 	Text execute(const Text& input, const CryptingMode& mode, bool fineTuning = false);
 	void setKey(int index, int value);
 	int getKey(int index);
+	CryptingMode getMode();
 	std::vector<int>& getKeys();
 protected:
 	std::vector<int> m_Keys;

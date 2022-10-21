@@ -30,11 +30,11 @@ char Affine::cryptingFormula(char letter)
     letter -= 'A';
     if (Alphabet::alphabet_length == 26)
     {
-        if (m_Mode == CryptingMode::encrypt)
-            letter = (m_Keys[0] * letter + m_Keys[1]) % Alphabet::alphabet_length;
-        else
+        if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
         {
-            if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
+            if (m_Mode == CryptingMode::encrypt)
+                letter = (m_Keys[0] * letter + m_Keys[1]) % Alphabet::alphabet_length;
+            else
                 letter = (m_Keys[0] * (letter - m_Keys[1])) % Alphabet::alphabet_length;
         }
     }

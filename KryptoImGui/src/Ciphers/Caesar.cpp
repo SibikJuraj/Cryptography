@@ -20,15 +20,19 @@ Text Caesar::encrypt(const Text& input, bool fineTuning)
 Text Caesar::decrypt(const Text& input, bool fineTuning)
 {
     Text output(input);
-    double max{-1.0};
-    for (int i{0}; i < output.getAlphabet().m_LetterIC.size(); ++i)
+    if (!fineTuning)
     {
-        if (max < output.getAlphabet().m_LetterIC[i])
+        double max{ -1.0 };
+        for (int i{ 0 }; i < output.getAlphabet().m_LetterIC.size(); ++i)
         {
-            max = output.getAlphabet().m_LetterIC[i];
-            m_Keys[0] = i;
+            if (max < output.getAlphabet().m_LetterIC[i])
+            {
+                max = output.getAlphabet().m_LetterIC[i];
+                m_Keys[0] = i;
+            }
         }
     }
+   
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
         output.getText()[i] = cryptingFormula(output.getText()[i]);
