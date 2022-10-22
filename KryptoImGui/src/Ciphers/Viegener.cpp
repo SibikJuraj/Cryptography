@@ -4,7 +4,6 @@
 #include <array>
 #include <algorithm>
 
-constexpr double c_SkCoincidenceIndex{ 0.06027 };
 
 Viegener::Viegener()
 	: Cipher(std::vector<int>{}), m_Counter{0}
@@ -26,6 +25,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
 {
     m_Counter = 0;
     int index{ 0 };
+    Alphabet language = input.getLanguage();
 
     if (!fineTuning)
     {
@@ -50,14 +50,16 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
                 ic += outputParts[k].getAlphabet().m_IC;
             }
             ic = ic / passLength;
-            if (abs(ic - c_SkCoincidenceIndex) < 0.01 &&
-                abs(ic - c_SkCoincidenceIndex) < abs(maxIc - c_SkCoincidenceIndex))
+            if (abs(ic - language.m_IC) < 0.01 &&
+                abs(ic - language.m_IC) < abs(maxIc - language.m_IC))
             {
                 maxIc = ic;
                 index = passLength;
             }
             //output.getText().append("\nIndex of coincidence: " + std::to_string(ic) + '\n');
         }
+
+
         m_Keys.resize(index);
 
         std::vector<Text> outputParts(m_Keys.size());
@@ -66,53 +68,24 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
         for (int k{ 0 }; k < m_Keys.size(); ++k)
         {
             outputParts[k].analyzeText();
-            std::vector<std::pair<int, double>> popularLetters{};
+            double minDist{ 10.00 };
 
-            for (int i{ 0 }; i < Alphabet::alphabet_length; ++i)
+            for (int j{ 0 }; j <= Alphabet::alphabet_length; ++j)
             {
-                if (outputParts[k].getAlphabet().m_LetterIC[i] > 0.003)
+                double dist{ 0.0 };
+                for (int i{ 0 }; i < Alphabet::alphabet_length; ++i)
                 {
-                    popularLetters.push_back({ i, outputParts[k].getAlphabet().m_LetterIC[i] });
+                    dist += pow(language.m_LetterIC[i] - outputParts[k].getAlphabet().m_LetterIC[i], 2);
                 }
-            }
-
-            int moveIndex{ 0 };
-
-            for (int i{ 0 }; i <= popularLetters.size(); ++i)
-            {
-                if (popularLetters.size() >= 3)
+                dist = sqrt(dist);
+                if (dist < minDist)
                 {
-                    if ((popularLetters[0].first + 4) % Alphabet::alphabet_length == popularLetters[1].first &&
-                        (popularLetters[1].first + 4) % Alphabet::alphabet_length == popularLetters[2].first)
-                    {
-                        moveIndex = popularLetters[0].first;
-                        break;
-                    }
+                    minDist = dist;
+                    m_Keys[k] = j;
                 }
-                std::rotate(popularLetters.begin(), popularLetters.begin() + 1, popularLetters.end());
+                std::rotate(outputParts[k].getAlphabet().m_LetterIC.begin(), outputParts[k].getAlphabet().m_LetterIC.begin() + 1, outputParts[k].getAlphabet().m_LetterIC.end());
             }
-            if (moveIndex == 0)
-            {
-                for (int i{ 0 }; i <= popularLetters.size(); ++i)
-                {
-                    if (popularLetters.size() >= 2)
-                    {
-                        if ((popularLetters[0].first + 4) % Alphabet::alphabet_length == popularLetters[1].first)
-                        {
-                            moveIndex = abs(4 - popularLetters[0].first);
-                            break;
-                        }
-                        if (popularLetters[1].first - popularLetters[0].first == 1)
-                        {
-                            moveIndex = abs(13 - popularLetters[0].first);
-                            break;
-                        }
-                    }
-
-                    std::rotate(popularLetters.begin(), popularLetters.begin() + 1, popularLetters.end());
-                }
-            }
-            m_Keys[k] = moveIndex;
+            outputParts[k].analyzeText();
         }
     }
 

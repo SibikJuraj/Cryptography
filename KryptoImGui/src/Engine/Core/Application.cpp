@@ -15,8 +15,10 @@
 
 void imGuiRender();
 
+
 Application::Application() : 
-    m_Cipher{ std::make_unique<Caesar>() }, m_Text{ std::make_unique<Text>("texts/text3_enc.txt") }, m_SelectedOption{ 0 }
+    m_Cipher{ std::make_unique<Caesar>() }, 
+    m_Text{ std::make_unique<Text>("texts/text1_enc.txt") }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -59,6 +61,7 @@ void Application::run()
 
     Text oText{*m_Text.get()};
     bool fineTuning{ false };
+    bool enLanguage{ false };
 
     // render loop
     // -----------
@@ -74,7 +77,7 @@ void Application::run()
         //Update();
         {
             ImGui::Begin("Ciphers");
-                if (ImGui::BeginCombo("Cipher", current_item)) // The second parameter is the label previewed before opening the combo.
+                if (ImGui::BeginCombo("Cipher", current_item)) 
                 {
                     for (int i{ 0 }; i < items.size(); ++i)
                     {
@@ -97,6 +100,12 @@ void Application::run()
                     oText = m_Cipher->execute(*m_Text.get(), CryptingMode::decrypt, fineTuning);
                 if (ImGui::Button("Encrypt"))
                     oText = m_Cipher->execute(*m_Text.get(), CryptingMode::encrypt, fineTuning);
+
+                ImGui::Checkbox("English", &enLanguage);
+                if (enLanguage)
+                    m_Text->getLanguage() = c_EnAlphabet;
+                else
+                    m_Text->getLanguage() = c_SkAlphabet;
 
                 ImGui::Checkbox("Fine Tuning", &fineTuning);
                 if (fineTuning)

@@ -4,13 +4,13 @@
 #include <array>
 
 Text::Text()
-    : m_Text{}, m_Alphabet{}, m_Spaces{}
+    : m_Text{}, m_Alphabet{}, m_Spaces{}, m_Language{c_SkAlphabet}
 {
     m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
 }
 
 Text::Text(std::string_view path)
-    : m_Alphabet{}
+    : m_Alphabet{}, m_Language{ c_SkAlphabet }
 {
     m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
 
@@ -27,7 +27,8 @@ Text::Text(std::string_view path)
 }
 
 Text::Text(const Text& other)
-    : m_Text{other.m_Text}, m_Alphabet{other.m_Alphabet}, m_Spaces {other.m_Spaces}
+    : m_Text{other.m_Text}, m_Alphabet{other.m_Alphabet}, 
+    m_Spaces {other.m_Spaces}, m_Language{ other.m_Language }
 {
 }
 
@@ -115,4 +116,14 @@ const std::string& Text::getText() const
 const Alphabet& Text::getAlphabet() const
 {
     return m_Alphabet;
+}
+
+Alphabet& Text::getLanguage()
+{
+    return m_Language;
+}
+
+const Alphabet& Text::getLanguage() const
+{
+    return m_Language;
 }
