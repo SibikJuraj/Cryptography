@@ -14,6 +14,7 @@ public:
 	void analyzeText();
 	bool saveText(std::string_view path);
 	void removeSpaces();
+	std::string textWithSpaces();
 	void sliceText(std::vector<Text>& parts) const;
 
 	std::string& getText();
@@ -23,5 +24,6 @@ public:
 private:
 	Alphabet m_Alphabet;
 	std::string m_Text;
+	std::vector<int> m_Spaces;
 
 };

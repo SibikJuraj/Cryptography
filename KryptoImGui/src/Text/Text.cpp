@@ -4,7 +4,7 @@
 #include <array>
 
 Text::Text()
-    : m_Text{}, m_Alphabet{}
+    : m_Text{}, m_Alphabet{}, m_Spaces{}
 {
     m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
 }
@@ -27,7 +27,7 @@ Text::Text(std::string_view path)
 }
 
 Text::Text(const Text& other)
-    : m_Text{other.m_Text}, m_Alphabet{other.m_Alphabet}
+    : m_Text{other.m_Text}, m_Alphabet{other.m_Alphabet}, m_Spaces {other.m_Spaces}
 {
 }
 
@@ -61,8 +61,27 @@ bool Text::saveText(std::string_view path)
 
 void Text::removeSpaces()
 {
+    int i{ 0 };
+    for (char& letter : m_Text)
+    {
+        if (letter == ' ')
+        {
+            m_Spaces.push_back(i);
+        }
+        ++i;
+    }
     m_Text.erase(std::remove_if(m_Text.begin(), m_Text.end(), ::isspace),
         m_Text.end());
+}
+
+std::string Text::textWithSpaces()
+{
+    std::string textWithSpaces{m_Text};
+    for (int index : m_Spaces)
+    {
+        textWithSpaces.insert(index, " ");
+    }
+    return textWithSpaces;
 }
 
 void Text::sliceText(std::vector<Text>& parts) const

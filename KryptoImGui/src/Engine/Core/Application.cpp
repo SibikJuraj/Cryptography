@@ -16,7 +16,7 @@
 void imGuiRender();
 
 Application::Application() : 
-    m_Cipher{ std::make_unique<Caesar>() }, m_Text{ std::make_unique<Text>("texts/text4_enc.txt") }, m_SelectedOption{ 0 }
+    m_Cipher{ std::make_unique<Caesar>() }, m_Text{ std::make_unique<Text>("texts/text3_enc.txt") }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -118,10 +118,10 @@ void Application::run()
 
             ImGui::End();
             ImGui::Begin("Text");
-                ImGui::TextWrapped(m_Text->getText().data());
+                ImGui::TextWrapped(m_Text->textWithSpaces().data());
             ImGui::End();
             ImGui::Begin("Output");
-                ImGui::TextWrapped(oText.getText().data());
+                ImGui::TextWrapped(oText.textWithSpaces().data());
             ImGui::End();
 
             ImGui::Begin("FrekvencnaAnalyza Text");
