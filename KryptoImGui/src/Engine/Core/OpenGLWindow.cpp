@@ -3,7 +3,7 @@
 
 OpenGLWindow::OpenGLWindow(int width, int height)
 {
-    m_Window = glfwCreateWindow(width, height, "Rendering engine", NULL, NULL) ;
+    m_Window = glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL) ;
     if (m_Window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;

@@ -2,8 +2,18 @@
 
 #include "Kasiski.h"
 
-bool Kasiski::compare_pair(const std::pair<int, int>& pair1,
+bool Kasiski::compare_ints(const std::pair<int, int>& pair1,
 	const std::pair<int, int>& pair2)
+{
+	int result{ 0 };
+	if (pair2.second < pair1.second)
+		result = 1;
+
+	return result;
+}
+
+bool Kasiski::compare_doubles(const std::pair<int, double>& pair1,
+	const std::pair<int, double>& pair2)
 {
 	int result{ 0 };
 	if (pair2.second < pair1.second)
@@ -31,7 +41,7 @@ std::vector<int> Kasiski::getPasswordLengths(const Text& text)
 			}
 		}
 	}
-	std::vector<std::pair<int, int>> passwordLengths(15);
+	std::vector<std::pair<int, int>> passwordLengths(11);
 	for (int i{ 15 }; i <= 25; ++i)
 	{
 		for (int distance : distances)
@@ -43,7 +53,7 @@ std::vector<int> Kasiski::getPasswordLengths(const Text& text)
 			}
 		}
 	}
-	std::sort(passwordLengths.begin(), passwordLengths.end(), &compare_pair);
+	std::sort(passwordLengths.begin(), passwordLengths.end(), &compare_ints);
 
 	distances.resize(passwordLengths.size());
 	for (int i{ 0 }; i < distances.size(); ++i)
