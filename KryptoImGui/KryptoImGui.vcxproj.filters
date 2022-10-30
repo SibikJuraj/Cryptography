@@ -1304,6 +1304,8 @@
     <ClInclude Include="src\Text\Text.h" />
     <ClInclude Include="src\Ciphers\Cipher.h" />
     <ClInclude Include="src\Text\Kasiski.h" />
+    <ClInclude Include="src\Ciphers\Stream.h" />
+    <ClInclude Include="src\Engine\Core\StreamGen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Affine.cpp">
@@ -1330,5 +1332,6 @@
     <ClCompile Include="src\Text\Text.cpp" />
     <ClCompile Include="src\Ciphers\Cipher.cpp" />
     <ClCompile Include="src\Text\Kasiski.cpp" />
+    <ClCompile Include="src\Ciphers\Stream.cpp" />
   </ItemGroup>
 </Project>

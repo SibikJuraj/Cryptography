@@ -18,7 +18,7 @@ void imGuiRender();
 
 Application::Application() : 
     m_Cipher{ std::make_unique<Caesar>() }, 
-    m_Text{ std::make_unique<Text>("texts/text1_enc.txt") }, m_SelectedOption{ 0 }
+    m_Text{ std::make_unique<Text>("texts/vigenere/text1_enc.txt") }, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
