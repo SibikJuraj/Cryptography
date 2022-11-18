@@ -1299,8 +1299,7 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ciphers\CryptingMode.h" />
-    <ClInclude Include="src\Text\Alphabet.h" />
+    <ClInclude Include="src\Text\Analysis\AnalysisOfLang.h" />
     <ClInclude Include="src\Text\Text.h" />
     <ClInclude Include="src\Ciphers\Cipher.h" />
     <ClInclude Include="src\Text\Kasiski.h" />

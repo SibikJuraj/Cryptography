@@ -3,24 +3,25 @@
 #include <string>
 #include <string_view>
 
-#include "CryptingMode.h"
 #include "Text/Text.h"
+
+#include "Text/Analysis/AnalysisOfLang.h"
+#include "Engine/Core/Application.h"
 
 class Cipher
 {
 public:
 	Cipher(std::vector<int> keys);
-	Text execute(const Text& input, const CryptingMode& mode, bool fineTuning = false);
-	void setKey(int index, int value);
-	int getKey(int index);
-	CryptingMode getMode();
-	std::vector<int>& getKeys();
-protected:
-	std::vector<int> m_Keys;
-	CryptingMode m_Mode;
 
 	virtual Text encrypt(const Text& input, bool fineTuning) = 0;
 	virtual Text decrypt(const Text& input, bool fineTuning) = 0;
-	virtual char cryptingFormula(char letter) = 0;
 
+	void setKey(int index, int value);
+	int getKey(int index);
+	std::vector<int>& getKeys();
+protected:
+	std::vector<int> m_Keys;
+	
+	virtual char encryptingFormula(char letter) = 0;
+	virtual char decryptingFormula(char letter) = 0;
 };

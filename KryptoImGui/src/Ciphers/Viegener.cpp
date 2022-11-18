@@ -1,10 +1,6 @@
 #include "Viegener.h"
 #include "Text/Kasiski.h"
 
-#include <array>
-#include <algorithm>
-
-
 Viegener::Viegener()
 	: Cipher(std::vector<int>{}), m_Counter{0}
 {
@@ -16,7 +12,7 @@ Text Viegener::encrypt(const Text& input, bool fineTuning)
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = encryptingFormula(output.getText()[i]);
     }
     return output;
 }
@@ -25,7 +21,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
 {
     m_Counter = 0;
     int index{ 0 };
-    Alphabet language = input.getLanguage();
+    const AnalysisOfLang& language = Application::getInstance().getLanguage();
 
     if (!fineTuning)
     {
@@ -47,11 +43,11 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
                 outputParts[k].analyzeText();
                 //output.getText().append("\nCoincidence index: " + std::to_string(outputParts[k].getAlphabet().m_IC));
 
-                ic += outputParts[k].getAlphabet().m_IC;
+                ic += outputParts[k].getTextAnalysis().getIC();
             }
             ic = ic / passLength;
-            if (abs(ic - language.m_IC) < 0.01 &&
-                abs(ic - language.m_IC) < abs(maxIc - language.m_IC))
+            if (abs(ic - language.getIC()) < 0.01 &&
+                abs(ic - language.getIC()) < abs(maxIc - language.getIC()))
             {
                 maxIc = ic;
                 index = passLength;
@@ -70,12 +66,12 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
             outputParts[k].analyzeText();
             double minDist{ 10.00 };
 
-            for (int j{ 0 }; j <= Alphabet::alphabet_length; ++j)
+            for (int j{ 0 }; j <= language.getAlphabetLength(); ++j)
             {
                 double dist{ 0.0 };
-                for (int i{ 0 }; i < Alphabet::alphabet_length; ++i)
+                for (char i{ 'A' }; i < 'A' + language.getAlphabetLength(); ++i)
                 {
-                    dist += pow(language.m_LetterIC[i] - outputParts[k].getAlphabet().m_LetterIC[i], 2);
+                    dist += pow(language[i] - outputParts[k].getTextAnalysis()[i], 2);
                 }
                 dist = sqrt(dist);
                 if (dist < minDist)
@@ -83,7 +79,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
                     minDist = dist;
                     m_Keys[k] = j;
                 }
-                std::rotate(outputParts[k].getAlphabet().m_LetterIC.begin(), outputParts[k].getAlphabet().m_LetterIC.begin() + 1, outputParts[k].getAlphabet().m_LetterIC.end());
+                std::rotate(outputParts[k].getTextAnalysis().getLetters().begin(), outputParts[k].getTextAnalysis().getLetters().begin() + 1, outputParts[k].getTextAnalysis().getLetters().end());
             }
             outputParts[k].analyzeText();
         }
@@ -91,12 +87,12 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
 
     Text output{ input };
     for (int i{ 0 }; i < input.getText().size(); ++i)
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = decryptingFormula(output.getText()[i]);
 
     std::string password{};
     for (int i{ 0 }; i < m_Keys.size(); ++i)
     {
-        char letter{ static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + Alphabet::alphabet_length: m_Keys[i]) % Alphabet::alphabet_length) + 65 };
+        char letter{ static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65};
 
         password.push_back(letter);
 
@@ -106,16 +102,26 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
     return output;
 }
 
-char Viegener::cryptingFormula(char letter)
+char Viegener::encryptingFormula(char letter)
 {
     letter -= 'A';
-    if (m_Mode == CryptingMode::encrypt)
-        letter = (letter + m_Keys[m_Counter]) % Alphabet::alphabet_length;
-    else
-        letter = (letter - m_Keys[m_Counter]) % Alphabet::alphabet_length;
-
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    letter = (letter + m_Keys[m_Counter]) % alphabetLength;
     m_Counter = ++m_Counter % m_Keys.size();
+
     if (letter < 0)
-        letter += Alphabet::alphabet_length;
+        letter += alphabetLength;
+    return letter + 'A';
+}
+
+char Viegener::decryptingFormula(char letter)
+{
+    letter -= 'A';
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    letter = (letter - m_Keys[m_Counter]) % alphabetLength;
+    m_Counter = ++m_Counter % m_Keys.size();
+
+    if (letter < 0)
+        letter += alphabetLength;
     return letter + 'A';
 }

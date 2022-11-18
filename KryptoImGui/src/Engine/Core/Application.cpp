@@ -15,10 +15,9 @@
 
 void imGuiRender();
 
-
 Application::Application() : 
     m_Cipher{ std::make_unique<Caesar>() }, 
-    m_Text{ std::make_unique<Text>("texts/vigenere/text1_enc.txt") }, m_SelectedOption{ 0 }
+    m_Language{ std::make_unique<AnalysisOfSKLang>()}, m_SelectedOption{ 0 }
 {
     // glfw: initialize and configure
    // ------------------------------
@@ -51,11 +50,13 @@ Application::Application() :
 
     ImGui_ImplGlfw_InitForOpenGL(m_Window->getWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
 }
+
 
 void Application::run()
 {
+    m_Text = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
+
     std::vector<const char*> items { "Caesar", "Affine", "Viegener" };
     const char* current_item = items[m_SelectedOption];
 
@@ -97,16 +98,11 @@ void Application::run()
                 }
                 
                 if (ImGui::Button("Decrypt"))
-                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::decrypt, fineTuning);
+                    oText = m_Cipher->decrypt(*m_Text.get(), fineTuning);
                 if (ImGui::Button("Encrypt"))
-                    oText = m_Cipher->execute(*m_Text.get(), CryptingMode::encrypt, fineTuning);
+                    oText = m_Cipher->encrypt(*m_Text.get(), fineTuning);
 
                 ImGui::Checkbox("English", &enLanguage);
-                if (enLanguage)
-                    m_Text->getLanguage() = c_EnAlphabet;
-                else
-                    m_Text->getLanguage() = c_SkAlphabet;
-
                 ImGui::Checkbox("Fine Tuning", &fineTuning);
                 if (fineTuning)
                 {
@@ -121,8 +117,13 @@ void Application::run()
                     {
                         ImGui::InputInt(keyNames[i], &(m_Cipher->getKeys()[i]));
                     }
-                    oText = m_Cipher->execute(*m_Text.get(), m_Cipher->getMode(), fineTuning);
                 }
+                if (enLanguage)
+                    m_Language = std::move(std::make_unique<AnalysisOfENLang>());
+                else
+                    m_Language = std::move(std::make_unique<AnalysisOfSKLang>());
+
+                
                 oText.analyzeText();
 
             ImGui::End();
@@ -136,14 +137,14 @@ void Application::run()
             ImGui::Begin("FrekvencnaAnalyza Text");
             if (ImPlot::BeginPlot("Text"))
             {
-                ImPlot::PlotBars("", m_Text->getAlphabet().m_LetterIC.data(), 26);
+                ImPlot::PlotBars("", m_Text->getTextAnalysis().getLetters().data(), 26);
                 ImPlot::EndPlot();
             }
             ImGui::End();
             ImGui::Begin("FrekvencnaAnalyza Output");
             if (ImPlot::BeginPlot("Output"))
             {
-                ImPlot::PlotBars("", oText.getAlphabet().m_LetterIC.data(), 26);
+                ImPlot::PlotBars("", oText.getTextAnalysis().getLetters().data(), 26);
                 ImPlot::EndPlot();
             }
             ImGui::End();
@@ -246,4 +247,14 @@ void Application::createCipherClass()
             m_Cipher = std::move(std::make_unique<Viegener>());
             break;
     }
+}
+
+const AnalysisOfLang& Application::getLanguage() const
+{
+    return *m_Language;
+}
+
+int Application::getAlphabetLength() const
+{
+    return m_Language->getAlphabetLength();
 }

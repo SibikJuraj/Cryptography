@@ -19,7 +19,12 @@ Text Stream::decrypt(const Text& input, bool fineTuning)
 	return Text();
 }
 
-char Stream::cryptingFormula(char letter)
+char Stream::encryptingFormula(char letter)
+{
+	return 0;
+}
+
+char Stream::decryptingFormula(char letter)
 {
 	return 0;
 }

@@ -10,7 +10,7 @@ Text Affine::encrypt(const Text& input, bool fineTuning)
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = encryptingFormula(output.getText()[i]);
     }
     return output;
 }
@@ -20,26 +20,33 @@ Text Affine::decrypt(const Text& input, bool fineTuning)
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = decryptingFormula(output.getText()[i]);
     }
     return output;
 }
 
-char Affine::cryptingFormula(char letter)
+char Affine::encryptingFormula(char letter)
 {
     letter -= 'A';
-    if (Alphabet::alphabet_length == 26)
-    {
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    if (alphabetLength == 26)
         if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
-        {
-            if (m_Mode == CryptingMode::encrypt)
-                letter = (m_Keys[0] * letter + m_Keys[1]) % Alphabet::alphabet_length;
-            else
-                letter = (m_Keys[0] * (letter - m_Keys[1])) % Alphabet::alphabet_length;
-        }
-    }
+            letter = (m_Keys[0] * letter + m_Keys[1]) % alphabetLength;
 
     if (letter < 0)
-        letter += Alphabet::alphabet_length;
+        letter += alphabetLength;
+    return letter + 'A';
+}
+
+char Affine::decryptingFormula(char letter)
+{
+    letter -= 'A';
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    if (alphabetLength == 26)
+        if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
+            letter = (m_Keys[0] * (letter - m_Keys[1])) % alphabetLength;
+
+    if (letter < 0)
+        letter += alphabetLength;
     return letter + 'A';
 }

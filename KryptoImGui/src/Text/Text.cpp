@@ -3,17 +3,17 @@
 #include <sstream>
 #include <array>
 
+#include "Engine/Core/Application.h"
+
 Text::Text()
-    : m_Text{}, m_Alphabet{}, m_Spaces{}, m_Language{c_SkAlphabet}
+    : m_Text{}, m_Spaces{},
+    m_AnalysisOfText{}
 {
-    m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
 }
 
 Text::Text(std::string_view path)
-    : m_Alphabet{}, m_Language{ c_SkAlphabet }
+    : m_AnalysisOfText{}
 {
-    m_Alphabet.m_LetterIC.resize(Alphabet::alphabet_length);
-
     std::ifstream fs(path.data());
 
     fs.seekg(0, std::ios::end);
@@ -27,8 +27,8 @@ Text::Text(std::string_view path)
 }
 
 Text::Text(const Text& other)
-    : m_Text{other.m_Text}, m_Alphabet{other.m_Alphabet}, 
-    m_Spaces {other.m_Spaces}, m_Language{ other.m_Language }
+    : m_Text{other.m_Text}, m_AnalysisOfText{other.m_AnalysisOfText },
+    m_Spaces {other.m_Spaces}
 {
 }
 
@@ -39,16 +39,17 @@ void Text::analyzeText()
 
     for (char letter : m_Text)
     {
-        if (letter - 'A' < 0 || letter - 'A' >= Alphabet::alphabet_length )
-            continue;
-        ++m_Alphabet.m_LetterIC[letter - 'A'];
+        if (letter == '\n')
+            break;
+        ++m_AnalysisOfText[letter];
     }
-    for (int i{0}; i < m_Alphabet.m_LetterIC.size(); ++i)
-    {
-        m_Alphabet.m_LetterIC[i] = ((double)m_Alphabet.m_LetterIC[i] / m_Text.size()) *
-            ((double)(m_Alphabet.m_LetterIC[i] - 1) / (m_Text.size() - 1));
 
-        m_Alphabet.m_IC += m_Alphabet.m_LetterIC[i];
+    for (char i{'A'}; i < 'A' + Application::getInstance().getAlphabetLength(); ++i)
+    {
+        m_AnalysisOfText[i] = ((double)m_AnalysisOfText[i] / m_Text.size()) *
+            ((double)(m_AnalysisOfText[i] - 1) / (m_Text.size() - 1));
+
+        m_AnalysisOfText.getIC() += m_AnalysisOfText[i];
     }
 }
 
@@ -103,27 +104,17 @@ std::string& Text::getText()
     return m_Text;
 }
 
-Alphabet& Text::getAlphabet()
+AnalysisOfText& Text::getTextAnalysis()
 {
-    return m_Alphabet;
+    return m_AnalysisOfText;
+}
+
+const AnalysisOfText& Text::getTextAnalysis() const
+{
+    return m_AnalysisOfText;
 }
 
 const std::string& Text::getText() const
 {
     return m_Text;
-}
-
-const Alphabet& Text::getAlphabet() const
-{
-    return m_Alphabet;
-}
-
-Alphabet& Text::getLanguage()
-{
-    return m_Language;
-}
-
-const Alphabet& Text::getLanguage() const
-{
-    return m_Language;
 }

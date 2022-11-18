@@ -1,6 +1,4 @@
 #include "Caesar.h"
-#include <string>
-
 
 Caesar::Caesar()
     : Cipher(std::vector<int>(1))
@@ -12,7 +10,7 @@ Text Caesar::encrypt(const Text& input, bool fineTuning)
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = encryptingFormula(output.getText()[i]);
     }
     return output;
 }
@@ -23,11 +21,12 @@ Text Caesar::decrypt(const Text& input, bool fineTuning)
     if (!fineTuning)
     {
         double max{ -1.0 };
-        for (int i{ 0 }; i < output.getAlphabet().m_LetterIC.size(); ++i)
+        int alphabetLength{ Application::getInstance().getAlphabetLength() };
+        for (char i{ 'A' }; i < 'A' + alphabetLength; ++i)
         {
-            if (max < output.getAlphabet().m_LetterIC[i])
+            if (max < output.getTextAnalysis()[i])
             {
-                max = output.getAlphabet().m_LetterIC[i];
+                max = output.getTextAnalysis()[i];
                 m_Keys[0] = i;
             }
         }
@@ -35,20 +34,30 @@ Text Caesar::decrypt(const Text& input, bool fineTuning)
    
     for (int i{ 0 }; i < output.getText().size(); ++i)
     {
-        output.getText()[i] = cryptingFormula(output.getText()[i]);
+        output.getText()[i] = decryptingFormula(output.getText()[i]);
     }
     return output;
 }
 
-char Caesar::cryptingFormula(char letter)
+char Caesar::encryptingFormula(char letter)
 {
     letter -= 'A';
-    if (m_Mode == CryptingMode::encrypt)
-        letter = (letter + m_Keys[0]) % Alphabet::alphabet_length;
-    else
-        letter = (letter - m_Keys[0]) % Alphabet::alphabet_length;
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    letter = (letter + m_Keys[0]) % alphabetLength;
+
     
     if (letter < 0)
-        letter += Alphabet::alphabet_length;
+        letter += alphabetLength;
+    return letter + 'A';
+}
+
+char Caesar::decryptingFormula(char letter)
+{
+    letter -= 'A';
+    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    letter = (letter - m_Keys[0]) % alphabetLength;
+
+    if (letter < 0)
+        letter += alphabetLength;
     return letter + 'A';
 }
