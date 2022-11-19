@@ -137,6 +137,8 @@ void Application::run()
             ImGui::Begin("FrekvencnaAnalyza Text");
             if (ImPlot::BeginPlot("Text"))
             {
+                ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
+                ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
                 ImPlot::PlotBars("", m_Text->getTextAnalysis().getLetters().data(), 26);
                 ImPlot::EndPlot();
             }
@@ -144,6 +146,8 @@ void Application::run()
             ImGui::Begin("FrekvencnaAnalyza Output");
             if (ImPlot::BeginPlot("Output"))
             {
+                ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
+                ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
                 ImPlot::PlotBars("", oText.getTextAnalysis().getLetters().data(), 26);
                 ImPlot::EndPlot();
             }
