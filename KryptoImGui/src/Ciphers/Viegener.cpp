@@ -14,6 +14,7 @@ Text Viegener::encrypt(const Text& input, bool fineTuning)
     {
         output.getText()[i] = encryptingFormula(output.getText()[i]);
     }
+    output.analyzeText();
     return output;
 }
 
@@ -97,8 +98,9 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
         password.push_back(letter);
 
     }
-
+    output.analyzeText();
     output.getText().append("\n\nPassword: " + password + " length: " + std::to_string(m_Keys.size()));
+    
     return output;
 }
 

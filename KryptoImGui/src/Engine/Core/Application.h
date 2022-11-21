@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
-#include "OpenGLWindow.h"
 #include "Text/Text.h"
 #include "Ciphers/Cipher.h"
+#include "Engine/GUI/GUI.h"
 
 #include "Text/Analysis/AnalysisOfLang.h"
 
@@ -21,15 +21,19 @@ public:
 	void run();
 	~Application();
 
-	void createCipherClass();
+	void createCipherClass(int selectedOption);
 	const AnalysisOfLang& getLanguage() const;
+	void setLanguage(bool english);
 	int getAlphabetLength() const;
+	Cipher& getCipher();
 private:
 	Application();
 
-	std::unique_ptr<OpenGLWindow> m_Window;
+	std::unique_ptr<GUI> m_GUI;
 	std::unique_ptr<AnalysisOfLang> m_Language;
 	std::unique_ptr<Text> m_Text;
 	std::unique_ptr<Cipher> m_Cipher;
-	int m_SelectedOption;
+	std::vector<Cipher> m_Ciphers;
+
+	int m_CurrentCipher;
 };

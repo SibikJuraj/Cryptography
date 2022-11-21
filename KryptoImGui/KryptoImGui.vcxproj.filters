@@ -51,9 +51,6 @@
     <ClInclude Include="src\Engine\Core\Application.h">
       <Filter>src\Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Core\OpenGLWindow.h">
-      <Filter>src\Engine\Core</Filter>
-    </ClInclude>
     <ClInclude Include="vendor\submodules\glm\glm\common.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
@@ -1305,6 +1302,14 @@
     <ClInclude Include="src\Text\Kasiski.h" />
     <ClInclude Include="src\Ciphers\Stream.h" />
     <ClInclude Include="src\Engine\Core\StreamGen.h" />
+    <ClInclude Include="src\Engine\GUI\GUI.h" />
+    <ClInclude Include="src\Engine\GUI\ImGUI.h" />
+    <ClInclude Include="src\Engine\GUI\IGUIFactory.h" />
+    <ClInclude Include="src\Engine\GUI\GUIElements.h" />
+    <ClInclude Include="src\Engine\Commands\ICommand.h" />
+    <ClInclude Include="src\Engine\GUI\ImGUIElements.h" />
+    <ClInclude Include="src\Engine\GUI\ImGUIFactory.h" />
+    <ClInclude Include="src\Ciphers\CipherManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Affine.cpp">
@@ -1319,9 +1324,6 @@
     <ClCompile Include="src\Engine\Core\Application.cpp">
       <Filter>src\Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Core\OpenGLWindow.cpp">
-      <Filter>src\Engine\Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\ImGuiBuild.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -1332,5 +1334,6 @@
     <ClCompile Include="src\Ciphers\Cipher.cpp" />
     <ClCompile Include="src\Text\Kasiski.cpp" />
     <ClCompile Include="src\Ciphers\Stream.cpp" />
+    <ClCompile Include="src\Engine\GUI\ImGUI.cpp" />
   </ItemGroup>
 </Project>

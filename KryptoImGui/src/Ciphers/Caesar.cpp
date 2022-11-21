@@ -12,6 +12,7 @@ Text Caesar::encrypt(const Text& input, bool fineTuning)
     {
         output.getText()[i] = encryptingFormula(output.getText()[i]);
     }
+    output.analyzeText();
     return output;
 }
 
@@ -36,6 +37,7 @@ Text Caesar::decrypt(const Text& input, bool fineTuning)
     {
         output.getText()[i] = decryptingFormula(output.getText()[i]);
     }
+    output.analyzeText();
     return output;
 }
 
