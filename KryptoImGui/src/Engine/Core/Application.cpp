@@ -9,20 +9,17 @@
 
 Application::Application() : 
     m_GUI{ std::make_unique<ImGUI>(1600, 900) }, m_CurrentCipher{ 0 },
-    m_Language{ std::make_unique<AnalysisOfSKLang>()}, m_Ciphers{ std::vector<Cipher>() }
+    m_Language{ std::make_unique<AnalysisOfSKLang>() }
 {
-    m_Ciphers.push_back(Caesar());
-    m_Ciphers.push_back(Affine());
-    m_Ciphers.push_back(Viegener());
+    //TODO 
+    //VYTVOR GUI JAK MA VYZERAT + NAPLN CO MA EXECUTOVAT KOMANDY ... CO SA MA VYKONAVAT
 }
 
 void Application::run()
 {
     m_Text = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
 
-    std::vector<const char*> cipherNames{};
-    for (Cipher& cipher : m_Ciphers)
-        cipherNames.push_back(typeid(cipher).name());
+    std::vector<const char*> cipherNames{"Affine", "Caesar"};
 
     const char* curItem{ cipherNames[0]};
 
@@ -47,7 +44,7 @@ void Application::createCipherClass(int selectedOption)
 {
     switch (selectedOption)
     {
-        case 0:
+       /* case 0:
             m_Cipher = std::move(std::make_unique<Caesar>());
             break;
         case 1:
@@ -55,7 +52,7 @@ void Application::createCipherClass(int selectedOption)
             break;
         case 2:
             m_Cipher = std::move(std::make_unique<Viegener>());
-            break;
+            break;*/
     }
 }
 
@@ -75,9 +72,4 @@ void Application::setLanguage(bool english)
 int Application::getAlphabetLength() const
 {
     return m_Language->getAlphabetLength();
-}
-
-Cipher& Application::getCipher()
-{
-    return m_Ciphers[m_CurrentCipher];
 }

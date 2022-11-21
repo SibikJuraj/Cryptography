@@ -94,8 +94,10 @@ void ImGUI::preRun()
 void ImGUI::run(std::vector<const char*> items, const char* curItem,
     int& selectedCipher, Text& iText, Text& oText, bool& fineTuning, bool& enLanguage)
 {
-    auto& cipher{ Application::getInstance().getCipher()};
+    auto& cipher{ Caesar() };
 
+    for (IGUIElement& element : m_Elements)
+        element.draw();
 
     ImGui::Begin("Ciphers");
     // render loop

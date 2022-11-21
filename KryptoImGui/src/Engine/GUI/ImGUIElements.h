@@ -16,7 +16,7 @@ public:
 		ImGui::Begin(m_Label);
 
 		for (int i{ 0 }; i < m_Elements.size(); ++i)
-			m_Elements[i].draw();
+			m_Elements[i]->draw();
 
 		ImGui::End();
 	}
@@ -25,7 +25,7 @@ public:
 class ImGUIButton : public Button
 {
 public:
-	ImGUIButton(const char* label, const ICommand& command) : Button(label, command){}
+	ImGUIButton(const char* label, ICommand* command) : Button(label, command){}
 
 	virtual void draw() override
 	{
@@ -37,7 +37,7 @@ public:
 class ImGUICombobox : public Combobox
 {
 public:
-	ImGUICombobox(const char* label, const std::vector<const char*>& items, const ICommand& command)
+	ImGUICombobox(const char* label, const std::vector<const char*>& items, ICommand* command)
 		: Combobox(label, items, command) {}
 	virtual void draw() override
 	{

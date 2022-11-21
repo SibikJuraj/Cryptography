@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <memory>
+#include <vector>
 #include "Cipher.h"
+
 
 class CipherManager
 {
@@ -13,17 +14,16 @@ public:
 		return instance;
 	}
 
-	~CipherManager() {}
+	~CipherManager();
 
-	void registerCipher(const Cipher& cipher) { m_Ciphers.push_back(cipher); }
-	void setCipher(int cipherID) 
-	{ m_SelectedCipher = std::make_unique<Cipher>(m_Ciphers[cipherID]); }
-	void setFinetuning(bool finetuning) { m_Finetuning = finetuning; }
-	void decrypt() { /*m_SelectedCipher->decrypt();*/ }
-	void encrypt() {/*m_SelectedCipher->encrypt();*/ }
+	void registerCipher(Cipher* cipher);
+	void setCipher(int cipherID);
+	void setFinetuning(bool finetuning);
+	void decrypt(Text& output);
+	void encrypt(Text& output);
 private:
-	CipherManager() : m_SelectedCipher{ nullptr }, m_Ciphers{ std::vector<Cipher>() } {}
+	CipherManager();
 	std::unique_ptr<Cipher> m_SelectedCipher;
-	std::vector<Cipher> m_Ciphers;
+	std::vector<std::unique_ptr<Cipher>> m_Ciphers;
 	bool m_Finetuning;
 };

@@ -22,7 +22,7 @@ Text Caesar::decrypt(const Text& input, bool fineTuning)
     if (!fineTuning)
     {
         double max{ -1.0 };
-        int alphabetLength{ Application::getInstance().getAlphabetLength() };
+        int alphabetLength{ 26 };
         for (char i{ 'A' }; i < 'A' + alphabetLength; ++i)
         {
             if (max < output.getTextAnalysis()[i])
@@ -44,7 +44,7 @@ Text Caesar::decrypt(const Text& input, bool fineTuning)
 char Caesar::encryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     letter = (letter + m_Keys[0]) % alphabetLength;
 
     
@@ -56,7 +56,7 @@ char Caesar::encryptingFormula(char letter)
 char Caesar::decryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     letter = (letter - m_Keys[0]) % alphabetLength;
 
     if (letter < 0)

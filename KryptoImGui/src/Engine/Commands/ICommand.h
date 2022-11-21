@@ -2,6 +2,8 @@
 
 #include "Ciphers/CipherManager.h"
 
+class CipherManager;
+
 class ICommand
 {
 public:
@@ -24,25 +26,25 @@ private:
 class CommandCipherDecrypt : public ICommand
 {
 public:
-	CommandCipherDecrypt(int cipherID) : m_CipherID{ cipherID } {}
+	CommandCipherDecrypt(Text& output) : m_Output{ output } {}
 	~CommandCipherDecrypt() {}
 	virtual void execute() override
 	{
-		CipherManager::getInstance().decrypt();
+		CipherManager::getInstance().decrypt(m_Output);
 	}
 private:
-	int m_CipherID;
+	Text& m_Output;
 };
 
 class CommandCipherEncrypt : public ICommand
 {
 public:
-	CommandCipherEncrypt(int cipherID) : m_CipherID{ cipherID } {}
+	CommandCipherEncrypt(Text& output) : m_Output{ output } {}
 	~CommandCipherEncrypt() {}
 	virtual void execute() override
 	{
-		CipherManager::getInstance().encrypt();
+		CipherManager::getInstance().encrypt(m_Output);
 	}
 private:
-	int m_CipherID;
+	Text& m_Output;
 };

@@ -6,7 +6,6 @@
 #include "Text/Text.h"
 
 #include "Text/Analysis/AnalysisOfLang.h"
-#include "Engine/Core/Application.h"
 
 class Cipher
 {

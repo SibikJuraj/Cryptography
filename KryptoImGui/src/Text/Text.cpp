@@ -44,7 +44,7 @@ void Text::analyzeText()
         ++m_AnalysisOfText[letter];
     }
 
-    for (char i{'A'}; i < 'A' + Application::getInstance().getAlphabetLength(); ++i)
+    for (char i{'A'}; i < 'A' + 26; ++i)
     {
         m_AnalysisOfText[i] = ((double)m_AnalysisOfText[i] / m_Text.size()) *
             ((double)(m_AnalysisOfText[i] - 1) / (m_Text.size() - 1));

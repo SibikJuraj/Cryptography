@@ -13,20 +13,21 @@ public:
 class Panel : public IGUIElement
 {
 public:
-	Panel(const char* label) : m_Label{label}
+	Panel(const char* label) : m_Label{label}, m_Elements{ std::vector<std::unique_ptr<IGUIElement>>()}
 	{}
 	~Panel() { delete m_Label;  m_Label = nullptr; }
 
-	void addElement(const IGUIElement& element) { m_Elements.push_back(element); }
+	void addElement(IGUIElement* element) { m_Elements.emplace_back(element); }
 protected:
 	const char* m_Label;
-	std::vector<IGUIElement> m_Elements;
+	std::vector<std::unique_ptr<IGUIElement>> m_Elements;
 };
 
 class Button : public IGUIElement
 {
 public:
-	Button(const char* label, const ICommand& command) : m_Label{ label }, m_Command{ std::make_unique<ICommand>(command) }
+	Button(const char* label, ICommand* command) 
+		: m_Label{ label }, m_Command{ command }
 	{}
 	~Button() { delete m_Label;  m_Label = nullptr; }
 protected:
@@ -37,8 +38,8 @@ protected:
 class Combobox : public IGUIElement
 {
 public:
-	Combobox(const char* label, const std::vector<const char*>& items, const ICommand& command)
-		: m_Label{ label }, m_Items{ items }, m_Command{ std::make_unique<ICommand>(command) }
+	Combobox(const char* label, const std::vector<const char*>& items, ICommand* command)
+		: m_Label{ label }, m_Items{ items }, m_Command{ command }
 	{}
 	~Combobox() { delete m_Label;  m_Label = nullptr; }
 protected:

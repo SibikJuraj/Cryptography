@@ -22,7 +22,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
 {
     m_Counter = 0;
     int index{ 0 };
-    const AnalysisOfLang& language = Application::getInstance().getLanguage();
+    const AnalysisOfSKLang language{};
 
     if (!fineTuning)
     {
@@ -107,7 +107,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
 char Viegener::encryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     letter = (letter + m_Keys[m_Counter]) % alphabetLength;
     m_Counter = ++m_Counter % m_Keys.size();
 
@@ -119,7 +119,7 @@ char Viegener::encryptingFormula(char letter)
 char Viegener::decryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     letter = (letter - m_Keys[m_Counter]) % alphabetLength;
     m_Counter = ++m_Counter % m_Keys.size();
 

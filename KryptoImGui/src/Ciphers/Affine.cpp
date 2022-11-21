@@ -30,7 +30,7 @@ Text Affine::decrypt(const Text& input, bool fineTuning)
 char Affine::encryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     if (alphabetLength == 26)
         if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
             letter = (m_Keys[0] * letter + m_Keys[1]) % alphabetLength;
@@ -43,7 +43,7 @@ char Affine::encryptingFormula(char letter)
 char Affine::decryptingFormula(char letter)
 {
     letter -= 'A';
-    int alphabetLength{ Application::getInstance().getAlphabetLength() };
+    int alphabetLength{ 26 };
     if (alphabetLength == 26)
         if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
             letter = (m_Keys[0] * (letter - m_Keys[1])) % alphabetLength;
