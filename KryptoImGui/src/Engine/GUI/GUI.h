@@ -7,15 +7,14 @@
 class GUI
 {
 public:
-	GUI() : m_Elements{ std::vector<IGUIElement>() } {}
+	GUI() : m_Elements{ std::vector< std::unique_ptr<IGUIElement>>() } {}
 	~GUI() = default;
 
 	virtual void preRun() = 0;
-	virtual void run(std::vector<const char*> items, const char* curItem,
-		int& selectedCipher, Text& iText, Text& oText, bool& fineTuning, bool& enLanguage) = 0;
+	virtual void run() = 0;
 	virtual void postRun() = 0;
 	virtual bool isRunning() = 0;
+	virtual void addElement(IGUIElement* element) = 0;
 
-	std::vector<IGUIElement> m_Elements;
-
+	std::vector< std::unique_ptr<IGUIElement>> m_Elements;
 };

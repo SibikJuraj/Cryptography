@@ -11,7 +11,6 @@
 #include "Engine/Core/Application.h"
 #include <Ciphers/Caesar.h>
 
-#include <Engine/GUI/ImGUIFactory.h>
 
 ImGUI::ImGUI(int width, int height) : GUI()
 {
@@ -53,13 +52,7 @@ ImGUI::ImGUI(int width, int height) : GUI()
 
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
-
- /*   ImGUIPanel panelCiphers{ ImGUIPanel("Ciphers") };
-    panelCiphers.addElement(ImGUICombobox("Cipher", items, command));
-    panelCiphers.addElement(ImGUIButton("Decrypt", command));
-    panelCiphers.addElement(ImGUIButton("Encrypt", command));
-    panelCiphers.addElement(ImGUICheckbox("English", english));
-    m_Elements.push_back()*/
+   
 }
 
 ImGUI::~ImGUI()
@@ -91,86 +84,85 @@ void ImGUI::preRun()
     imGuiRender();
 }
 
-void ImGUI::run(std::vector<const char*> items, const char* curItem,
-    int& selectedCipher, Text& iText, Text& oText, bool& fineTuning, bool& enLanguage)
+void ImGUI::run()
 {
     auto& cipher{ Caesar() };
 
-    for (IGUIElement& element : m_Elements)
-        element.draw();
+    for (std::unique_ptr<IGUIElement>& element : m_Elements)
+        element->draw();
 
-    ImGui::Begin("Ciphers");
-    // render loop
-    // -----------
-    if (ImGui::BeginCombo("Cipher", curItem))
-    {
-        for (int i{ 0 }; i < items.size(); ++i)
-        {
-            bool is_selected = (curItem == items[i]);
-            if (ImGui::Selectable(items[i], is_selected))
-            {
-                curItem = items[i];
-                selectedCipher = i;
-                Application::getInstance().createCipherClass(selectedCipher);
-            }
-            if (is_selected)
-            {
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-        ImGui::EndCombo();
-    }
+    //ImGui::Begin("Ciphers");
+    //// render loop
+    //// -----------
+    //if (ImGui::BeginCombo("Cipher", curItem))
+    //{
+    //    for (int i{ 0 }; i < items.size(); ++i)
+    //    {
+    //        bool is_selected = (curItem == items[i]);
+    //        if (ImGui::Selectable(items[i], is_selected))
+    //        {
+    //            curItem = items[i];
+    //            selectedCipher = i;
+    //            Application::getInstance().createCipherClass(selectedCipher);
+    //        }
+    //        if (is_selected)
+    //        {
+    //            ImGui::SetItemDefaultFocus();
+    //        }
+    //    }
+    //    ImGui::EndCombo();
+    //}
 
-    if (ImGui::Button("Decrypt"))
-        oText = cipher.decrypt(oText, fineTuning);
-    if (ImGui::Button("Encrypt"))
-        oText = cipher.encrypt(oText, fineTuning);
+    //if (ImGui::Button("Decrypt"))
+    //    oText = cipher.decrypt(oText, fineTuning);
+    //if (ImGui::Button("Encrypt"))
+    //    oText = cipher.encrypt(oText, fineTuning);
 
-    ImGui::Checkbox("English", &enLanguage);
-    ImGui::Checkbox("Fine Tuning", &fineTuning);
-    if (fineTuning)
-    {
-        const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4", "Key 5",
-                            "Key 6", "Key 7", "Key 8", "Key 9", "Key 10",
-                            "Key 11", "Key 12", "Key 13", "Key 14", "Key 15",
-                            "Key 16", "Key 17", "Key 18", "Key 19", "Key 20",
-                            "Key 21", "Key 22", "Key 23", "Key 24", "Key 25",
-                            "Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
-        };
-        for (int i{ 0 }; i < cipher.getKeys().size(); ++i)
-        {
-            ImGui::InputInt(keyNames[i], &(cipher.getKeys()[i]));
-        }
-        //m_Cipher->setKey();
-    }
-    Application::getInstance().setLanguage(enLanguage);
+    //ImGui::Checkbox("English", &enLanguage);
+    //ImGui::Checkbox("Fine Tuning", &fineTuning);
+    //if (fineTuning)
+    //{
+    //    const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4", "Key 5",
+    //                        "Key 6", "Key 7", "Key 8", "Key 9", "Key 10",
+    //                        "Key 11", "Key 12", "Key 13", "Key 14", "Key 15",
+    //                        "Key 16", "Key 17", "Key 18", "Key 19", "Key 20",
+    //                        "Key 21", "Key 22", "Key 23", "Key 24", "Key 25",
+    //                        "Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
+    //    };
+    //    for (int i{ 0 }; i < cipher.getKeys().size(); ++i)
+    //    {
+    //        ImGui::InputInt(keyNames[i], &(cipher.getKeys()[i]));
+    //    }
+    //    //m_Cipher->setKey();
+    //}
+    //Application::getInstance().setLanguage(enLanguage);
 
-    ImGui::End();
-    ImGui::Begin("Text");
-    ImGui::TextWrapped(iText.textWithSpaces().data());
-    ImGui::End();
-    ImGui::Begin("Output");
-    ImGui::TextWrapped(oText.textWithSpaces().data());
-    ImGui::End();
+    //ImGui::End();
+    //ImGui::Begin("Text");
+    //ImGui::TextWrapped(iText.textWithSpaces().data());
+    //ImGui::End();
+    //ImGui::Begin("Output");
+    //ImGui::TextWrapped(oText.textWithSpaces().data());
+    //ImGui::End();
 
-    ImGui::Begin("FrekvencnaAnalyza Text");
-    if (ImPlot::BeginPlot("Text"))
-    {
-        ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
-        ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
-        ImPlot::PlotBars("", iText.getTextAnalysis().getLetters().data(), 26);
-        ImPlot::EndPlot();
-    }
-    ImGui::End();
-    ImGui::Begin("FrekvencnaAnalyza Output");
-    if (ImPlot::BeginPlot("Output"))
-    {
-        ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
-        ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
-        ImPlot::PlotBars("", oText.getTextAnalysis().getLetters().data(), 26);
-        ImPlot::EndPlot();
-    }
-    ImGui::End();
+    //ImGui::Begin("FrekvencnaAnalyza Text");
+    //if (ImPlot::BeginPlot("Text"))
+    //{
+    //    ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
+    //    ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
+    //    ImPlot::PlotBars("", iText.getTextAnalysis().getLetters().data(), 26);
+    //    ImPlot::EndPlot();
+    //}
+    //ImGui::End();
+    //ImGui::Begin("FrekvencnaAnalyza Output");
+    //if (ImPlot::BeginPlot("Output"))
+    //{
+    //    ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
+    //    ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
+    //    ImPlot::PlotBars("", oText.getTextAnalysis().getLetters().data(), 26);
+    //    ImPlot::EndPlot();
+    //}
+    //ImGui::End();
 }
 
 void ImGUI::postRun()
@@ -193,6 +185,11 @@ void ImGUI::postRun()
 bool ImGUI::isRunning()
 {
     return !glfwWindowShouldClose(m_Window);
+}
+
+void ImGUI::addElement(IGUIElement* element)
+{
+    m_Elements.emplace_back(element);
 }
 
 void ImGUI::imGuiRender()

@@ -33,4 +33,5 @@ private:
 	std::unique_ptr<Text> m_Text;
 
 	int m_CurrentCipher;
+	bool m_English;
 };

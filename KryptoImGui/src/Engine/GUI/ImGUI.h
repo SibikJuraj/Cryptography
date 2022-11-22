@@ -13,11 +13,10 @@ public:
 	GLFWwindow* getWindow();
 
 	virtual void preRun() override;
-	virtual void run(std::vector<const char*> items, const char* curItem,
-		int& selectedCipher, Text& iText, Text& oText, bool& fineTuning, bool& enLanguage) override;
+	virtual void run() override;
 	virtual void postRun() override;
 	virtual bool isRunning() override;
-
+	virtual void addElement(IGUIElement* element) override;
 private:
 	GLFWwindow* m_Window;
 	int m_SelectedOption;

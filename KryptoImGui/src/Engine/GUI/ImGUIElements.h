@@ -109,3 +109,33 @@ public:
 		}
 	}
 };
+
+class ImGUIComboboxCipher : public ImGUICombobox
+{
+public:
+	ImGUIComboboxCipher(const char* label, const std::vector<const char*>& items)
+		: ImGUICombobox(label, items, new CommandCipherCreate(m_SelectedValue)) {}
+	virtual void draw() override
+	{
+		const char* curItem{ m_Items[m_SelectedValue] };
+		if (ImGui::BeginCombo(m_Label, curItem))
+		{
+			for (int i{ 0 }; i < m_Items.size(); ++i)
+			{
+				bool is_selected = (curItem == m_Items[i]);
+				if (ImGui::Selectable(m_Items[i], is_selected))
+				{
+					m_SelectedValue = i;
+					curItem = m_Items[m_SelectedValue];
+					m_Command.reset(new CommandCipherCreate(m_SelectedValue));
+					m_Command->execute();
+				}
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
+};
