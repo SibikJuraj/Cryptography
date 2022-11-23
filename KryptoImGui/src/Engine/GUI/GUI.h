@@ -15,6 +15,6 @@ public:
 	virtual void postRun() = 0;
 	virtual bool isRunning() = 0;
 	virtual void addElement(IGUIElement* element) = 0;
-
+protected:
 	std::vector< std::unique_ptr<IGUIElement>> m_Elements;
 };
