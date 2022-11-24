@@ -30,10 +30,6 @@ void Application::run()
 {
     m_Text = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
 
-    Text oText{ *m_Text.get() };
-    bool fineTuning{ false };
-    bool enLanguage{ false };
-
     while (m_GUI->isRunning())
     {
         m_GUI->preRun();

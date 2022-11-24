@@ -1304,12 +1304,12 @@
     <ClInclude Include="src\Engine\Core\StreamGen.h" />
     <ClInclude Include="src\Engine\GUI\GUI.h" />
     <ClInclude Include="src\Engine\Commands\ICommand.h" />
-    <ClInclude Include="src\Ciphers\CipherManager.h" />
     <ClInclude Include="src\Engine\GUI\ImGUIFactory.h" />
     <ClInclude Include="src\Engine\GUI\ImGUIElements.h" />
-    <ClInclude Include="src\Engine\GUI\ImGUI.h" />
     <ClInclude Include="src\Engine\GUI\IGUIFactory.h" />
     <ClInclude Include="src\Engine\GUI\GUIElements.h" />
+    <ClInclude Include="src\Ciphers\CipherManager.h" />
+    <ClInclude Include="src\Engine\GUI\ImGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Affine.cpp">

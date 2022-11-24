@@ -91,6 +91,14 @@ void ImGUI::run()
     for (std::unique_ptr<IGUIElement>& element : m_Elements)
         element->draw();
 
+    //int selectedCipher{ 0 };
+    //auto iText = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
+    //Text oText{ *iText.get() };
+    //bool fineTuning{ false };
+    //bool enLanguage{ false };
+    //std::vector<const char*> items{ "Affine", "Caesar" };
+    //const char* curItem{ items[0]};
+
     //ImGui::Begin("Ciphers");
     //// render loop
     //// -----------
@@ -139,7 +147,7 @@ void ImGUI::run()
 
     //ImGui::End();
     //ImGui::Begin("Text");
-    //ImGui::TextWrapped(iText.textWithSpaces().data());
+    //ImGui::TextWrapped(iText->textWithSpaces().data());
     //ImGui::End();
     //ImGui::Begin("Output");
     //ImGui::TextWrapped(oText.textWithSpaces().data());
@@ -150,7 +158,7 @@ void ImGUI::run()
     //{
     //    ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
     //    ImPlot::SetupAxisTicks(ImAxis_X1, 0, 25, 26);
-    //    ImPlot::PlotBars("", iText.getTextAnalysis().getLetters().data(), 26);
+    //    ImPlot::PlotBars("", iText->getTextAnalysis().getLetters().data(), 26);
     //    ImPlot::EndPlot();
     //}
     //ImGui::End();
