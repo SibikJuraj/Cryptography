@@ -1,7 +1,8 @@
 #include "CipherManager.h"
 
-CipherManager::CipherManager() 
-	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::unique_ptr<Cipher>>() }, m_SelectedCipher{nullptr}
+CipherManager::CipherManager()
+	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::unique_ptr<Cipher>>() }, m_SelectedCipher{nullptr},
+	 m_InputText{ std::make_unique<Text>("texts/vigenere/text4_enc.txt")}
 {
 }
 
@@ -24,12 +25,22 @@ void CipherManager::setFinetuning(bool finetuning)
 	m_Finetuning = finetuning;
 }
 
-void CipherManager::decrypt(Text& output)
+void CipherManager::decrypt()
 { 
-	m_SelectedCipher->decrypt(output, m_Finetuning);
+	*m_OutputText = m_SelectedCipher->decrypt(*m_InputText, m_Finetuning);
 }
 
-void CipherManager::encrypt(Text& output)
+void CipherManager::encrypt()
 {
-	m_SelectedCipher->encrypt(output, m_Finetuning);
+	*m_OutputText = m_SelectedCipher->encrypt(*m_InputText, m_Finetuning);
+}
+
+const Text& CipherManager::getInputText()
+{
+	return *m_InputText;
+}
+
+const Text& CipherManager::getOutputText()
+{
+	return *m_OutputText;
 }

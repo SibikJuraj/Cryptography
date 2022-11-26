@@ -12,14 +12,17 @@
 
 Application::Application() : 
     m_GUI{ std::make_unique<ImGUI>(1600, 900) }, m_CurrentCipher{ 0 },
-    m_Language{ std::make_unique<AnalysisOfSKLang>() }, m_English{ false }
+    m_English{ false }
 {
-    //std::vector<const char*>* cipherNames{ "Affine", "Caesar" };
+    CipherManager::getInstance().registerCipher(new Caesar());
+    CipherManager::getInstance().registerCipher(new Affine());
+    CipherManager::getInstance().registerCipher(new Viegener());
+    std::vector<const char*> cipherNames{ "Affine", "Caesar" };
 
     ImGUIPanel* panelCiphers{ new ImGUIPanel("Ciphers") };
-    //panelCiphers->addElement(new ImGUIComboboxCipher("Cipher", cipherNames));
-    panelCiphers->addElement(new ImGUIButton("Decrypt", new CommandCipherDecrypt(*m_Text)));
-    panelCiphers->addElement(new ImGUIButton("Encrypt", new CommandCipherEncrypt(*m_Text)));
+    panelCiphers->addElement(new ImGUIComboboxCipher("Cipher", cipherNames));
+    panelCiphers->addElement(new ImGUIButton("Decrypt", new CommandCipherDecrypt()));
+    panelCiphers->addElement(new ImGUIButton("Encrypt", new CommandCipherEncrypt()));
     panelCiphers->addElement(new ImGUICheckbox("English", m_English));
     m_GUI->addElement(panelCiphers);
     //TODO 
@@ -28,7 +31,6 @@ Application::Application() :
 
 void Application::run()
 {
-    m_Text = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
 
     while (m_GUI->isRunning())
     {
@@ -59,20 +61,3 @@ void Application::createCipherClass(int selectedOption)
     }
 }
 
-const AnalysisOfLang& Application::getLanguage() const
-{
-    return *m_Language;
-}
-
-void Application::setLanguage(bool english)
-{
-    if (english)
-        m_Language = std::move(std::make_unique<AnalysisOfENLang>());
-    else
-        m_Language = std::move(std::make_unique<AnalysisOfSKLang>());
-}
-
-int Application::getAlphabetLength() const
-{
-    return m_Language->getAlphabetLength();
-}

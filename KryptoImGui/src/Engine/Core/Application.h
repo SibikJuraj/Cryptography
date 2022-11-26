@@ -27,10 +27,7 @@ public:
 	int getAlphabetLength() const;
 private:
 	Application();
-
 	std::unique_ptr<GUI> m_GUI;
-	std::unique_ptr<AnalysisOfLang> m_Language;
-	std::unique_ptr<Text> m_Text;
 
 	int m_CurrentCipher;
 	bool m_English;

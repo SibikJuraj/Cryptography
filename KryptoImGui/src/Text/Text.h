@@ -22,8 +22,13 @@ public:
 	AnalysisOfText& getTextAnalysis();
 	const AnalysisOfText& getTextAnalysis() const;
 
+	AnalysisOfLang& getLanguage();
+	const AnalysisOfLang& getLanguage() const;
+
+	Text& operator=(const Text& other);
 private:
 	AnalysisOfText m_AnalysisOfText;
+	std::unique_ptr<AnalysisOfLang> m_Language;
 	std::string m_Text;
 	std::vector<int> m_Spaces;
 };

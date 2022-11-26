@@ -19,11 +19,16 @@ public:
 	void registerCipher(Cipher* cipher);
 	void setCipher(int cipherID);
 	void setFinetuning(bool finetuning);
-	void decrypt(Text& output);
-	void encrypt(Text& output);
+	void decrypt();
+	void encrypt();
+
+	const Text& getInputText(); 
+	const Text& getOutputText();
 private:
 	CipherManager();
 	std::unique_ptr<Cipher> m_SelectedCipher;
+	std::shared_ptr<Text> m_InputText;
+	std::shared_ptr<Text> m_OutputText;
 	std::vector<std::unique_ptr<Cipher>> m_Ciphers;
 	bool m_Finetuning;
 };

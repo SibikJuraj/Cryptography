@@ -38,15 +38,14 @@ protected:
 class Combobox : public IGUIElement
 {
 public:
-	Combobox(const char* label, const std::vector<const char*>& items, ICommand* command)
-		: m_Label{ label }, m_Items{ items }, m_Command{ command }
+	Combobox(const char* label, const std::vector<const char*>& items)
+		: m_Label{ label }, m_Items{ items }, m_SelectedValue{ 0 }
 	{}
 	~Combobox() { delete m_Label;  m_Label = nullptr; }
 protected:
 	const char* m_Label;
 	const std::vector<const char*> m_Items;
 	int m_SelectedValue;
-	std::unique_ptr<ICommand> m_Command;
 };
 
 class Checkbox : public IGUIElement

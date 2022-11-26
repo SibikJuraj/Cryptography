@@ -26,25 +26,21 @@ private:
 class CommandCipherDecrypt : public ICommand
 {
 public:
-	CommandCipherDecrypt(Text& output) : m_Output{ output } {}
+	CommandCipherDecrypt() {}
 	~CommandCipherDecrypt() {}
 	virtual void execute() override
 	{
-		CipherManager::getInstance().decrypt(m_Output);
+		CipherManager::getInstance().decrypt();
 	}
-private:
-	Text& m_Output;
 };
 
 class CommandCipherEncrypt : public ICommand
 {
 public:
-	CommandCipherEncrypt(Text& output) : m_Output{ output } {}
+	CommandCipherEncrypt() {}
 	~CommandCipherEncrypt() {}
 	virtual void execute() override
 	{
-		CipherManager::getInstance().encrypt(m_Output);
+		CipherManager::getInstance().encrypt();
 	}
-private:
-	Text& m_Output;
 };

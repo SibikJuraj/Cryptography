@@ -14,8 +14,8 @@ public:
 	virtual std::unique_ptr<Button> createButton(const char* label, ICommand* command) override
 	{ return std::make_unique<ImGUIButton>(label, command); }
 
-	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items, ICommand* command) override
-	{ return std::make_unique<ImGUICombobox>(label, items, command); }
+	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items) override
+	{ return std::make_unique<ImGUIComboboxCipher>(label, items); }
 
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) override
 	{ return std::make_unique<ImGUICheckbox>(label, value); }

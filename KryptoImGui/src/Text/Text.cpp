@@ -3,16 +3,14 @@
 #include <sstream>
 #include <array>
 
-#include "Engine/Core/Application.h"
-
 Text::Text()
     : m_Text{}, m_Spaces{},
-    m_AnalysisOfText{}
+    m_AnalysisOfText{}, m_Language{ std::make_unique<AnalysisOfSKLang>() }
 {
 }
 
 Text::Text(std::string_view path)
-    : m_AnalysisOfText{}
+    : m_AnalysisOfText{}, m_Language{ std::make_unique<AnalysisOfSKLang>() }
 {
     std::ifstream fs(path.data());
 
@@ -28,7 +26,7 @@ Text::Text(std::string_view path)
 
 Text::Text(const Text& other)
     : m_Text{other.m_Text}, m_AnalysisOfText{other.m_AnalysisOfText },
-    m_Spaces {other.m_Spaces}
+    m_Spaces {other.m_Spaces}, /*m_Language{std::move(other.m_Language)}*/
 {
 }
 
@@ -114,7 +112,29 @@ const AnalysisOfText& Text::getTextAnalysis() const
     return m_AnalysisOfText;
 }
 
+AnalysisOfLang& Text::getLanguage()
+{
+    return *m_Language;
+}
+
+const AnalysisOfLang& Text::getLanguage() const
+{
+    return *m_Language;
+}
+
 const std::string& Text::getText() const
 {
     return m_Text;
+}
+
+Text& Text::operator=(const Text& other)
+{
+    if (this == &other)
+        return *this;
+
+    m_Text = other.m_Text;
+    m_AnalysisOfText = other.m_AnalysisOfText;
+    m_Spaces = other.m_Spaces;
+    //m_Language = std::make_unique(std::move(other.m_Language));
+    return *this;
 }
