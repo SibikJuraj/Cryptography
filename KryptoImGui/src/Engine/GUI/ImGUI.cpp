@@ -12,7 +12,8 @@
 #include <Ciphers/Caesar.h>
 
 
-ImGUI::ImGUI(int width, int height) : GUI()
+ImGUI::ImGUI(int width, int height) 
+    : GUI(), m_Window{ std::make_unique<GLFWwindow>(glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL))}
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -23,15 +24,14 @@ ImGUI::ImGUI(int width, int height) : GUI()
 
     // glfw window creation
     // --------------------
-    m_Window = glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL);
-    if (m_Window == NULL)
+    if (!m_Window)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return; //-1;
     }
 
-    glfwMakeContextCurrent(m_Window);
+    glfwMakeContextCurrent(m_Window.get());
     glfwSwapInterval(1); //Enable vsync
 
     // glad: load all OpenGL function pointers
@@ -50,15 +50,13 @@ ImGUI::ImGUI(int width, int height) : GUI()
     ImGuiIO& io{ ImGui::GetIO() };
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
+    ImGui_ImplGlfw_InitForOpenGL(m_Window.get(), true);
     ImGui_ImplOpenGL3_Init("#version 330");
-   
 }
 
 ImGUI::~ImGUI()
 {
-    glfwDestroyWindow(m_Window);
-    m_Window = nullptr;
+    glfwDestroyWindow(m_Window.get());
 
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
@@ -68,12 +66,7 @@ ImGUI::~ImGUI()
     glfwTerminate();
 }
 
-GLFWwindow* ImGUI::getWindow()
-{
-    return m_Window;
-}
-
-void ImGUI::preRun()
+void ImGUI::render()
 {
     glfwPollEvents();
 
@@ -82,14 +75,24 @@ void ImGUI::preRun()
     ImGui::NewFrame();
 
     imGuiRender();
-}
 
-void ImGUI::run()
-{
-    auto& cipher{ Caesar() };
 
     for (std::unique_ptr<IGUIElement>& element : m_Elements)
         element->draw();
+
+    // render
+    // ------
+    ImGui::Render();
+    int display_w, display_h;
+    glfwGetFramebufferSize(m_Window.get(), &display_w, &display_h);
+    glViewport(0, 0, display_w, display_h);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+    // -------------------------------------------------------------------------------
+    glfwSwapBuffers(m_Window.get());
 
     //int selectedCipher{ 0 };
     //auto iText = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
@@ -173,29 +176,12 @@ void ImGUI::run()
     //ImGui::End();
 }
 
-void ImGUI::postRun()
-{
-    // render
-    // ------
-    ImGui::Render();
-    int display_w, display_h;
-    glfwGetFramebufferSize(m_Window, &display_w, &display_h);
-    glViewport(0, 0, display_w, display_h);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-    // -------------------------------------------------------------------------------
-    glfwSwapBuffers(m_Window);
-}
-
 bool ImGUI::isRunning()
 {
-    return !glfwWindowShouldClose(m_Window);
+    return !glfwWindowShouldClose(m_Window.get());
 }
 
-void ImGUI::addElement(IGUIElement* element)
+void ImGUI::addElement(IGUIElement& element)
 {
     m_Elements.emplace_back(element);
 }

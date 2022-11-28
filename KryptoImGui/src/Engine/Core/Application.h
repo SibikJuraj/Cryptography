@@ -3,12 +3,7 @@
 #include <memory>
 #include "Text/Text.h"
 #include "Engine/GUI/GUI.h"
-
-#include "Text/Analysis/AnalysisOfLang.h"
-
-class Cipher;
-class AnalysisOfLang;
-class GUI;
+#include "Ciphers/CipherManager.h"
 
 class Application
 {
@@ -18,17 +13,10 @@ public:
 		static Application instance;
 		return instance;
 	}
+	~Application() = default;
 	void run();
-	~Application();
-
-	void createCipherClass(int selectedOption);
-	const AnalysisOfLang& getLanguage() const;
-	void setLanguage(bool english);
-	int getAlphabetLength() const;
 private:
 	Application();
 	std::unique_ptr<GUI> m_GUI;
-
-	int m_CurrentCipher;
-	bool m_English;
+	std::unique_ptr<CipherManager> m_CipherManager;
 };

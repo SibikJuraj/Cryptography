@@ -25,7 +25,7 @@ public:
 class ImGUIButton : public Button
 {
 public:
-	ImGUIButton(const char* label, ICommand* command) : Button(label, command){}
+	ImGUIButton(const char* label, const ICommand& command) : Button(label, command){}
 
 	virtual void draw() override
 	{
@@ -55,8 +55,8 @@ public:
 class ImGUITextbox : public Textbox
 {
 public:
-	ImGUITextbox(const char* text)
-		: Textbox(text) {}
+	ImGUITextbox(const char* text, const ICommand* command)
+		: Textbox(text, command) {}
 	virtual void draw() override
 	{
 		ImGui::TextWrapped(m_Text);
@@ -105,7 +105,7 @@ public:
 				{
 					m_SelectedValue = i;
 					curItem = m_Items[m_SelectedValue];
-					CommandCipherCreate(m_SelectedValue).execute();
+					//CommandCipherCreate(m_SelectedValue).execute();
 				}
 				if (is_selected)
 				{

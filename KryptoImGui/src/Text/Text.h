@@ -2,6 +2,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <memory>
+
 
 #include "Text/Analysis/AnalysisOfLang.h"
 
@@ -24,8 +26,6 @@ public:
 
 	AnalysisOfLang& getLanguage();
 	const AnalysisOfLang& getLanguage() const;
-
-	Text& operator=(const Text& other);
 private:
 	AnalysisOfText m_AnalysisOfText;
 	std::unique_ptr<AnalysisOfLang> m_Language;

@@ -1,23 +1,25 @@
 #include "CipherManager.h"
+#include "Ciphers/Caesar.h"
+#include "Ciphers/Affine.h"
+#include "Ciphers/Viegener.h"
 
 CipherManager::CipherManager()
-	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::unique_ptr<Cipher>>() }, m_SelectedCipher{nullptr},
-	 m_InputText{ std::make_unique<Text>("texts/vigenere/text4_enc.txt")}
+	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::shared_ptr<Cipher>>() },
+	 m_InputText{ std::make_unique<Text>("texts/vigenere/text4_enc.txt")}, m_OutputText{nullptr}
 {
+	m_Ciphers.push_back(std::make_shared<Caesar>());
+	m_Ciphers.push_back(std::make_shared<Affine>());
+	m_Ciphers.push_back(std::make_shared<Viegener>());
+	m_SelectedCipher = m_Ciphers[0];
 }
 
 CipherManager::~CipherManager()
 {
 }
 
-void CipherManager::registerCipher(Cipher* cipher)
-{
-	m_Ciphers.emplace_back(cipher);
-}
-
 void CipherManager::setCipher(int cipherID)
 {
-	m_SelectedCipher.reset(m_Ciphers[cipherID].get());
+	m_SelectedCipher = m_Ciphers[cipherID];
 }
 
 void CipherManager::setFinetuning(bool finetuning)
@@ -27,12 +29,12 @@ void CipherManager::setFinetuning(bool finetuning)
 
 void CipherManager::decrypt()
 { 
-	*m_OutputText = m_SelectedCipher->decrypt(*m_InputText, m_Finetuning);
+	m_OutputText.reset(&m_SelectedCipher->decrypt(*m_InputText, m_Finetuning));
 }
 
 void CipherManager::encrypt()
 {
-	*m_OutputText = m_SelectedCipher->encrypt(*m_InputText, m_Finetuning);
+	m_OutputText.reset(&m_SelectedCipher->encrypt(*m_InputText, m_Finetuning));
 }
 
 const Text& CipherManager::getInputText()

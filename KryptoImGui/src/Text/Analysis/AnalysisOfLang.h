@@ -58,14 +58,4 @@ public:
 		}
 		throw std::invalid_argument("received invalid letter");
 	}
-
-	AnalysisOfText& operator=(const AnalysisOfText& other)
-	{
-		if (this == &other)
-			return *this;
-
-		m_LetterIC = other.m_LetterIC;
-		m_IC = other.m_IC;
-		return *this;
-	}
 };

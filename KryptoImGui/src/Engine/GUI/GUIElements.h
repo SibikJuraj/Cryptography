@@ -17,7 +17,7 @@ public:
 	{}
 	~Panel() { delete m_Label;  m_Label = nullptr; }
 
-	void addElement(IGUIElement* element) { m_Elements.emplace_back(element); }
+	void addElement(const IGUIElement& element) { m_Elements.emplace_back(element); }
 protected:
 	const char* m_Label;
 	std::vector<std::unique_ptr<IGUIElement>> m_Elements;
@@ -26,8 +26,8 @@ protected:
 class Button : public IGUIElement
 {
 public:
-	Button(const char* label, ICommand* command) 
-		: m_Label{ label }, m_Command{ command }
+	Button(const char* label, const ICommand& command)
+		: m_Label{ label }, m_Command{ std::make_unique<ICommand>(command) }
 	{}
 	~Button() { delete m_Label;  m_Label = nullptr; }
 protected:
@@ -63,12 +63,13 @@ protected:
 class Textbox : public IGUIElement
 {
 public:
-	Textbox(const char* text)
-		: m_Text{ text }
+	Textbox(const char* text, const ICommand* command)
+		: m_Text{ text }, m_Command{ std::make_unique<ICommand>(command) }
 	{}
 	~Textbox() { delete m_Text;  m_Text = nullptr; }
 protected:
 	const char* m_Text;
+	std::unique_ptr<ICommand> m_Command;
 };
 
 class Plot : public IGUIElement

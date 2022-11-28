@@ -26,7 +26,7 @@ Text::Text(std::string_view path)
 
 Text::Text(const Text& other)
     : m_Text{other.m_Text}, m_AnalysisOfText{other.m_AnalysisOfText },
-    m_Spaces {other.m_Spaces}, /*m_Language{std::move(other.m_Language)}*/
+    m_Spaces {other.m_Spaces}, m_Language{std::make_unique<AnalysisOfLang>(*other.m_Language)}
 {
 }
 
@@ -125,16 +125,4 @@ const AnalysisOfLang& Text::getLanguage() const
 const std::string& Text::getText() const
 {
     return m_Text;
-}
-
-Text& Text::operator=(const Text& other)
-{
-    if (this == &other)
-        return *this;
-
-    m_Text = other.m_Text;
-    m_AnalysisOfText = other.m_AnalysisOfText;
-    m_Spaces = other.m_Spaces;
-    //m_Language = std::make_unique(std::move(other.m_Language));
-    return *this;
 }
