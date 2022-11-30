@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <vector>
-#include "Cipher.h"
+#include "Cipher Abstract Class/Cipher.h"
 
 
 class CipherManager
@@ -19,9 +19,9 @@ public:
 	const Text& getInputText(); 
 	const Text& getOutputText();
 private:
-	std::shared_ptr<Cipher> m_SelectedCipher;
+	std::shared_ptr<Cipher<int>> m_SelectedCipher;
 	std::unique_ptr<Text> m_InputText;
 	std::unique_ptr<Text> m_OutputText;
-	std::vector<std::shared_ptr<Cipher>> m_Ciphers;
+	std::vector<std::shared_ptr<Cipher<int>>> m_Ciphers;
 	bool m_Finetuning;
 };

@@ -1,5 +1,5 @@
 #pragma once
-#include "Cipher.h"
+#include <Ciphers/Abstract Class Cipher/Cipher.h>
 
 class Viegener : public Cipher
 {

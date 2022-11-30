@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "Text/Text.h"
-#include "Engine/GUI/GUI.h"
+#include "GUI/GUI.h"
 #include "Ciphers/CipherManager.h"
 
 class Application

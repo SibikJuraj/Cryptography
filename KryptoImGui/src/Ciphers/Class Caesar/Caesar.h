@@ -1,10 +1,10 @@
 #pragma once
-#include "Cipher.h"
+#include <Ciphers/Abstract Class Cipher/Cipher.h>
 
-class Affine : public Cipher
+class Caesar : public Cipher
 {
 public:
-	Affine();
+	Caesar();
 	virtual Text encrypt(const Text& input, bool fineTuning) override;
 	virtual Text decrypt(const Text& input, bool fineTuning) override;
 	virtual char encryptingFormula(char letter) override;

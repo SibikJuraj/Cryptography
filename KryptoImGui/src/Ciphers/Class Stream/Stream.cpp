@@ -1,7 +1,5 @@
 #include "Stream.h"
 
-#include "../Engine/Core/StreamGen.h"
-
 Stream::Stream()
 	: Cipher(std::vector<int>(2))
 {
@@ -9,13 +7,13 @@ Stream::Stream()
 
 Text Stream::encrypt(const Text& input, bool fineTuning)
 {
-	StreamGen::init(StreamGen::CipherMode::MODE_ENCRYPT);
+	//StreamGen::init(StreamGen::CipherMode::MODE_ENCRYPT);
 	return Text();
 }
 
 Text Stream::decrypt(const Text& input, bool fineTuning)
 {
-	StreamGen::init(StreamGen::CipherMode::MODE_DECRYPT);
+	//StreamGen::init(StreamGen::CipherMode::MODE_DECRYPT);
 	return Text();
 }
 

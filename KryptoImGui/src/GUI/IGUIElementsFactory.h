@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "Engine/Commands/ICommand.h"
+#include "Commands/ICommand.h"
 #include "GUIElements.h"
 
 class IGUIElementsFactory

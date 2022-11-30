@@ -7,11 +7,38 @@
     <Filter Include="src\Ciphers">
       <UniqueIdentifier>{AAAA8A2F-1660-0325-9F54-FDFB0B09FA28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Engine">
-      <UniqueIdentifier>{12A1320E-FE58-745B-6760-4DB753370F4C}</UniqueIdentifier>
+    <Filter Include="src\Ciphers\Abstract Class Cipher">
+      <UniqueIdentifier>{7E8C6BF1-EAFA-C070-33E4-7B709F91B60C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Engine\Core">
-      <UniqueIdentifier>{AA407579-16CC-E23D-1FDD-65328BE73E3E}</UniqueIdentifier>
+    <Filter Include="src\Ciphers\Class Affine">
+      <UniqueIdentifier>{B89FC67F-A4C4-1500-CD0F-FB8FB993141E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ciphers\Class Caesar">
+      <UniqueIdentifier>{FE121684-EA37-6504-1383-4A94FF066422}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ciphers\Class CipherManager">
+      <UniqueIdentifier>{856C3953-F14F-4893-FA52-76CF66B50EE4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ciphers\Class Stream">
+      <UniqueIdentifier>{FB53C7AA-E778-162B-10C4-FBBAFC471549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ciphers\Class Viegener">
+      <UniqueIdentifier>{2485C4D1-1095-70A2-794E-D5C0657D5F3B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Class Application">
+      <UniqueIdentifier>{264BD267-92B7-8D62-5BAB-25C0C7D6AFCA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Commands">
+      <UniqueIdentifier>{0E2916E8-FA8B-A58C-A311-DE428F53710F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI">
+      <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Text">
+      <UniqueIdentifier>{61FC25CF-4DC9-80DA-76E2-6E82620EB668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Text\Class Text">
+      <UniqueIdentifier>{8BDE7EE1-F73F-5CEF-80AD-A2A1EC0D93AE}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -39,17 +66,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Ciphers\Affine.h">
-      <Filter>src\Ciphers</Filter>
+    <ClInclude Include="src\Text\AnalysisOfLang.h">
+      <Filter>src\Text</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ciphers\Caesar.h">
-      <Filter>src\Ciphers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ciphers\Viegener.h">
-      <Filter>src\Ciphers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Core\Application.h">
-      <Filter>src\Engine\Core</Filter>
+    <ClInclude Include="src\Text\Class Text\Text.h">
+      <Filter>src\Text\Class Text</Filter>
     </ClInclude>
     <ClInclude Include="vendor\submodules\glm\glm\common.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
@@ -1296,45 +1317,19 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text\Analysis\AnalysisOfLang.h" />
-    <ClInclude Include="src\Text\Text.h" />
-    <ClInclude Include="src\Ciphers\Cipher.h" />
-    <ClInclude Include="src\Text\Kasiski.h" />
-    <ClInclude Include="src\Ciphers\Stream.h" />
-    <ClInclude Include="src\Ciphers\StreamGen.h" />
-    <ClInclude Include="src\Engine\GUI\GUI.h" />
-    <ClInclude Include="src\Engine\Commands\ICommand.h" />
-    <ClInclude Include="src\Engine\GUI\ImGUIElementsFactory.h" />
-    <ClInclude Include="src\Engine\GUI\ImGUIElements.h" />
-    <ClInclude Include="src\Engine\GUI\IGUIElementsFactory.h" />
-    <ClInclude Include="src\Engine\GUI\GUIElements.h" />
-    <ClInclude Include="src\Ciphers\CipherManager.h" />
-    <ClInclude Include="src\Engine\GUI\ImGUI.h" />
+    <ClInclude Include="src\Text\TextLoader.h" />
+    <ClInclude Include="src\Ciphers\Abstract Class Cipher\Cipher.h" />
+    <ClInclude Include="src\Ciphers\Class Stream\Stream.h" />
+    <ClInclude Include="src\Ciphers\Class Stream\StreamGen.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ciphers\Affine.cpp">
-      <Filter>src\Ciphers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ciphers\Caesar.cpp">
-      <Filter>src\Ciphers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ciphers\Viegener.cpp">
-      <Filter>src\Ciphers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Core\Application.cpp">
-      <Filter>src\Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiBuild.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\Text\Class Text\Text.cpp">
+      <Filter>src\Text\Class Text</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Text\Text.cpp" />
-    <ClCompile Include="src\Ciphers\Cipher.cpp" />
-    <ClCompile Include="src\Text\Kasiski.cpp" />
-    <ClCompile Include="src\Ciphers\Stream.cpp" />
-    <ClCompile Include="src\Ciphers\CipherManager.cpp" />
-    <ClCompile Include="src\Engine\GUI\ImGUI.cpp" />
+    <ClCompile Include="src\Ciphers\Abstract Class Cipher\Cipher.cpp" />
+    <ClCompile Include="src\Ciphers\Class Stream\Stream.cpp" />
   </ItemGroup>
 </Project>

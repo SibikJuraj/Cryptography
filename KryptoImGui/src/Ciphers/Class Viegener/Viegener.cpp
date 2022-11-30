@@ -1,5 +1,5 @@
 #include "Viegener.h"
-#include "Text/Kasiski.h"
+#include "Kasiski.h"
 
 Viegener::Viegener()
 	: Cipher(std::vector<int>{}), m_Counter{0}

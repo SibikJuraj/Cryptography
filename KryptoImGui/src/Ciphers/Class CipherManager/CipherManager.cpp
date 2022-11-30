@@ -1,10 +1,10 @@
 #include "CipherManager.h"
-#include "Ciphers/Caesar.h"
-#include "Ciphers/Affine.h"
-#include "Ciphers/Viegener.h"
+#include "Caesar Class/Caesar.h"
+#include "Viegener Class/Viegener.h"
+#include "Affine Class/Affine.h"
 
 CipherManager::CipherManager()
-	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::shared_ptr<Cipher>>() },
+	: m_Finetuning{ false }, m_Ciphers{ std::vector<std::shared_ptr<Cipher<int>>>() },
 	 m_InputText{ std::make_unique<Text>("texts/vigenere/text4_enc.txt")}, m_OutputText{nullptr}
 {
 	m_Ciphers.push_back(std::make_shared<Caesar>());

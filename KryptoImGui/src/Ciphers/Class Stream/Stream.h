@@ -1,10 +1,10 @@
 #pragma once
-#include "Cipher.h"
+#include <Ciphers/Abstract Class Cipher/Cipher.h>
 
-class Caesar : public Cipher
+class Stream : public Cipher
 {
 public:
-	Caesar();
+	Stream();
 	virtual Text encrypt(const Text& input, bool fineTuning) override;
 	virtual Text decrypt(const Text& input, bool fineTuning) override;
 	virtual char encryptingFormula(char letter) override;

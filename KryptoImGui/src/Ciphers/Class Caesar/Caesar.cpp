@@ -46,7 +46,6 @@ char Caesar::encryptingFormula(char letter)
     letter -= 'A';
     int alphabetLength{ 26 };
     letter = (letter + m_Keys[0]) % alphabetLength;
-
     
     if (letter < 0)
         letter += alphabetLength;

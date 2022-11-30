@@ -8,8 +8,7 @@
 #include <vector>
 
 #include "ImGUI.h"
-#include "Engine/Core/Application.h"
-#include <Ciphers/Caesar.h>
+#include "Application.h"
 
 
 ImGUI::ImGUI(int width, int height) 

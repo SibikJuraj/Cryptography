@@ -1,14 +1,12 @@
-#pragma once
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-#define MAX_TEXT_SIZE 10000
+namespace StreamGen {
 
-namespace StreamGen
-{
+	#define MAX_TEXT_SIZE 10000
+
 	/* generator pseudonahodnych cisel zalozeny na RC4 */
 
 	typedef unsigned char byte;
@@ -48,7 +46,7 @@ namespace StreamGen
 	000000f0  72 64 00 70 61 73 73 77  6f 72 64 00 70 61 73 73  |rd.password.pass|
 	 * */
 
-	byte* getKey(const char* passwd)
+	byte* getKey(const std::string& passwd)
 	{
 		for (int i = 0, j = 0; i < 256; i++)
 		{
@@ -117,7 +115,7 @@ namespace StreamGen
 		return count;
 	}
 
-	void writeFile(const char* name, const byte* memory, int count)
+	void writeFile(const char* name, const char* memory, int count)
 	{
 		FILE* stream = fopen(name, "wb");
 		if (stream == NULL)
@@ -131,7 +129,7 @@ namespace StreamGen
 		}
 	}
 
-	void encrypt(const char* passwd, const byte* plainText, byte* cipherText, size_t count)
+	void encrypt(const std::string& passwd, const byte* plainText, byte* cipherText, size_t count)
 	{
 		// nastav random seed - toto je hodnota kluca
 		rc4_init(getKey(passwd));
@@ -141,23 +139,25 @@ namespace StreamGen
 		{
 			byte p = plainText[i];
 			byte r = rc4_rand();
-			byte c = p ^ r; // symbol ^ znamena v jazyku C/C++ operaciu bitovy XOR
+			byte c = p ^ r;
 			cipherText[i] = c;
 		}
 	}
 
-	void decrypt(const char* passwd, const byte* cipherText, byte* plainText, size_t count)
+	void decrypt(const std::string& passwd, const byte* cipherText, byte* plainText, size_t count)
 	{
 		// vzhladom na operaciu XOR je sifrovanie a desifrovanie uplne rovnake
 		encrypt(passwd, cipherText, plainText, count);
 	}
 
-	int init(CipherMode cipherMode)
+	int init()
 	{
-		CipherMode mode = cipherMode;
-		const char* passwd = "123";
-		const char* inputFilename = "texts/stream/text1_enc.txt";
-		const char* outputFilename = "texts/stream/decoded/text1_dec.txt";
+		CipherMode mode = MODE_DECRYPT;
+		std::string passwd = "100000";
+		const char* inputFilename = "texts/stream/text4_enc.txt";
+		const char* outputFilename = "texts/stream/decoded/text4_dec.txt";
+
+		int i = 1;
 
 		byte* inputText = (byte*)malloc(MAX_TEXT_SIZE);
 		byte* outputText = (byte*)malloc(MAX_TEXT_SIZE);
@@ -174,14 +174,42 @@ namespace StreamGen
 			return -1;
 		}
 
-		if (mode == MODE_ENCRYPT) encrypt(passwd, inputText, outputText, count);
-		else if (mode == MODE_DECRYPT) decrypt(passwd, inputText, outputText, count);
+		double closest = 10.00;
+		int nOLetters = 0;
+		AnalysisOfSKLang skLang{};
+		std::string decryptedText{};
+		for (int i{ 100'000 }; i <= 999'999; ++i)
+		{
+			passwd = std::to_string(i);
+			if (mode == MODE_ENCRYPT)
+				encrypt(passwd, inputText, outputText, count);
+			else if (mode == MODE_DECRYPT)
+				decrypt(passwd, inputText, outputText, count);
 
-		writeFile(outputFilename, outputText, count);
+			if (i == 123456)
+				auto a{ 0 };
+			
+
+			auto* text{ reinterpret_cast<char*>(outputText) };
+			auto analysis{ TextLoader::analyzeText(text)};
+			if (analysis && analysis->getNOLetters() > 50 && 
+				analysis->getNOLetters() > nOLetters/* &&
+				abs(analysis->getIC() - skLang.getIC()) < closest*/)
+			{
+				closest = abs(analysis->getIC() - skLang.getIC());
+				nOLetters = analysis->getNOLetters();
+				decryptedText.assign("Password : ");
+				decryptedText.append(std::to_string(i));
+				decryptedText.append("\n");
+				decryptedText.append(text);
+			}
+		}
+
+		writeFile(outputFilename, decryptedText.c_str(), count);
 
 		free(inputText);
 		free(outputText);
+
 		return 0;
 	}
-
 }

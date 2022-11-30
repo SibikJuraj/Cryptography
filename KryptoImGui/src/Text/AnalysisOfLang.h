@@ -7,7 +7,7 @@ class AnalysisOfLang
 {
 public:
 	AnalysisOfLang(std::vector<double> letterIC, double ic)
-		: m_LetterIC{letterIC}, m_IC{ic}
+		: m_LetterIC{letterIC}, m_IC{ic}, m_NumberOfLetters{ 0 }
 	{}
 
 	const double operator[](char letter) const
@@ -21,10 +21,12 @@ public:
 
 	const double getIC() const { return m_IC; }
 	const int getAlphabetLength() const { return m_AlphabetLength; }
+	const int getNOLetters() const { return m_NumberOfLetters; }
 protected:
 	std::vector<double> m_LetterIC;
 	double m_IC;
 	const int m_AlphabetLength = 26;
+	int m_NumberOfLetters;
 };
 
 class AnalysisOfSKLang : public AnalysisOfLang
@@ -47,8 +49,13 @@ public:
 	AnalysisOfText() : AnalysisOfLang(std::vector<double>(26, 0.0), 0.0)
 	{}
 
+	AnalysisOfText(const AnalysisOfText& other) : 
+		AnalysisOfLang(other.m_LetterIC, other.m_IC)
+	{}
+
 	double& getIC() { return m_IC; }
 	std::vector<double>& getLetters() { return m_LetterIC; }
+	int& getNOLetters() { return m_NumberOfLetters; }
 
 	double& operator[](char letter)
 	{

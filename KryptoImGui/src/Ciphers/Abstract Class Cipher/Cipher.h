@@ -2,10 +2,7 @@
 #include <vector>
 #include <string>
 #include <string_view>
-
-#include "Text/Text.h"
-
-#include "Text/Analysis/AnalysisOfLang.h"
+#include <Text/Class Text/Text.h>
 
 class Cipher
 {
