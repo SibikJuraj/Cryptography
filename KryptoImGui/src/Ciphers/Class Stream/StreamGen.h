@@ -5,12 +5,8 @@
 
 namespace StreamGen {
 
-	#define MAX_TEXT_SIZE 10000
-
 	/* generator pseudonahodnych cisel zalozeny na RC4 */
-
 	typedef unsigned char byte;
-
 	/* vnutorny stav RC4 generatora */
 
 	byte rc4_i, rc4_j;
@@ -46,13 +42,15 @@ namespace StreamGen {
 	000000f0  72 64 00 70 61 73 73 77  6f 72 64 00 70 61 73 73  |rd.password.pass|
 	 * */
 
-	byte* getKey(const std::string& passwd)
+	byte* getKey(const std::string_view passwd)
 	{
-		for (int i = 0, j = 0; i < 256; i++)
+		for (int i{ 0 }, j = { 0 }; i < 256; ++i)
 		{
 			rc4_k[i] = (byte)passwd[j];
-			if (passwd[j] != 0) j++;
-			else j = 0;
+			if (passwd[j] != 0)
+				++j;
+			else
+				j = 0;
 		}
 
 		return rc4_k;
@@ -98,117 +96,54 @@ namespace StreamGen {
 		MODE_DECRYPT = 1
 	} CipherMode;
 
-	size_t readFile(const char* name, byte* memory, size_t max)
-	{
-		size_t count = 0;
-		FILE* stream = fopen(name, "rb");
-		if (stream == NULL)
-		{
-			fprintf(stderr, "Nepodarilo sa nacitat subor '%s'!\n", name);
-		}
-		else
-		{
-			count = fread(memory, sizeof(byte), max, stream);
-			fclose(stream);
-		}
-
-		return count;
-	}
-
-	void writeFile(const char* name, const char* memory, int count)
-	{
-		FILE* stream = fopen(name, "wb");
-		if (stream == NULL)
-		{
-			fprintf(stderr, "Nepodarilo sa zapisat subor '%s'!\n", name);
-		}
-		else
-		{
-			fwrite(memory, sizeof(byte), count, stream);
-			fclose(stream);
-		}
-	}
-
-	void encrypt(const std::string& passwd, const byte* plainText, byte* cipherText, size_t count)
+	void encrypt(const std::string_view passwd, const std::string_view plainText, std::string& cipherText)
 	{
 		// nastav random seed - toto je hodnota kluca
 		rc4_init(getKey(passwd));
 
-		int i;
-		for (i = 0; i < count; i++)
+		for (int i{ 0 }; i < plainText.size(); ++i)
 		{
-			byte p = plainText[i];
+			byte p = (byte)plainText[i];
 			byte r = rc4_rand();
 			byte c = p ^ r;
 			cipherText[i] = c;
 		}
 	}
 
-	void decrypt(const std::string& passwd, const byte* cipherText, byte* plainText, size_t count)
+	void decrypt(const std::string_view passwd, const std::string_view cipherText, std::string& plainText)
 	{
 		// vzhladom na operaciu XOR je sifrovanie a desifrovanie uplne rovnake
-		encrypt(passwd, cipherText, plainText, count);
+		encrypt(passwd, cipherText, plainText);
 	}
 
 	int init()
 	{
-		CipherMode mode = MODE_DECRYPT;
-		std::string passwd = "100000";
-		const char* inputFilename = "texts/stream/text4_enc.txt";
-		const char* outputFilename = "texts/stream/decoded/text4_dec.txt";
+		_setmode(_fileno(stdout), _O_U8TEXT);
+		_setmode(_fileno(stdin), _O_U8TEXT);
 
-		int i = 1;
+		std::string inputText{ TextLoader::loadByteFile("texts/stream/text4_enc.txt") };
+		std::string outputText{ };
+		outputText.resize(inputText.size());
 
-		byte* inputText = (byte*)malloc(MAX_TEXT_SIZE);
-		byte* outputText = (byte*)malloc(MAX_TEXT_SIZE);
-		if (inputText == NULL || outputText == NULL)
-		{
-			fprintf(stderr, "Nepodarilo sa alokovat pamat na text!\n");
-			return -1;
-		}
-
-		size_t count = readFile(inputFilename, inputText, MAX_TEXT_SIZE);
-		if (count == 0)
-		{
-			fprintf(stderr, "Vstupny text je prazdny!\n");
-			return -1;
-		}
-
-		double closest = 10.00;
-		int nOLetters = 0;
+		std::string passwd{};
+		int letterCountBest{ 0 };
 		AnalysisOfSKLang skLang{};
 		std::string decryptedText{};
 		for (int i{ 100'000 }; i <= 999'999; ++i)
 		{
-			passwd = std::to_string(i);
-			if (mode == MODE_ENCRYPT)
-				encrypt(passwd, inputText, outputText, count);
-			else if (mode == MODE_DECRYPT)
-				decrypt(passwd, inputText, outputText, count);
+			passwd = std::to_string(i) + '\0';
 
-			if (i == 123456)
-				auto a{ 0 };
-			
+			decrypt(passwd, inputText, outputText);
 
-			auto* text{ reinterpret_cast<char*>(outputText) };
-			auto analysis{ TextLoader::analyzeText(text)};
-			if (analysis && analysis->getNOLetters() > 50 && 
-				analysis->getNOLetters() > nOLetters/* &&
-				abs(analysis->getIC() - skLang.getIC()) < closest*/)
+			auto letterCountText{ TextLoader::numberOfLetters(outputText) };
+			if (letterCountText > letterCountBest)
 			{
-				closest = abs(analysis->getIC() - skLang.getIC());
-				nOLetters = analysis->getNOLetters();
-				decryptedText.assign("Password : ");
-				decryptedText.append(std::to_string(i));
-				decryptedText.append("\n");
-				decryptedText.append(text);
+				letterCountBest = letterCountText;
+				decryptedText.assign("Password : " + std::to_string(i) + '\n' + outputText);
 			}
 		}
 
-		writeFile(outputFilename, decryptedText.c_str(), count);
-
-		free(inputText);
-		free(outputText);
+		TextLoader::saveText("texts/stream/decoded/text4_dec.txt", decryptedText);
 
 		return 0;
 	}

@@ -32,11 +32,25 @@ namespace TextLoader
         return spaces;
     }
 
+    int numberOfLetters(const std::string_view& text)
+    {
+        if (text.size() == 0)
+            return 0;
+
+        int letterCount{ 0 };
+        for (char letter : text)
+        {
+            if (letter == '\0')
+                break;
+
+            if (letter >= 'a' && letter <= 'z' || letter >= 'A' && letter <= 'Z')
+                ++letterCount;
+        }
+        return letterCount;
+    }
+
     std::unique_ptr<AnalysisOfText> analyzeText(const std::string_view& text)
     {
-        _setmode(_fileno(stdout), _O_U8TEXT);
-        _setmode(_fileno(stdin), _O_U8TEXT);
-
         if (text.size() == 0)
             return nullptr;
 
@@ -71,8 +85,8 @@ namespace TextLoader
         std::ifstream fs(path.data());
 
         fs.seekg(0, std::ios::end);
-        auto text{std::make_unique<std::string>()};
         fs.seekg(0, std::ios::beg);
+        auto text{std::make_unique<std::string>()};
         text->assign((std::istreambuf_iterator<char>(fs)),
             std::istreambuf_iterator<char>());
 
@@ -82,16 +96,15 @@ namespace TextLoader
         return std::make_unique<Text>(std::move(text), std::move(spaces), std::move(analysis));
 	}
 
-    char* loadByteFile(const std::string_view&& path)
+    std::string loadByteFile(const std::string_view&& path)
     {
-        std::ifstream fs(path.data());
+        std::ifstream fs(path.data(), std::ios_base::binary);
 
         fs.seekg(0, std::ios::end);
-        auto length{ fs.tellg() };
-        char* text{ new char[length] };
         fs.seekg(0, std::ios::beg);
-
-        fs.read(text, length);
+        std::string text{};
+        text.assign((std::istreambuf_iterator<char>(fs)),
+            std::istreambuf_iterator<char>());
 
         return text;
     }
