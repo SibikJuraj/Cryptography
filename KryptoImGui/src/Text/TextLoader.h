@@ -8,53 +8,34 @@
 #include "AnalysisOfLang.h"
 #include "Class Text/Text.h"
 
-
 #include <io.h>
 #include <fcntl.h>
 
 namespace TextLoader
 {
-    std::unique_ptr<std::vector<int>> removeSpaces(std::string& text)
-    {
-        int i{ 0 };
-        auto spaces{ std::make_unique<std::vector<int>>() };
-        for (char letter : text)
-        {
-            if (letter == ' ')
-            {
-                spaces->push_back(i);
-            }
-            ++i;
-        }
-        text.erase(std::remove_if(text.begin(), text.end(), ::isspace),
-            text.end());
-
-        return spaces;
-    }
-
     int numberOfLetters(const std::string_view& text)
     {
         if (text.size() == 0)
             return 0;
 
         int letterCount{ 0 };
-        for (char letter : text)
+        for (int i{ 0 }; i < text.length(); ++i)
         {
-            if (letter == '\0')
+            if (text[i] == '\0')
                 break;
 
-            if (letter >= 'a' && letter <= 'z' || letter >= 'A' && letter <= 'Z')
+            if (text[i] >= 'a' && text[i] <= 'z' || text[i] >= 'A' && text[i] <= 'Z')
                 ++letterCount;
         }
         return letterCount;
     }
 
-    std::unique_ptr<AnalysisOfText> analyzeText(const std::string_view& text)
+    AnalysisOfText analyzeText(const std::string_view& text)
     {
         if (text.size() == 0)
-            return nullptr;
+            throw std::exception();
 
-        auto analysis{ std::make_unique<AnalysisOfText>() };
+        auto analysis{ AnalysisOfText() };
 
         for (char letter : text)
         {
@@ -64,40 +45,41 @@ namespace TextLoader
             letter = toupper(letter);
             if (letter >= 'A' && letter <= 'Z')
             {
-                ++(*analysis)[letter];
-                ++analysis->getNOLetters();
+                ++analysis[letter];
+                ++analysis.getNOLetters();
             }
         }
 
         for (char i{ 'A' }; i < 'A' + 26; ++i)
         {
-            (*analysis)[i] = (((double)(*analysis)[i] / analysis->getNOLetters())) *
-                (((double)(*analysis)[i] - 1) / (analysis->getNOLetters() - 1));
-
-            analysis->getIC() += (*analysis)[i];
+            analysis[i] = ((double)analysis[i] / analysis.getNOLetters()) *
+                (((double)analysis[i] - 1) / (analysis.getNOLetters() - 1));
+            analysis.getIC() += analysis[i];
         }
 
         return analysis;
     }
 
-	std::unique_ptr<Text> loadFile(const std::string_view&& path)
+	Text loadFile(const std::string_view&& path)
 	{
         std::ifstream fs(path.data());
 
         fs.seekg(0, std::ios::end);
         fs.seekg(0, std::ios::beg);
-        auto text{std::make_unique<std::string>()};
-        text->assign((std::istreambuf_iterator<char>(fs)),
+        std::string text{ };
+        text.assign((std::istreambuf_iterator<char>(fs)),
             std::istreambuf_iterator<char>());
 
-        auto spaces{ removeSpaces(*text) };
-        auto analysis{ analyzeText(*text) };
+        auto analysis{ analyzeText(text) };
 
-        return std::make_unique<Text>(std::move(text), std::move(spaces), std::move(analysis));
+        return Text(text, analysis);
 	}
 
     std::string loadByteFile(const std::string_view&& path)
     {
+        _setmode(_fileno(stdout), _O_U8TEXT);
+        _setmode(_fileno(stdin), _O_U8TEXT);
+
         std::ifstream fs(path.data(), std::ios_base::binary);
 
         fs.seekg(0, std::ios::end);
@@ -112,7 +94,7 @@ namespace TextLoader
     bool saveText(const std::string_view&& path, const std::string& text)
     {
         std::ofstream outfile;
-        outfile.open(path.data(), std::ios_base::app);//std::ios_base::app
+        outfile.open(path.data());
         outfile << text;
         return true;
     }

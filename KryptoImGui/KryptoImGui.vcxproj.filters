@@ -1318,9 +1318,7 @@
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="src\Text\TextLoader.h" />
-    <ClInclude Include="src\Ciphers\Abstract Class Cipher\Cipher.h" />
-    <ClInclude Include="src\Ciphers\Class Stream\Stream.h" />
-    <ClInclude Include="src\Ciphers\Class Stream\StreamGen.h" />
+    <ClInclude Include="src\Ciphers\StreamGen.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Text\Class Text\Text.cpp">
@@ -1329,7 +1327,5 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ciphers\Abstract Class Cipher\Cipher.cpp" />
-    <ClCompile Include="src\Ciphers\Class Stream\Stream.cpp" />
   </ItemGroup>
 </Project>

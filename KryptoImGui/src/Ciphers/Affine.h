@@ -1,11 +1,22 @@
-#include "Affine.h"
+#pragma once
+#include <Ciphers/Cipher.h>
+
+class Affine : public CipherCore<int>
+{
+public:
+	Affine();
+	virtual Text encrypt(const Text& input, bool fineTuning) override;
+	virtual Text decrypt(const Text& input, bool fineTuning) override;
+	virtual char encryptingFormula(char letter) override;
+	virtual char decryptingFormula(char letter) override;
+};
 
 Affine::Affine()
-    : Cipher(std::vector<int>(2))
+    : CipherCore(std::vector<int>(2))
 {
 }
 
-Text Affine::encrypt(const Text& input, bool fineTuning)
+inline Text Affine::encrypt(const Text& input, bool fineTuning)
 {
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
@@ -16,7 +27,7 @@ Text Affine::encrypt(const Text& input, bool fineTuning)
     return output;
 }
 
-Text Affine::decrypt(const Text& input, bool fineTuning)
+inline Text Affine::decrypt(const Text& input, bool fineTuning)
 {
     Text output(input);
     for (int i{ 0 }; i < output.getText().size(); ++i)
@@ -27,7 +38,7 @@ Text Affine::decrypt(const Text& input, bool fineTuning)
     return output;
 }
 
-char Affine::encryptingFormula(char letter)
+inline char Affine::encryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };
@@ -40,7 +51,7 @@ char Affine::encryptingFormula(char letter)
     return letter + 'A';
 }
 
-char Affine::decryptingFormula(char letter)
+inline char Affine::decryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };

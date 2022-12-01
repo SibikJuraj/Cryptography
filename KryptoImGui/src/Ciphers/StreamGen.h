@@ -16,32 +16,6 @@ namespace StreamGen {
 
 	byte rc4_k[256];
 
-	/* funkcia na generovanie kluca zo zadaneho hesla
-	 * budem heslo opakovat tak, aby som vytvoril 256 bajtove pole kluca
-	 *
-	 * !!! POZOR !!!
-	 * Opakuje sa aj ukoncenie retazca, t.j. jednotlive opakovania
-	 * su oddelene znakom '\0'.
-	 * Ak heslo bude "password", kluc bude "password\0password\0...pass",
-	 * HEX dump:
-	00000000  70 61 73 73 77 6f 72 64  00 70 61 73 73 77 6f 72  |password.passwor|
-	00000010  64 00 70 61 73 73 77 6f  72 64 00 70 61 73 73 77  |d.password.passw|
-	00000020  6f 72 64 00 70 61 73 73  77 6f 72 64 00 70 61 73  |ord.password.pas|
-	00000030  73 77 6f 72 64 00 70 61  73 73 77 6f 72 64 00 70  |sword.password.p|
-	00000040  61 73 73 77 6f 72 64 00  70 61 73 73 77 6f 72 64  |assword.password|
-	00000050  00 70 61 73 73 77 6f 72  64 00 70 61 73 73 77 6f  |.password.passwo|
-	00000060  72 64 00 70 61 73 73 77  6f 72 64 00 70 61 73 73  |rd.password.pass|
-	00000070  77 6f 72 64 00 70 61 73  73 77 6f 72 64 00 70 61  |word.password.pa|
-	00000080  73 73 77 6f 72 64 00 70  61 73 73 77 6f 72 64 00  |ssword.password.|
-	00000090  70 61 73 73 77 6f 72 64  00 70 61 73 73 77 6f 72  |password.passwor|
-	000000a0  64 00 70 61 73 73 77 6f  72 64 00 70 61 73 73 77  |d.password.passw|
-	000000b0  6f 72 64 00 70 61 73 73  77 6f 72 64 00 70 61 73  |ord.password.pas|
-	000000c0  73 77 6f 72 64 00 70 61  73 73 77 6f 72 64 00 70  |sword.password.p|
-	000000d0  61 73 73 77 6f 72 64 00  70 61 73 73 77 6f 72 64  |assword.password|
-	000000e0  00 70 61 73 73 77 6f 72  64 00 70 61 73 73 77 6f  |.password.passwo|
-	000000f0  72 64 00 70 61 73 73 77  6f 72 64 00 70 61 73 73  |rd.password.pass|
-	 * */
-
 	byte* getKey(const std::string_view passwd)
 	{
 		for (int i{ 0 }, j = { 0 }; i < 256; ++i)
@@ -118,32 +92,25 @@ namespace StreamGen {
 
 	int init()
 	{
-		_setmode(_fileno(stdout), _O_U8TEXT);
-		_setmode(_fileno(stdin), _O_U8TEXT);
-
-		std::string inputText{ TextLoader::loadByteFile("texts/stream/text4_enc.txt") };
+		std::string inputText{ TextLoader::loadByteFile("texts/stream/text1_enc.txt") };
 		std::string outputText{ };
 		outputText.resize(inputText.size());
 
-		std::string passwd{};
-		int letterCountBest{ 0 };
-		AnalysisOfSKLang skLang{};
-		std::string decryptedText{};
 		for (int i{ 100'000 }; i <= 999'999; ++i)
 		{
-			passwd = std::to_string(i) + '\0';
-
-			decrypt(passwd, inputText, outputText);
+			decrypt(std::to_string(i)+'\0', inputText, outputText);
 
 			auto letterCountText{ TextLoader::numberOfLetters(outputText) };
-			if (letterCountText > letterCountBest)
+			if (letterCountText > inputText.length() * 0.65)
 			{
-				letterCountBest = letterCountText;
-				decryptedText.assign("Password : " + std::to_string(i) + '\n' + outputText);
+				outputText.erase(std::remove(outputText.begin(), outputText.end(), '\r'), outputText.end());
+
+				outputText += "\nPassword : " + std::to_string(i);
+				break;
 			}
 		}
 
-		TextLoader::saveText("texts/stream/decoded/text4_dec.txt", decryptedText);
+		TextLoader::saveText("texts/stream/decoded/text1_dec.txt", outputText);
 
 		return 0;
 	}

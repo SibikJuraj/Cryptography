@@ -5,7 +5,7 @@
 
 #include <Text/TextLoader.h>
 #include <Text/Class Text/Text.h>
-#include <Ciphers/Class Stream/StreamGen.h>
+#include <Ciphers/StreamGen.h>
 
 int main()
 {

@@ -1,4 +1,3 @@
-Password : 987654
 SpaceX a NASA preskúmajú možnosť predĺženia životnosti Hubbleovho teleskopu
 
 Spoločnosť SpaceX podnikateľa Elona Muska a americký Národný úrad pre letectvo a vesmír (NASA) chcú vytvoriť štúdiu, ktorá by preskúmala možnosti využitia lode Dragon na vyslanie Hubbleovho teleskopu na vyššiu obežnú dráhu.
@@ -11,4 +10,5 @@ Hubbleov vesmírny ďalekohľad je na obežnej dráhe od roku tisícdeväťstode
 
 V prvej dekáde dvadsiatehoprvého storočia prešiel opravami, na ktorých sa podieľali americké raketoplány. Od ukončenia programu raketoplánov v roku dvetisícjedenásť astronómovia zvažujú rôzne spôsoby vykonávania opráv starnúceho, ale stále funkčného ďalekohľadu. Žiadne konkrétne plány zatiaľ predstavené neboli.
 
-Štúdia tiež preskúma, či bude potrebné upraviť loď Dragon tak, aby sa mohla k teleskopu pripojiť. Mala by tiež určiť, tu budú musieť byť na palube pri prípadnej
+Štúdia tiež preskúma, či bude potrebné upraviť loď Dragon tak, aby sa mohla k teleskopu pripojiť. Mala by tiež určiť, tu budú musieť byť na palube pri prípadnej misii astronauti.
+Password : 987654

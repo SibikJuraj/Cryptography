@@ -1,12 +1,25 @@
-#include "Viegener.h"
+#pragma once
+#include <Ciphers/Cipher.h>
 #include "Kasiski.h"
 
-Viegener::Viegener()
-	: Cipher(std::vector<int>{}), m_Counter{0}
+class Viegener : public CipherCore<int>
+{
+public:
+	Viegener();
+	virtual Text encrypt(const Text& input, bool fineTuning) override;
+	virtual Text decrypt(const Text& input, bool fineTuning) override;
+	virtual char encryptingFormula(char letter) override;
+	virtual char decryptingFormula(char letter) override;
+private:
+	int m_Counter;
+};
+
+inline Viegener::Viegener()
+    : CipherCore(std::vector<int>{}), m_Counter{ 0 }
 {
 }
 
-Text Viegener::encrypt(const Text& input, bool fineTuning)
+inline Text Viegener::encrypt(const Text& input, bool fineTuning)
 {
     m_Counter = 0;
     Text output(input);
@@ -18,7 +31,7 @@ Text Viegener::encrypt(const Text& input, bool fineTuning)
     return output;
 }
 
-Text Viegener::decrypt(const Text& input, bool fineTuning)
+inline Text Viegener::decrypt(const Text& input, bool fineTuning)
 {
     m_Counter = 0;
     int index{ 0 };
@@ -39,7 +52,7 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
             m_Keys.resize(passLength);
 
             //output.getText().append("\nPassword length: " + std::to_string(passLength));
-            for (int k{0}; k < outputParts.size(); ++k)
+            for (int k{ 0 }; k < outputParts.size(); ++k)
             {
                 outputParts[k].analyzeText();
                 //output.getText().append("\nCoincidence index: " + std::to_string(outputParts[k].getAlphabet().m_IC));
@@ -93,18 +106,18 @@ Text Viegener::decrypt(const Text& input, bool fineTuning)
     std::string password{};
     for (int i{ 0 }; i < m_Keys.size(); ++i)
     {
-        char letter{ static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65};
+        char letter{ static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65 };
 
         password.push_back(letter);
 
     }
     output.analyzeText();
     output.getText().append("\n\nPassword: " + password + " length: " + std::to_string(m_Keys.size()));
-    
+
     return output;
 }
 
-char Viegener::encryptingFormula(char letter)
+inline char Viegener::encryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };
@@ -116,7 +129,7 @@ char Viegener::encryptingFormula(char letter)
     return letter + 'A';
 }
 
-char Viegener::decryptingFormula(char letter)
+inline char Viegener::decryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };

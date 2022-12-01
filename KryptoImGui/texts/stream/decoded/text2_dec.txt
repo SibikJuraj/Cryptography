@@ -1,4 +1,3 @@
-Password : 555555
 Robot vo fast-foode nahradil pri smažení hranolčekov ľudí
 
 Americká spoločnosť Miso Robotics vyvinula pre prevádzky rýchleho občerstvenia nový robot. Volá sa Flippy II a zvládne pripravovať viacero jedál s rôznymi receptami súčasne.
@@ -9,4 +8,6 @@ Vývoj Flippyho II trval päť rokov a do priamej prevádzky ho už nasadilo nie
 
 „Robí to rýchlejšie a je pritom presnejší, spoľahlivejší a šťastnejší, ako keď to robí väčšina ľudí,“ povedal Mike Bell, generálny riaditeľ spoločnosti Miso.
 
-Ľudia však budú stále potrební a roboty im umožnia robiť to, v čom je človek stále lepší: práce s vyššou pridanou hodnotou, ako je napríklad komunikácia 
+Ľudia však budú stále potrební a roboty im umožnia robiť to, v čom je človek stále lepší: práce s vyššou pridanou hodnotou, ako je napríklad komunikácia so zákazníkmi.
+
+Password : 555555
