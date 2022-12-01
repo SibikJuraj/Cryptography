@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <Text/Class Text/Text.h>
+#include <Config.h>
 
 class Cipher {
 public:
@@ -15,8 +16,8 @@ class CipherCore : public Cipher
 public:
 	CipherCore(std::vector<T> keys);
 
-	virtual Text encrypt(const Text& input, bool fineTuning) = 0;
-	virtual Text decrypt(const Text& input, bool fineTuning) = 0;
+	virtual Text encrypt(const Text& input) = 0;
+	virtual Text decrypt(const Text& input) = 0;
 
 	void setKey(int index, T value);
 	int getKey(int index);

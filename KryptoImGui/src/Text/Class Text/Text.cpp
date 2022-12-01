@@ -39,6 +39,11 @@ const AnalysisOfText& Text::getTextAnalysis() const
     return m_AnalysisOfText;
 }
 
+AnalysisOfText& Text::getTextAnalysis()
+{
+    return m_AnalysisOfText;
+}
+
 const std::string_view& Text::getText() const
 {
     return m_Text;
@@ -47,6 +52,16 @@ const std::string_view& Text::getText() const
 const std::string_view& Text::getRawText() const
 {
     return m_RawText;
+}
+
+void Text::sliceText(std::vector<Text>& parts) const
+{
+    int part{ 0 };
+    for (auto letter : m_RawText)
+    {
+        parts[part].addLetter(letter);
+        part = ++part % parts.size();
+    }
 }
 
 void Text::addLetter(char letter)
@@ -58,7 +73,28 @@ void Text::addLetter(char letter)
     {
         m_RawText += letter;
         m_AnalysisOfText.addLetter(letter);
+        m_AnalysisOfText.updateStatistics();
     }
+}
+
+void Text::changeLetter(char letter, int index)
+{
+    if (m_Text.size() == 0)
+        return;
+
+    m_Text[index] = letter;
+    if (m_RawText.size() != 0)
+    {
+        auto last{ m_Text.size() - 1 };
+        auto rLast{ m_RawText.size() - 1 };
+        if (m_Text[last] == m_RawText[rLast] || m_Text[last] == tolower(m_RawText[rLast]))
+        {
+            m_AnalysisOfText.removeLetter(m_RawText[rLast]);
+            m_AnalysisOfText.updateStatistics();
+            m_RawText.pop_back();
+        }
+    }
+
 }
 
 void Text::addText(const std::string_view text)
@@ -79,6 +115,7 @@ void Text::removeLetter()
         if (m_Text[last] == m_RawText[rLast] || m_Text[last] == tolower(m_RawText[rLast]))
         {
             m_AnalysisOfText.removeLetter(m_RawText[rLast]);
+            m_AnalysisOfText.updateStatistics();
             m_RawText.pop_back();
         }
     }
@@ -103,5 +140,6 @@ void Text::createRawText()
             m_AnalysisOfText.addLetter(letter);
         }
     }
+    m_AnalysisOfText.updateStatistics();
 }
 

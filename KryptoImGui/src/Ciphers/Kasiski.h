@@ -1,5 +1,5 @@
 #pragma once
-#include<vector>
+#include <vector>
 #include <algorithm>
 #include <string>
 #include <Text/Class Text/Text.h>
@@ -26,20 +26,20 @@ namespace Kasiski
 		return result;
 	}
 
-	std::vector<int> getPasswordLengths(const Text& text)
+	std::vector<int> getPasswordLengths(const std::string_view text)
 	{
 		std::vector<int> distances{};
 		std::string s{};
-		for (int i{ 0 }; i < text.getText().size() - 2; ++i)
+		for (int i{ 0 }; i < text.size() - 2; ++i)
 		{
-			for (int j{ i + 1 }; j < text.getText().size() - 2; ++j)
+			for (int j{ i + 1 }; j < text.size() - 2; ++j)
 			{
-				if (text.getText()[i] == text.getText()[j] &&
-					text.getText()[i + 1] == text.getText()[j + 1] &&
-					text.getText()[i + 2] == text.getText()[j + 2])
+				if (text[i] == text[j] &&
+					text[i + 1] == text[j + 1] &&
+					text[i + 2] == text[j + 2])
 				{
 					for (int z{ 0 }; z < s.size(); ++z)
-						s[z] = text.getText()[i + z];
+						s[z] = text[i + z];
 
 					distances.push_back(j - i);
 				}

@@ -57,20 +57,19 @@ public:
 		AnalysisOfLang(other.m_LetterIC, other.m_IC)
 	{}
 
+	void rotateLetters()
+	{
+		std::rotate(m_LetterIC.begin(), m_LetterIC.begin() + 1, m_LetterIC.end());
+	}
+
 	void addLetter(char letter)
 	{
 		auto idx{ getIndex(letter) };
 		if (idx == -1)
 			return;
-		m_IC -= m_LetterIC[idx].second;
 
 		++m_LetterIC[idx].first;
 		++m_NumberOfLetters;
-
-		m_LetterIC[idx].second = ((double)m_LetterIC[idx].first / m_NumberOfLetters) *
-			(((double)m_LetterIC[idx].first - 1) / (m_NumberOfLetters - 1));
-
-		m_IC += m_LetterIC[idx].second;
 	}
 
 	void removeLetter(char letter)
@@ -82,14 +81,18 @@ public:
 		if (idx == -1 || m_LetterIC[idx].first == 0)
 			return;
 
-		m_IC -= m_LetterIC[idx].second;
-
 		--m_LetterIC[idx].first;
 		--m_NumberOfLetters;
+	}
 
-		m_LetterIC[idx].second = ((double)m_LetterIC[idx].first / m_NumberOfLetters) *
-			(((double)m_LetterIC[idx].first - 1) / (m_NumberOfLetters - 1));
-
-		m_IC += m_LetterIC[idx].second;
+	void updateStatistics()
+	{
+		m_IC = 0;
+		for (int i{ 0 }; i < m_LetterIC.size(); ++i)
+		{
+			m_LetterIC[i].second = ((double)m_LetterIC[i].first / m_NumberOfLetters) *
+				(((double)m_LetterIC[i].first - 1) / (m_NumberOfLetters - 1));
+			m_IC += m_LetterIC[i].second;
+		}
 	}
 };

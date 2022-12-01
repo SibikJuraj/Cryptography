@@ -9,6 +9,7 @@ class Text
 {
 public:
 	static int letterCount(std::string_view text);
+	void sliceText(std::vector<Text>& parts) const;
 
 	Text();
 	Text(std::string text);
@@ -18,8 +19,10 @@ public:
 	const std::string_view& getText() const;
 	const std::string_view& getRawText() const;
 	const AnalysisOfText& getTextAnalysis() const;
+	AnalysisOfText& getTextAnalysis();
 	void addLetter(char letter);
 	void addText(const std::string_view text);
+	void changeLetter(char letter, int index);
 	void removeLetter();
 private:
 	void createRawText();

@@ -1319,6 +1319,12 @@
     </ClInclude>
     <ClInclude Include="src\Text\TextLoader.h" />
     <ClInclude Include="src\Ciphers\StreamGen.h" />
+    <ClInclude Include="src\Ciphers\Cipher.h" />
+    <ClInclude Include="src\Ciphers\Kasiski.h" />
+    <ClInclude Include="src\Ciphers\Caesar.h" />
+    <ClInclude Include="src\Config.h" />
+    <ClInclude Include="src\Ciphers\Affine.h" />
+    <ClInclude Include="src\Ciphers\Viegener.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Text\Class Text\Text.cpp">

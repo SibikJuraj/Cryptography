@@ -65,10 +65,7 @@ namespace StreamGen {
 
 	/* koniec generatora pseudonahodnych cisel */
 
-	typedef enum {
-		MODE_ENCRYPT = 0,
-		MODE_DECRYPT = 1
-	} CipherMode;
+	
 
 	void encrypt(const std::string_view passwd, const std::string_view plainText, std::string& cipherText)
 	{
