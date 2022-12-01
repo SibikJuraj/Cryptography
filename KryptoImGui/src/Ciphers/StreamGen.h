@@ -92,25 +92,24 @@ namespace StreamGen {
 
 	int init()
 	{
-		std::string inputText{ TextLoader::loadByteFile("texts/stream/text1_enc.txt") };
+		Text inputText{ TextLoader::loadFile("texts/stream/text2_enc.txt") };
 		std::string outputText{ };
-		outputText.resize(inputText.size());
-
+		outputText.resize(inputText.getText().size());
 		for (int i{ 100'000 }; i <= 999'999; ++i)
 		{
-			decrypt(std::to_string(i)+'\0', inputText, outputText);
+			decrypt(std::to_string(i)+'\0', inputText.getText(), outputText);
 
-			auto letterCountText{ TextLoader::numberOfLetters(outputText) };
-			if (letterCountText > inputText.length() * 0.65)
+			auto letterCount{ Text::letterCount(outputText) };
+
+			if (letterCount > inputText.getText().length() * 0.65)
 			{
 				outputText.erase(std::remove(outputText.begin(), outputText.end(), '\r'), outputText.end());
 
 				outputText += "\nPassword : " + std::to_string(i);
+				TextLoader::saveText("texts/stream/decoded/text2_dec.txt", outputText);
 				break;
 			}
 		}
-
-		TextLoader::saveText("texts/stream/decoded/text1_dec.txt", outputText);
 
 		return 0;
 	}

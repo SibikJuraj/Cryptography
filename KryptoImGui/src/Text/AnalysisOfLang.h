@@ -6,63 +6,90 @@
 class AnalysisOfLang
 {
 public:
-	AnalysisOfLang(std::vector<double> letterIC, double ic)
+	AnalysisOfLang(std::vector<std::pair<int, double>> letterIC, double ic)
 		: m_LetterIC{letterIC}, m_IC{ic}, m_NumberOfLetters{ 0 }
 	{}
+	AnalysisOfLang(std::vector<std::pair<int, double>> letterIC, double ic, int nOfLetters)
+		: m_LetterIC{ letterIC }, m_IC{ ic }, m_NumberOfLetters{ nOfLetters }
+	{}
 
-	const double operator[](char letter) const
-	{ 
-		if (letter < 'A' || letter > 'Z') {
-			throw std::invalid_argument("received invalid letter");
-		}
-
-		return m_LetterIC[letter - 65];
-	}
-
-	const double getIC() const { return m_IC; }
-	const int getAlphabetLength() const { return m_AlphabetLength; }
-	const int getNOLetters() const { return m_NumberOfLetters; }
+	inline const double operator[](char letter) const { return m_LetterIC[getIndex(letter)].second; }
+	inline const double getIC() const { return m_IC; }
+	inline const int getAlphabetLength() const { return m_AlphabetLength; }
+	inline const int getNOLetters() const { return m_NumberOfLetters; }
 protected:
-	std::vector<double> m_LetterIC;
-	double m_IC;
+	const int getIndex(char letter) const 
+	{ 
+		if (letter >= 'a' && letter <= 'z')
+			letter = toupper(letter);
+		if (letter >= 'A' && letter <= 'Z')
+			return letter - 65;
+		return -1;
+	}
 	const int m_AlphabetLength = 26;
+
+	std::vector<std::pair<int, double>> m_LetterIC;
+	double m_IC;
 	int m_NumberOfLetters;
 };
 
 class AnalysisOfSKLang : public AnalysisOfLang
 {
 public:
-	AnalysisOfSKLang() : AnalysisOfLang(std::vector<double>{ {0.114171257}, { 0.01352028 }, { 0.030545819 }, { 0.050075113 }, { 0.08012018 }, { 0.013019529 }, { 0.002003005 }, { 0.020030045 }, { 0.081622434 }, { 0.018027041 }, { 0.046569855 }, { 0.030045068 }, { 0.040560841 }, { 0.074111167 }, { 0.09313971 }, { 0.020530796 }, { 0 }, { 0.04907361 }, { 0.053079619 }, { 0.049574362 }, { 0.044066099 }, { 0.036054081 }, { 0 }, { 0.000500751 }, { 0.019529294 }, { 0.020030045 }}, 0.061182957)
+	AnalysisOfSKLang() : AnalysisOfLang(std::vector<std::pair<int, double>>{ {228, 0.11417}, { 27, 0.01352 }, { 61, 0.03055 }, { 100, 0.05008 }, { 160, 0.08012 }, { 26, 0.01302 }, { 4, 0.00200 }, { 40, 0.02003 }, { 163, 0.08162 }, { 36, 0.01803 }, { 93, 0.04657 }, { 60, 0.03005 }, { 81, 0.04056 }, { 148, 0.07411 }, { 186, 0.09314 }, { 41, 0.02053 }, { 0, 0.00000 }, { 98, 0.04907 }, { 106, 0.05308 }, { 99, 0.04957 }, { 88, 0.04407 }, { 72, 0.03605 }, { 0, 0.00000 }, { 1, 0.00050 }, { 39, 0.01953 }, { 40, 0.02003 }}, 0.061182957, 1997)
 	{}
 };
 
 class AnalysisOfENLang : public AnalysisOfLang
 {
 public:
-	AnalysisOfENLang() : AnalysisOfLang(std::vector<double>{ {0.078047355}, { 0.014907922 }, { 0.047354575 }, { 0.038292897 }, { 0.113709442 }, { 0.020754165 }, { 0.017246419 }, { 0.047939199 }, { 0.083308974 }, { 0.001461561 }, { 0.005846244 }, { 0.029231219 }, { 0.027477346 }, { 0.06547793 }, { 0.071616486 }, { 0.035369775 }, { 0.000584624 }, { 0.068401052 }, { 0.068985677 }, { 0.099970769 }, { 0.022800351 }, { 0.009646302 }, { 0.010230927 }, { 0.000876937 }, { 0.019877229 }, { 0.000584624 }}, 0.065504939)
+	AnalysisOfENLang() : AnalysisOfLang(std::vector<std::pair<int, double>>{ {267, 0.07805}, { 51, 0.01491 }, { 162, 0.04735 }, { 131, 0.03829 }, { 389, 0.11371 }, { 71, 0.02075 }, { 59, 0.01725 }, { 164, 0.04794 }, { 285, 0.08331 }, { 5, 0.00146 }, { 20, 0.00585 }, { 100, 0.02923 }, { 94, 0.02748 }, { 224, 0.06548 }, { 245, 0.07162 }, { 121, 0.03537 }, { 2, 0.00058 }, { 234, 0.06840 }, { 236, 0.06899 }, { 342, 0.09997 }, { 78, 0.02280 }, { 33, 0.00965 }, { 35, 0.01023 }, { 3, 0.00088 }, { 68, 0.01988 }, { 2, 0.00058 }}, 0.065504939, 3421)
 	{}
 };
 
 class AnalysisOfText : public AnalysisOfLang
 {
 public:
-	AnalysisOfText() : AnalysisOfLang(std::vector<double>(26, 0.0), 0.0)
+	AnalysisOfText() : AnalysisOfLang(std::vector<std::pair<int, double>>(26, std::make_pair(0, 0.0)), 0.0)
 	{}
 
 	AnalysisOfText(const AnalysisOfText& other) : 
 		AnalysisOfLang(other.m_LetterIC, other.m_IC)
 	{}
 
-	double& getIC() { return m_IC; }
-	std::vector<double>& getLetters() { return m_LetterIC; }
-	int& getNOLetters() { return m_NumberOfLetters; }
-
-	double& operator[](char letter)
+	void addLetter(char letter)
 	{
-		if (letter >= 'A' && letter <= 'Z') 
-		{
-			return m_LetterIC[letter - 65];
-		}
-		throw std::invalid_argument("received invalid letter");
+		auto idx{ getIndex(letter) };
+		if (idx == -1)
+			return;
+		m_IC -= m_LetterIC[idx].second;
+
+		++m_LetterIC[idx].first;
+		++m_NumberOfLetters;
+
+		m_LetterIC[idx].second = ((double)m_LetterIC[idx].first / m_NumberOfLetters) *
+			(((double)m_LetterIC[idx].first - 1) / (m_NumberOfLetters - 1));
+
+		m_IC += m_LetterIC[idx].second;
+	}
+
+	void removeLetter(char letter)
+	{
+		if (m_NumberOfLetters == 0)
+			return;
+
+		auto idx{ getIndex(letter) };
+		if (idx == -1 || m_LetterIC[idx].first == 0)
+			return;
+
+		m_IC -= m_LetterIC[idx].second;
+
+		--m_LetterIC[idx].first;
+		--m_NumberOfLetters;
+
+		m_LetterIC[idx].second = ((double)m_LetterIC[idx].first / m_NumberOfLetters) *
+			(((double)m_LetterIC[idx].first - 1) / (m_NumberOfLetters - 1));
+
+		m_IC += m_LetterIC[idx].second;
 	}
 };
