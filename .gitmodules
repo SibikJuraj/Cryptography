@@ -10,3 +10,6 @@
 [submodule "KryptoImGui/vendor/submodules/assimp"]
 	path = KryptoImGui/vendor/submodules/assimp
 	url = https://github.com/assimp/assimp
+[submodule "KryptoImGui/vendor/submodules/eigen"]
+	path = KryptoImGui/vendor/submodules/eigen
+	url = https://gitlab.com/libeigen/eigen
