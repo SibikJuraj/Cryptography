@@ -5,51 +5,33 @@
 class Hill : public CipherCore<int>
 {
 public:
-    Hill();
-    virtual Text encrypt(const Text& input, bool fineTuning) override;
-    virtual Text decrypt(const Text& input, bool fineTuning) override;
+    Hill(int size);
+    virtual std::string encrypt(const std::string_view input) override;
+    virtual std::string decrypt(const std::string_view input) override;
     virtual char encryptingFormula(char letter) override;
     virtual char decryptingFormula(char letter) override;
 };
 
-inline Hill::Hill()
-    : CipherCore(std::vector<int>{})
+inline Hill::Hill(int size)
+    : CipherCore(std::vector<int>{size * size})
 {
 }
 
-inline Text Hill::encrypt(const Text& input, bool fineTuning)
+inline std::string Hill::encrypt(const std::string_view input)
 {
-    Text output(input);
-    for (int i{ 0 }; i < output.getText().size(); ++i)
-    {
-        output.getText()[i] = encryptingFormula(output.getText()[i]);
-    }
-    output.analyzeText();
-    return output;
+    throw std::logic_error("Not implemented");
 }
 
-inline Text Hill::decrypt(const Text& input, bool fineTuning)
+inline std::string Hill::decrypt(const std::string_view input)
 {
-    Text output(input);
-    if (!fineTuning)
-    {
-        double max{ -1.0 };
-        int alphabetLength{ 26 };
-        for (char i{ 'A' }; i < 'A' + alphabetLength; ++i)
-        {
-            if (max < output.getTextAnalysis()[i])
-            {
-                max = output.getTextAnalysis()[i];
-                m_Keys[0] = i;
-            }
-        }
-    }
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+        output += decryptingFormula(input[i]);
+    output += "\n\nPassword: ";
+    for (int i{ 0 }; i < m_Keys.size(); ++i)
+        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65);
+    output += " length: " + std::to_string(m_Keys.size());
 
-    for (int i{ 0 }; i < output.getText().size(); ++i)
-    {
-        output.getText()[i] = decryptingFormula(output.getText()[i]);
-    }
-    output.analyzeText();
     return output;
 }
 

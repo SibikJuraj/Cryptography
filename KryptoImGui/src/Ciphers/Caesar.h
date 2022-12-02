@@ -5,8 +5,8 @@ class Caesar : public CipherCore<int>
 {
 public:
 	Caesar();
-	virtual Text encrypt(const Text& input) override;
-	virtual Text decrypt(const Text& input) override;
+    virtual std::string encrypt(const std::string_view input) override;
+    virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
 };
@@ -16,12 +16,12 @@ inline Caesar::Caesar()
 {
 }
 
-inline Text Caesar::encrypt(const Text& input)
+inline std::string Caesar::encrypt(const std::string_view input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline Text Caesar::decrypt(const Text& input)
+inline std::string Caesar::decrypt(const std::string_view input)
 {
     double max{ -1.0 };
     int alphabetLength{ 26 };

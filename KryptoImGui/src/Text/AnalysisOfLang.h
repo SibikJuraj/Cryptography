@@ -1,14 +1,12 @@
 #pragma once
 #include <vector>
 #include <string_view>
+#include <locale>
 #include <stdexcept>
 
 class AnalysisOfLang
 {
 public:
-	AnalysisOfLang(std::vector<std::pair<int, double>> letterIC, double ic)
-		: m_LetterIC{letterIC}, m_IC{ic}, m_NumberOfLetters{ 0 }
-	{}
 	AnalysisOfLang(std::vector<std::pair<int, double>> letterIC, double ic, int nOfLetters)
 		: m_LetterIC{ letterIC }, m_IC{ ic }, m_NumberOfLetters{ nOfLetters }
 	{}
@@ -50,18 +48,20 @@ public:
 class AnalysisOfText : public AnalysisOfLang
 {
 public:
-	AnalysisOfText() : AnalysisOfLang(std::vector<std::pair<int, double>>(26, std::make_pair(0, 0.0)), 0.0)
-	{}
-
-	AnalysisOfText(const AnalysisOfText& other) : 
-		AnalysisOfLang(other.m_LetterIC, other.m_IC)
-	{}
+	AnalysisOfText(const std::string_view text) : AnalysisOfLang(std::vector<std::pair<int, double>>(26, std::make_pair(0, 0.0)), 0.0, 0)
+	{
+		for (char letter : text)
+		{
+			addLetter(letter);
+		}
+		updateStatistics();
+	}
 
 	void rotateLetters()
 	{
 		std::rotate(m_LetterIC.begin(), m_LetterIC.begin() + 1, m_LetterIC.end());
 	}
-
+private:
 	void addLetter(char letter)
 	{
 		auto idx{ getIndex(letter) };
@@ -72,7 +72,7 @@ public:
 		++m_NumberOfLetters;
 	}
 
-	void removeLetter(char letter)
+	/*void removeLetter(char letter)
 	{
 		if (m_NumberOfLetters == 0)
 			return;
@@ -83,7 +83,7 @@ public:
 
 		--m_LetterIC[idx].first;
 		--m_NumberOfLetters;
-	}
+	}*/
 
 	void updateStatistics()
 	{

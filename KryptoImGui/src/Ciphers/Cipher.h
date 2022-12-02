@@ -2,7 +2,8 @@
 #include <vector>
 #include <string>
 #include <string_view>
-#include <Text/Class Text/Text.h>
+#include <Text/Text.h>
+#include <stdexcept>
 #include <Config.h>
 
 class Cipher {
@@ -16,8 +17,8 @@ class CipherCore : public Cipher
 public:
 	CipherCore(std::vector<T> keys);
 
-	virtual Text encrypt(const Text& input) = 0;
-	virtual Text decrypt(const Text& input) = 0;
+	virtual std::string encrypt(const std::string_view input) = 0;
+	virtual std::string decrypt(const std::string_view input) = 0;
 
 	void setKey(int index, T value);
 	int getKey(int index);

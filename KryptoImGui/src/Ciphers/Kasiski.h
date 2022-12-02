@@ -2,7 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <Text/Class Text/Text.h>
+#include <Text/Text.h>
 
 namespace Kasiski
 {

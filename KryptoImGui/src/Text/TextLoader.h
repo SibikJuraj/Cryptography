@@ -5,16 +5,12 @@
 #include <fstream>
 #include <sstream>
 
-#include "AnalysisOfLang.h"
-#include "Class Text/Text.h"
-
 #include <io.h>
 #include <fcntl.h>
 
 namespace TextLoader
 {
-
-	Text loadFile(const std::string_view&& path)
+	std::string loadText(const std::string_view&& path)
 	{
         _setmode(_fileno(stdout), _O_U8TEXT);
         _setmode(_fileno(stdin), _O_U8TEXT);
@@ -27,14 +23,13 @@ namespace TextLoader
         text.assign((std::istreambuf_iterator<char>(fs)),
             std::istreambuf_iterator<char>());
 
-        return Text(text);
+        return text;
 	}
 
-    bool saveText(const std::string_view&& path, const Text& text)
+    void saveText(const std::string_view&& path, const std::string_view text)
     {
         std::ofstream outfile;
         outfile.open(path.data());
-        outfile << text.getText();
-        return true;
+        outfile << text;
     }
 }

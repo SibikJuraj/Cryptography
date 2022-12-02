@@ -5,8 +5,8 @@ class Affine : public CipherCore<int>
 {
 public:
 	Affine();
-	virtual Text encrypt(const Text& input) override;
-	virtual Text decrypt(const Text& input) override;
+	virtual std::string encrypt(const std::string_view input) override;
+	virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
 };
@@ -16,12 +16,12 @@ Affine::Affine()
 {
 }
 
-inline Text Affine::encrypt(const Text& input)
+inline std::string Affine::encrypt(const std::string_view input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline Text Affine::decrypt(const Text& input)
+inline std::string Affine::decrypt(const std::string_view input)
 {
     std::string_view rawText{ input.getRawText() };
 

@@ -11,6 +11,7 @@ project "KryptoImGui"
 	includeDir["Glad"]  = "%{wks.location}/KryptoImGui/vendor/submodules/Glad/include"
 	includeDir["imgui"] = "%{wks.location}/KryptoImGui/vendor/submodules/imgui"
 	includeDir["glm"] = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
+	includeDir["eigen"] = "%{wks.location}/KryptoImGui/vendor/submodules/eigen"
 
 	files 
 	{
@@ -32,7 +33,8 @@ project "KryptoImGui"
 		"%{includeDir.GLFW}",
 		"%{includeDir.Glad}",
 		"%{includeDir.imgui}",
-		"%{includeDir.glm}"
+		"%{includeDir.glm}",
+		"%{includeDir.eigen}"
 	}
 
 	links

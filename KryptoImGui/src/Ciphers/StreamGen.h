@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 namespace StreamGen {
-
 	/* generator pseudonahodnych cisel zalozeny na RC4 */
 	typedef unsigned char byte;
 	/* vnutorny stav RC4 generatora */
@@ -13,7 +12,6 @@ namespace StreamGen {
 	byte rc4_s[256];
 
 	/* staticky alokovany pouzity kluc pre RC4 */
-
 	byte rc4_k[256];
 
 	byte* getKey(const std::string_view passwd)
@@ -62,10 +60,7 @@ namespace StreamGen {
 		byte t = (rc4_s[rc4_i] + rc4_s[rc4_j]) % 256;
 		return rc4_s[t];
 	}
-
 	/* koniec generatora pseudonahodnych cisel */
-
-	
 
 	void encrypt(const std::string_view passwd, const std::string_view plainText, std::string& cipherText)
 	{
@@ -85,29 +80,5 @@ namespace StreamGen {
 	{
 		// vzhladom na operaciu XOR je sifrovanie a desifrovanie uplne rovnake
 		encrypt(passwd, cipherText, plainText);
-	}
-
-	int init()
-	{
-		Text inputText{ TextLoader::loadFile("texts/stream/text2_enc.txt") };
-		std::string outputText{ };
-		outputText.resize(inputText.getText().size());
-		for (int i{ 100'000 }; i <= 999'999; ++i)
-		{
-			decrypt(std::to_string(i)+'\0', inputText.getText(), outputText);
-
-			auto letterCount{ Text::letterCount(outputText) };
-
-			if (letterCount > inputText.getText().length() * 0.65)
-			{
-				outputText.erase(std::remove(outputText.begin(), outputText.end(), '\r'), outputText.end());
-
-				outputText += "\nPassword : " + std::to_string(i);
-				TextLoader::saveText("texts/stream/decoded/text2_dec.txt", outputText);
-				break;
-			}
-		}
-
-		return 0;
 	}
 }

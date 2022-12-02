@@ -4,21 +4,21 @@
 #include <crtdbg.h>
 
 #include <Text/TextLoader.h>
-#include <Text/Class Text/Text.h>
-#include <Ciphers/StreamGen.h>
+#include <Ciphers/Stream.h>
 #include <Ciphers/Viegener.h>
 
 int main()
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-    auto text{ TextLoader::loadFile("texts/vigenere/text1_enc.txt") };
-    auto viegener{ Viegener() };
-    auto decryptedText{ viegener.decrypt(text) };
+    auto textVigenere{ TextLoader::loadText("texts/vigenere/text1_enc.txt") };
+    auto textStream{ TextLoader::loadText("texts/stream/text2_enc.txt") };
 
-    TextLoader::saveText("texts/vigenere/text1_dec.txt",decryptedText);
+    auto decryptedTextVigenere{ Viegener().decrypt(textVigenere) };
+    auto decryptedTextStream{ Stream().decrypt(textStream) };
 
-    //StreamGen::init();
+    TextLoader::saveText("texts/vigenere/decoded/text1_dec.txt", decryptedTextVigenere);
+    TextLoader::saveText("texts/stream/decoded/text2_dec.txt", decryptedTextStream);
 
     return 0;
 }
