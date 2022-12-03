@@ -7,9 +7,6 @@
     <Filter Include="src\Ciphers">
       <UniqueIdentifier>{AAAA8A2F-1660-0325-9F54-FDFB0B09FA28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Ciphers\Class CipherManager">
-      <UniqueIdentifier>{856C3953-F14F-4893-FA52-76CF66B50EE4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Class Application">
       <UniqueIdentifier>{264BD267-92B7-8D62-5BAB-25C0C7D6AFCA}</UniqueIdentifier>
     </Filter>
@@ -56,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="src\Ciphers\Cipher.h">
       <Filter>src\Ciphers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ciphers\Class CipherManager\CipherManager.h">
-      <Filter>src\Ciphers\Class CipherManager</Filter>
     </ClInclude>
     <ClInclude Include="src\Ciphers\Hill.h">
       <Filter>src\Ciphers</Filter>
@@ -1358,9 +1352,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Ciphers\Class CipherManager\CipherManager.cpp">
-      <Filter>src\Ciphers\Class CipherManager</Filter>
-    </ClCompile>
     <ClCompile Include="src\Class Application\Application.cpp">
       <Filter>src\Class Application</Filter>
     </ClCompile>

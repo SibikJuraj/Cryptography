@@ -10,7 +10,7 @@ project "KryptoImGui"
 	includeDir["GLFW"]  = "%{wks.location}/KryptoImGui/vendor/submodules/GLFW/include"
 	includeDir["Glad"]  = "%{wks.location}/KryptoImGui/vendor/submodules/Glad/include"
 	includeDir["imgui"] = "%{wks.location}/KryptoImGui/vendor/submodules/imgui"
-	includeDir["glm"] = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
+	includeDir["glm"]   = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
 	includeDir["eigen"] = "%{wks.location}/KryptoImGui/vendor/submodules/eigen"
 
 	files 

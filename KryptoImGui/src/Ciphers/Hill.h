@@ -1,6 +1,7 @@
 #pragma once
+#include <Eigen/Dense>
+
 #include <Ciphers/Cipher.h>
-#include <glm/glm.hpp>
 
 class Hill : public CipherCore<int>
 {
@@ -10,10 +11,12 @@ public:
     virtual std::string decrypt(const std::string_view input) override;
     virtual char encryptingFormula(char letter) override;
     virtual char decryptingFormula(char letter) override;
+private:
+    int m_Dimension;
 };
 
 inline Hill::Hill(int size)
-    : CipherCore(std::vector<int>{size * size})
+    : CipherCore(std::vector<int>{size * size}), m_Dimension{ size }
 {
 }
 
@@ -24,14 +27,11 @@ inline std::string Hill::encrypt(const std::string_view input)
 
 inline std::string Hill::decrypt(const std::string_view input)
 {
+    Eigen::Matrix matrix{ m_Dimension, m_Dimension };
+    matrix
     std::string output{};
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);
-    output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_Keys.size(); ++i)
-        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65);
-    output += " length: " + std::to_string(m_Keys.size());
-
     return output;
 }
 
