@@ -7,6 +7,9 @@
     <Filter Include="src\Ciphers">
       <UniqueIdentifier>{AAAA8A2F-1660-0325-9F54-FDFB0B09FA28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Ciphers\Class MD5">
+      <UniqueIdentifier>{75B285E9-E11E-41E4-AA12-D941163E634C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Class Application">
       <UniqueIdentifier>{264BD267-92B7-8D62-5BAB-25C0C7D6AFCA}</UniqueIdentifier>
     </Filter>
@@ -18,6 +21,9 @@
     </Filter>
     <Filter Include="src\Text">
       <UniqueIdentifier>{61FC25CF-4DC9-80DA-76E2-6E82620EB668}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Text\Class base64">
+      <UniqueIdentifier>{8B8D0D5D-F7F9-C857-C0ED-60B52C19EBBF}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -54,6 +60,9 @@
     <ClInclude Include="src\Ciphers\Cipher.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ciphers\Class MD5\md5.h">
+      <Filter>src\Ciphers\Class MD5</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ciphers\Hill.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
@@ -69,35 +78,14 @@
     <ClInclude Include="src\Ciphers\Viegener.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Class Application\Application.h">
-      <Filter>src\Class Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Commands\ICommand.h">
-      <Filter>src\Commands</Filter>
-    </ClInclude>
     <ClInclude Include="src\Config.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\GUI.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\GUIElements.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\IGUIElementsFactory.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ImGUI.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ImGUIElements.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GUI\ImGUIElementsFactory.h">
-      <Filter>src\GUI</Filter>
-    </ClInclude>
     <ClInclude Include="src\Text\AnalysisOfLang.h">
       <Filter>src\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Text\Class base64\base64.h">
+      <Filter>src\Text\Class base64</Filter>
     </ClInclude>
     <ClInclude Include="src\Text\Text.h">
       <Filter>src\Text</Filter>
@@ -1352,14 +1340,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Class Application\Application.cpp">
-      <Filter>src\Class Application</Filter>
+    <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">
+      <Filter>src\Ciphers\Class MD5</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\ImGUI.cpp">
-      <Filter>src\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GUI\ImGuiBuild.cpp">
-      <Filter>src\GUI</Filter>
+    <ClCompile Include="src\Text\Class base64\base64.cpp">
+      <Filter>src\Text\Class base64</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>

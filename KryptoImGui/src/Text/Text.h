@@ -12,6 +12,15 @@ namespace Text
         return false;
     }
 
+    int toInt(char letter)
+    {
+        if (letter >= 'a' && letter <= 'z')
+            letter = toupper(letter);
+        if (letter >= 'A' && letter <= 'Z')
+            return letter - 65;
+        return -1;
+    }
+
     bool toUpperCase(char& letter)
     {
         if (letter >= 'a' && letter <= 'z')

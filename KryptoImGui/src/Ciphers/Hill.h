@@ -1,22 +1,20 @@
 #pragma once
-#include <Eigen/Dense>
 
 #include <Ciphers/Cipher.h>
+#include <armadillo>
 
 class Hill : public CipherCore<int>
 {
 public:
-    Hill(int size);
+    Hill(std::vector<int> code);
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
     virtual char encryptingFormula(char letter) override;
     virtual char decryptingFormula(char letter) override;
-private:
-    int m_Dimension;
 };
 
-inline Hill::Hill(int size)
-    : CipherCore(std::vector<int>{size * size}), m_Dimension{ size }
+inline Hill::Hill(std::vector<int> code)
+    : CipherCore(code)
 {
 }
 
@@ -27,8 +25,18 @@ inline std::string Hill::encrypt(const std::string_view input)
 
 inline std::string Hill::decrypt(const std::string_view input)
 {
-    Eigen::Matrix matrix{ m_Dimension, m_Dimension };
-    matrix
+    arma::Mat<int> matA{ {3, 7, 20}, {17, 24, 17}, {0, 9, 0 } };
+    arma::Mat<int> matB(matA.n_rows, matA.n_cols);
+    int k{ 0 };
+    for (int i{ 0 }; i < matB.n_cols; ++i)
+    {
+        for (int j{ 0 }; j < matB.n_rows; ++j)
+        {
+            matB(j, i) = Text::toInt(input[k]);
+            ++k;
+        }
+    }
+
     std::string output{};
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);

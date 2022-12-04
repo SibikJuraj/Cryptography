@@ -12,9 +12,6 @@ namespace TextLoader
 {
 	std::string loadText(const std::string_view&& path)
 	{
-        _setmode(_fileno(stdout), _O_U8TEXT);
-        _setmode(_fileno(stdin), _O_U8TEXT);
-
         std::ifstream fs(path.data(), std::ios_base::binary);
 
         fs.seekg(0, std::ios::end);
@@ -28,6 +25,9 @@ namespace TextLoader
 
     void saveText(const std::string_view&& path, const std::string_view text)
     {
+        for (int i{ 0 }; i < 2'000; ++i)
+            std::vector<std::string> peter(300);
+
         std::ofstream outfile;
         outfile.open(path.data());
         outfile << text;
