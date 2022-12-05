@@ -368,3 +368,4 @@ FodyWeavers.xsd
 /KryptoImGui/vendor/submodules/imgui/imgui.vcxproj
 /KryptoImGui/vendor/submodules/Glad/bin-obj/Debug-windows-x86_64/Glad
 /KryptoImGui/vendor/submodules/imgui/imgui.vcxproj.filters
+/bin-obj/Release-windows-x86_64/KryptoImGui
