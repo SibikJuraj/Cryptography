@@ -25,8 +25,6 @@ namespace TextLoader
 
     void saveText(const std::string_view&& path, const std::string_view text)
     {
-        for (int i{ 0 }; i < 2'000; ++i)
-            std::vector<std::string> peter(300);
 
         std::ofstream outfile;
         outfile.open(path.data());
