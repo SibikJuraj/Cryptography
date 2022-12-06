@@ -14,6 +14,7 @@
 #include <random>
 #include <bitset>
 
+#include <boost/integer/mod_inverse.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
 
 using namespace boost::multiprecision;
@@ -185,28 +186,6 @@ bool isSquare(int1024_t x)
     return false;
 }
 
-int1024_t xGCD(int1024_t a, int1024_t b, int1024_t& x, int1024_t& y) {
-    if (b == 0) {
-        x = 1;
-        y = 0;
-        return a;
-    }
-
-    int1024_t x1, y1;
-    int1024_t gcd = xGCD(b, a % b, x1, y1);
-    x = y1;
-    y = x1 - (a / b) * y1;
-    return gcd;
-}
-
-int1024_t modInverse(int1024_t a, int1024_t n)
-{
-    int1024_t u, v;
-    if (xGCD(a, n, u, v) == 1)
-        return u % n;
-    return 0;
-}
-
 std::pair<int1024_t, int1024_t> findAB(int1024_t offset, int1024_t n, int1024_t a, bool& terminate)
 {
     int1024_t b;
@@ -271,9 +250,9 @@ int main()
 
     int offset{ 0 };
     bool termL{ false };
-    int1024_t n{ "16812615098258879" };
+    int1024_t n{ "181052234309092978339" };
     int1024_t e{ 65537 };
-    int1024_t y{ "1990249581724467" };
+    int1024_t y{ "147885702766350471578" };
 
     int1024_t a = (int1024_t)sqrt(n) + 1;
     for (int i = offset; i < offset + fSL.size(); ++i)
@@ -300,7 +279,7 @@ int main()
         std::cout << p << " * " << q << " = " << n << '\n';
 
     int1024_t phi_n{ (p - 1) * (q - 1) };
-    int1024_t d = modInverse(e, phi_n);
+    auto d = boost::integer::mod_inverse(e, phi_n);
     std::cout << "Private key is: " << d << '\n';
 
     auto x{ modulo(y, d, n)};
