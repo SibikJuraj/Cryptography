@@ -250,9 +250,9 @@ int main()
 
     int offset{ 0 };
     bool termL{ false };
-    int1024_t n{ "181052234309092978339" };
+    int1024_t n{ "1327612780145399205245813" };
     int1024_t e{ 65537 };
-    int1024_t y{ "147885702766350471578" };
+    int1024_t y{ "1075593273482743198269527" };
 
     int1024_t a = (int1024_t)sqrt(n) + 1;
     for (int i = offset; i < offset + fSL.size(); ++i)
