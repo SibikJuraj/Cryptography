@@ -5,14 +5,14 @@
 
 namespace Text
 {
-    bool isLetter(char letter)
+    inline bool isLetter(char letter)
     {
         if ((letter >= 'a' && letter <= 'z') || (letter >= 'A' && letter <= 'Z'))
             return true;
         return false;
     }
 
-    int toInt(char letter)
+    inline int toInt(char letter)
     {
         if (letter >= 'a' && letter <= 'z')
             letter = toupper(letter);
@@ -21,12 +21,12 @@ namespace Text
         return -1;
     }
 
-    int toChar(int letter)
+    inline int toChar(int letter)
     {
         return letter + 'A';
     }
 
-    bool toUpperCase(char& letter)
+    inline bool toUpperCase(char& letter)
     {
         if (letter >= 'a' && letter <= 'z')
         {
@@ -36,7 +36,7 @@ namespace Text
         return false;
     }
 
-    int letterCount(std::string_view text)
+    inline int letterCount(std::string_view text)
     {
         auto lCount{ 0 };
         for (int i{ 0 }; i < text.length(); ++i)
@@ -45,7 +45,7 @@ namespace Text
         return lCount;
     }
 
-    std::vector<std::string> sliceText(const std::string_view text, int slices)
+    inline std::vector<std::string> sliceText(const std::string_view text, int slices)
     {
         std::vector<std::string> parts(slices);
         int part{ 0 };

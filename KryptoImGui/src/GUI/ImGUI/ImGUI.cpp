@@ -1,3 +1,5 @@
+#include "ImGUI.h"
+
 #include <memory>
 #include <iostream>
 #include <imgui.h>
@@ -7,12 +9,8 @@
 
 #include <vector>
 
-#include "ImGUI.h"
-#include "Application.h"
-
-
 ImGUI::ImGUI(int width, int height) 
-    : GUI(), m_Window{ std::make_unique<GLFWwindow>(glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL))}
+    : GUI(width, height)
 {
     // glfw: initialize and configure
     // ------------------------------
@@ -20,6 +18,8 @@ ImGUI::ImGUI(int width, int height)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    m_Window = glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL);
 
     // glfw window creation
     // --------------------
@@ -30,7 +30,7 @@ ImGUI::ImGUI(int width, int height)
         return; //-1;
     }
 
-    glfwMakeContextCurrent(m_Window.get());
+    glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1); //Enable vsync
 
     // glad: load all OpenGL function pointers
@@ -49,13 +49,13 @@ ImGUI::ImGUI(int width, int height)
     ImGuiIO& io{ ImGui::GetIO() };
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    ImGui_ImplGlfw_InitForOpenGL(m_Window.get(), true);
+    ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 ImGUI::~ImGUI()
 {
-    glfwDestroyWindow(m_Window.get());
+    glfwDestroyWindow(m_Window);
 
     ImGui_ImplGlfw_Shutdown();
     ImGui_ImplOpenGL3_Shutdown();
@@ -83,7 +83,7 @@ void ImGUI::render()
     // ------
     ImGui::Render();
     int display_w, display_h;
-    glfwGetFramebufferSize(m_Window.get(), &display_w, &display_h);
+    glfwGetFramebufferSize(m_Window, &display_w, &display_h);
     glViewport(0, 0, display_w, display_h);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -91,7 +91,7 @@ void ImGUI::render()
 
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
-    glfwSwapBuffers(m_Window.get());
+    glfwSwapBuffers(m_Window);
 
     //int selectedCipher{ 0 };
     //auto iText = std::make_unique<Text>("texts/vigenere/text4_enc.txt");
@@ -177,12 +177,12 @@ void ImGUI::render()
 
 bool ImGUI::isRunning()
 {
-    return !glfwWindowShouldClose(m_Window.get());
+    return !glfwWindowShouldClose(m_Window);
 }
 
-void ImGUI::addElement(IGUIElement& element)
+void ImGUI::addElement(std::unique_ptr<IGUIElement> element)
 {
-    m_Elements.emplace_back(element);
+    //m_Elements.push_back(element);
 }
 
 void ImGUI::imGuiRender()

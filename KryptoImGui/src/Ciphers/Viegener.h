@@ -1,8 +1,6 @@
 #pragma once
 #include <Ciphers/Cipher.h>
 #include "Kasiski.h"
-#include "Text/Text.h"
-#include <Text/AnalysisOfLang.h>
 
 class Viegener : public CipherCore<int>
 {
@@ -45,7 +43,7 @@ inline std::string Viegener::decrypt(const std::string_view input)
         std::vector<std::string> outputParts{ Text::sliceText(input, potentialPassLength) };
 
         for (int k{ 0 }; k < outputParts.size(); ++k)
-            ic += AnalysisOfText{ outputParts[k]}.getIC();
+            ic += AnalysisOfText{ outputParts[k] }.getIC();
 
         ic = ic / potentialPassLength;
         if (abs(ic - language.getIC()) < 0.01 &&

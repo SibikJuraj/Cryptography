@@ -10,7 +10,7 @@
 
 namespace TextLoader
 {
-	std::string loadText(const std::string_view&& path)
+    inline std::string loadText(const std::string_view&& path)
 	{
         std::ifstream fs(path.data(), std::ios_base::binary);
 
@@ -23,11 +23,13 @@ namespace TextLoader
         return text;
 	}
 
-    void saveText(const std::string_view&& path, const std::string_view text)
+    inline void saveText(const std::string_view&& path, const std::string_view text, bool append = false)
     {
-
         std::ofstream outfile;
-        outfile.open(path.data());
+        if (append)
+            outfile.open(path.data(), std::ios_base::app);
+        else
+            outfile.open(path.data());
         outfile << text;
     }
 }

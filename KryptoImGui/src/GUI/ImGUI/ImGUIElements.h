@@ -4,7 +4,7 @@
 #include <implot.h>
 
 #include <vector>
-#include "GUIElements.h"
+#include "GUI/GUIElements.h"
 
 class ImGUIPanel : public Panel
 {
@@ -55,7 +55,7 @@ public:
 class ImGUITextbox : public Textbox
 {
 public:
-	ImGUITextbox(const char* text, const ICommand* command)
+	ImGUITextbox(const char* text, const ICommand& command)
 		: Textbox(text, command) {}
 	virtual void draw() override
 	{

@@ -1,9 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "Text/Text.h"
+#include "Ciphers/Cipher.h"
 #include "GUI/GUI.h"
-#include "Ciphers/CipherManager.h"
 
 class Application
 {
@@ -17,6 +16,7 @@ public:
 	void run();
 private:
 	Application();
+	void registerCipher(Cipher& cipher);
 	std::unique_ptr<GUI> m_GUI;
-	std::unique_ptr<CipherManager> m_CipherManager;
+	std::vector<std::unique_ptr<Cipher>> m_Ciphers;
 };

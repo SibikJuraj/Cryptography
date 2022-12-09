@@ -1,5 +1,4 @@
 #pragma once
-
 #include <Ciphers/Cipher.h>
 #include <matrix.h>
 #include <matrix_operation.h>
@@ -8,11 +7,17 @@ class Hill : public CipherCore<int>
 {
 public:
     Hill(std::vector<int> code);
+    Hill();
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
     virtual char encryptingFormula(char letter) override;
     virtual char decryptingFormula(char letter) override;
 };
+
+inline Hill::Hill()
+    : CipherCore(std::vector<int>())
+{
+}
 
 inline Hill::Hill(std::vector<int> code)
     : CipherCore(code)

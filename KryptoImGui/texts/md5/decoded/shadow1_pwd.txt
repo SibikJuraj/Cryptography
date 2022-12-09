@@ -1,3 +1,5 @@
+User: kochlan4 | Password: petkO
+User: krajciko | Password: katkA
 User: nemecm | Password: milaDa
 User: brezani7 | Password: e1VL | Generator seed: 1138
 User: piecka | Password: kjhgty | Generator seed: 3630

@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "GUI.h"
+#include "GUI/GUI.h"
 
 class ImGUI : public GUI
 {
@@ -13,9 +13,9 @@ public:
 
 	virtual void render() override;
 	virtual bool isRunning() override;
-	virtual void addElement(IGUIElement& element) override;
+	virtual void addElement(std::unique_ptr<IGUIElement> element) override;
 private:
-	std::unique_ptr<GLFWwindow> m_Window;
+	GLFWwindow* m_Window;
 	int m_SelectedOption;
 
 	void imGuiRender();

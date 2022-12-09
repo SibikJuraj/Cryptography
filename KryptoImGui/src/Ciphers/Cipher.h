@@ -2,9 +2,11 @@
 #include <vector>
 #include <string>
 #include <string_view>
-#include <Text/Text.h>
 #include <stdexcept>
+
 #include <Config.h>
+#include <Text/Text.h>
+#include <Text/AnalysisOfLang.h>
 
 class Cipher {
 public:

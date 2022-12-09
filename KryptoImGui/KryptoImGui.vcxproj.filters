@@ -1341,6 +1341,14 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Class Application\Application.h" />
+    <ClInclude Include="src\GUI\ImGUI\ImGUI.h" />
+    <ClInclude Include="src\GUI\ImGUI\ImGUIElements.h" />
+    <ClInclude Include="src\GUI\GUI.h" />
+    <ClInclude Include="src\GUI\GUIElements.h" />
+    <ClInclude Include="src\GUI\GUIFactories.h" />
+    <ClInclude Include="src\GUI\IGUIElementsFactories.h" />
+    <ClInclude Include="src\Commands\ICommand.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">
@@ -1352,5 +1360,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Class Application\Application.cpp" />
+    <ClCompile Include="src\GUI\ImGUI\ImGUI.cpp" />
+    <ClCompile Include="src\ImGuiBuild.cpp" />
   </ItemGroup>
 </Project>

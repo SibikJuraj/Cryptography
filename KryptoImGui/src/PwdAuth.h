@@ -5,6 +5,7 @@
 #include <vector>
 #include <future>
 #include <Ciphers/Class MD5/md5.h>
+#include <Text/TextLoader.h>
 #include <deque>
 
 namespace PwdAuth
@@ -112,7 +113,6 @@ namespace PwdAuth
                     if (u.data[2] == c)
                     {
                         output += "User: " + u.data[0] + " | Password: " + pwd + '\n';
-                        goto _end_;
                     }
                     if (i < pwd.size())
                     {
@@ -125,8 +125,7 @@ namespace PwdAuth
                 }
             }
         }
-
-    _end_:
+        std::cout << output << '\n';
 
         std::string pwd{ "aaaaaaa" };
         std::string lastPwd{ "aaaaaaa" };
@@ -134,7 +133,7 @@ namespace PwdAuth
         std::deque<std::future<std::string>> fSL(5'000);
         std::deque<std::future<std::string>> fSA(5'000);
 
-        int offset{ 0 };
+        int offset{ 0'000 };
         bool termL{ false };
         bool termA{ false };
         for (int i = offset; i < offset + fSL.size(); ++i)
@@ -151,8 +150,10 @@ namespace PwdAuth
                 o = fSL[0].get();
                 if (o != "")
                 {
+                    std::cout << o << '\n';
                     output += o;
                     termL = true;
+
                 }
                 fSL.pop_front();
             }
@@ -161,6 +162,7 @@ namespace PwdAuth
                 o = fSA[0].get();
                 if (o != "")
                 {
+                    std::cout << o << '\n';
                     output += o;
                     termA = true;
                 }
