@@ -17,8 +17,13 @@ namespace Text
         if (letter >= 'a' && letter <= 'z')
             letter = toupper(letter);
         if (letter >= 'A' && letter <= 'Z')
-            return letter - 65;
+            return letter - 'A';
         return -1;
+    }
+
+    int toChar(int letter)
+    {
+        return letter + 'A';
     }
 
     bool toUpperCase(char& letter)

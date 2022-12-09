@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Ciphers/Cipher.h>
-#include <armadillo>
+#include <matrix.h>
+#include <matrix_operation.h>
 
 class Hill : public CipherCore<int>
 {
@@ -25,21 +26,76 @@ inline std::string Hill::encrypt(const std::string_view input)
 
 inline std::string Hill::decrypt(const std::string_view input)
 {
-    arma::Mat<int> matA{ {3, 7, 20}, {17, 24, 17}, {0, 9, 0 } };
-    arma::Mat<int> matB(matA.n_rows, matA.n_cols);
-    int k{ 0 };
-    for (int i{ 0 }; i < matB.n_cols; ++i)
+    int dimension{ static_cast<int>(std::sqrt(m_Keys.size())) };
+    Matrix<double> matA(dimension, dimension);
+    for (int i{ 0 }; i < matA.cols(); ++i)
     {
-        for (int j{ 0 }; j < matB.n_rows; ++j)
+        for (int j{ 0 }; j < matA.rows(); ++j)
         {
-            matB(j, i) = Text::toInt(input[k]);
-            ++k;
+            matA(j, i) = Text::toInt(input[(i * matA.rows()) + j]);
+        }
+    }
+    const int moduloValue = 26;
+
+    auto determ = static_cast<int>(det(matA)) % moduloValue;
+    if (determ < 0)
+        determ += moduloValue;
+
+    int modVal{ 1 };
+    while (modVal <= moduloValue)
+    {
+        auto val{ determ * modVal % moduloValue };
+        if (val < 0)
+            val += moduloValue;
+        if (val == 1)
+            break;
+        ++modVal;
+    }
+    auto matB{ ((inverse(matA) * det(matA)).castWRound<int>() * modVal).modulo(moduloValue) };
+    Matrix<int> matC(dimension, dimension);
+    for (int i{ 0 }; i < matC.cols(); ++i)
+    {
+        for (int j{ 0 }; j < matC.rows(); ++j)
+        {
+            matC(i, j) = m_Keys[(i * matC.rows()) + j];
+        }
+    }
+    auto matF{ matmul(matC, matB).modulo(moduloValue)};
+    std::string output{};
+
+    int txtPos{0};
+    while (txtPos < input.size())
+    {
+        Matrix<int> readMat(dimension, dimension, 0);
+        for (int i{ 0 }; i < readMat.cols(); ++i)
+        {
+            for (int j{ 0 }; j < readMat.rows(); ++j)
+            {
+                if (txtPos < input.size())
+                {
+                    readMat(j, i) = Text::toInt(input[txtPos]);
+                    ++txtPos;
+                }
+                else
+                    break;
+            }
+        }
+        readMat = matmul(matF, readMat).modulo(moduloValue);
+
+        for (int i{ 0 }; i < readMat.cols(); ++i)
+        {
+            for (int j{ 0 }; j < readMat.rows(); ++j)
+            {
+                if (output.size() < input.size())
+                    output += Text::toChar(readMat(j, i));
+            }
         }
     }
 
-    std::string output{};
+    /*
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);
+    */
     return output;
 }
 

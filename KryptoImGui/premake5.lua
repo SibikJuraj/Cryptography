@@ -12,8 +12,7 @@ project "KryptoImGui"
 	includeDir["imgui"] = "%{wks.location}/KryptoImGui/vendor/submodules/imgui"
 	includeDir["glm"]   = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
 	includeDir["boost"]   = "%{wks.location}/KryptoImGui/vendor/submodules/boost/include"
-	includeDir["armadillo"] = "%{wks.location}/KryptoImGui/vendor/submodules/armadillo/include"
-
+	includeDir["MatrixLib"] = "%{wks.location}/KryptoImGui/vendor/submodules/MatrixLib"
 	files 
 	{
 		"src/**.cpp",
@@ -36,7 +35,7 @@ project "KryptoImGui"
 		"%{includeDir.imgui}",
 		"%{includeDir.glm}",
 		"%{includeDir.boost}",
-		"%{includeDir.armadillo}"
+		"%{includeDir.MatrixLib}"
 	}
 
 	links
@@ -44,7 +43,7 @@ project "KryptoImGui"
 		"GLFW",
 		"Glad",
 		"imgui",
-		"opengl32.lib"
+		"opengl32.lib",
 	}
 
 	filter "configurations:Debug"
