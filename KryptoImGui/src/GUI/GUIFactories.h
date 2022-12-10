@@ -8,11 +8,10 @@ public:
 	virtual std::unique_ptr<GUI> createGUI(int width, int height) = 0;
 };
 
-
-#include "ImGUI/ImGUI.h"
 /// <summary>
 /// ImGUI Factory
 /// </summary>
+#include "ImGUI/ImGUI.h"
 class ImGUIFactory : public IGUIFactory
 {
 public:

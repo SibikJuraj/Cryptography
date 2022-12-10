@@ -11,6 +11,13 @@
 class Cipher {
 public:
 	Cipher() = default;
+
+	virtual std::string encrypt(const std::string_view input) = 0;
+	virtual std::string decrypt(const std::string_view input) = 0;
+
+	virtual char encryptingFormula(char letter) = 0;
+	virtual char decryptingFormula(char letter) = 0;
+	virtual const char* getName() = 0;
 };
 
 template<typename T>
@@ -19,17 +26,11 @@ class CipherCore : public Cipher
 public:
 	CipherCore(std::vector<T> keys);
 
-	virtual std::string encrypt(const std::string_view input) = 0;
-	virtual std::string decrypt(const std::string_view input) = 0;
-
 	void setKey(int index, T value);
 	int getKey(int index);
 	std::vector<T>& getKeys();
 protected:
 	std::vector<T> m_Keys;
-	
-	virtual char encryptingFormula(char letter) = 0;
-	virtual char decryptingFormula(char letter) = 0;
 };
 
 template <typename T>

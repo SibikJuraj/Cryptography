@@ -1,7 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "GUIElements.h"
+#include "IGUIElementsFactories.h"
+
 
 class GUI
 {
@@ -12,7 +13,11 @@ public:
 
 	virtual void render() = 0;
 	virtual bool isRunning() = 0;
-	virtual void addElement(std::unique_ptr<IGUIElement> element) = 0;
+	virtual void addElement(std::unique_ptr<IGUIElement>&& element) = 0;
+	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() = 0;
+
+	virtual void openSaveWindow() = 0;
+	virtual void openLoadWindow() = 0;
 protected:
 	std::vector<std::unique_ptr<IGUIElement>> m_Elements;
 	int m_Width;

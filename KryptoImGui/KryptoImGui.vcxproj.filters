@@ -19,6 +19,9 @@
     <Filter Include="src\GUI">
       <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\GUI\ImGUI">
+      <UniqueIdentifier>{6BB69958-D776-158F-A0B1-5E0C0C315A6B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Text">
       <UniqueIdentifier>{61FC25CF-4DC9-80DA-76E2-6E82620EB668}</UniqueIdentifier>
     </Filter>
@@ -30,6 +33,9 @@
     </Filter>
     <Filter Include="vendor\submodules">
       <UniqueIdentifier>{C589A148-31A0-9FDE-7A17-2B00E66C7066}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\submodules\ImGuiFileDialog">
+      <UniqueIdentifier>{7F9702B6-EB05-5835-34EF-1235A09C4DD1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\submodules\glm">
       <UniqueIdentifier>{946E466E-00DB-0169-C9CE-99C635FA23D1}</UniqueIdentifier>
@@ -77,6 +83,9 @@
     </ClInclude>
     <ClInclude Include="src\Ciphers\Viegener.h">
       <Filter>src\Ciphers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Class Cryptography\Cryptography.h">
+      <Filter>src\Class Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Config.h">
       <Filter>src</Filter>
@@ -1341,18 +1350,24 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Class Application\Application.h" />
     <ClInclude Include="src\GUI\ImGUI\ImGUI.h" />
-    <ClInclude Include="src\GUI\ImGUI\ImGUIElements.h" />
     <ClInclude Include="src\GUI\GUI.h" />
-    <ClInclude Include="src\GUI\GUIElements.h" />
     <ClInclude Include="src\GUI\GUIFactories.h" />
+    <ClInclude Include="src\Commands\ICommands.h" />
     <ClInclude Include="src\GUI\IGUIElementsFactories.h" />
-    <ClInclude Include="src\Commands\ICommand.h" />
+    <ClInclude Include="src\GUI\GUIElements.h" />
+    <ClInclude Include="src\GUI\ImGUI\ImGUIElements.h" />
+    <ClInclude Include="Commands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">
       <Filter>src\Ciphers\Class MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Class Cryptography\Cryptography.cpp">
+      <Filter>src\Class Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiBuild.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Text\Class base64\base64.cpp">
       <Filter>src\Text\Class base64</Filter>
@@ -1360,8 +1375,10 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Class Application\Application.cpp" />
+    <ClCompile Include="vendor\submodules\ImGuiFileDialog\ImGuiFileDialog.cpp">
+      <Filter>vendor\submodules\ImGuiFileDialog</Filter>
+    </ClCompile>
     <ClCompile Include="src\GUI\ImGUI\ImGUI.cpp" />
-    <ClCompile Include="src\ImGuiBuild.cpp" />
+    <ClCompile Include="src\Commands\ICommands.cpp" />
   </ItemGroup>
 </Project>

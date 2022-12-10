@@ -13,18 +13,21 @@ project "KryptoImGui"
 	includeDir["glm"]   = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
 	includeDir["boost"]   = "%{wks.location}/KryptoImGui/vendor/submodules/boost/include"
 	includeDir["MatrixLib"] = "%{wks.location}/KryptoImGui/vendor/submodules/MatrixLib"
+	includeDir["ImGuiFileDialog"] = "%{wks.location}/KryptoImGui/vendor/submodules/ImGuiFileDialog"
 	files 
 	{
 		"src/**.cpp",
 		"src/**.h",
 		"vendor/submodules/glm/glm/**.hpp",
-		"vendor/submodules/glm/glm/**.inl"
+		"vendor/submodules/glm/glm/**.inl",
+		"vendor/submodules/ImGuiFileDialog/ImGuiFileDialog.cpp",
+		
 	}
 
 	defines
 	{
 		"_CRT_SECURE_NO_WARNINGS",
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
 	}
 
 	includedirs
@@ -35,7 +38,8 @@ project "KryptoImGui"
 		"%{includeDir.imgui}",
 		"%{includeDir.glm}",
 		"%{includeDir.boost}",
-		"%{includeDir.MatrixLib}"
+		"%{includeDir.MatrixLib}",
+		"%{includeDir.ImGuiFileDialog}",
 	}
 
 	links

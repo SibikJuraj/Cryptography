@@ -8,6 +8,10 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <vector>
+#include <ImGuiFileDialog.h>
+#include <Text/TextLoader.h>
+
+#include <Class Cryptography/Cryptography.h>
 
 ImGUI::ImGUI(int width, int height) 
     : GUI(width, height)
@@ -49,19 +53,19 @@ ImGUI::ImGUI(int width, int height)
     ImGuiIO& io{ ImGui::GetIO() };
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
+    io.Fonts->AddFontFromFileTTF("vendor\\submodules\\imgui\\misc\\fonts\\arialbd.ttf", Config::c_FontSize);
+
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
 }
 
 ImGUI::~ImGUI()
 {
-    glfwDestroyWindow(m_Window);
-
-    ImGui_ImplGlfw_Shutdown();
-    ImGui_ImplOpenGL3_Shutdown();
     ImPlot::DestroyContext();
     ImGui::DestroyContext();
-
+    ImGui_ImplGlfw_Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
     glfwTerminate();
 }
 
@@ -74,7 +78,7 @@ void ImGUI::render()
     ImGui::NewFrame();
 
     imGuiRender();
-
+    fileWindowRender();
 
     for (std::unique_ptr<IGUIElement>& element : m_Elements)
         element->draw();
@@ -180,9 +184,14 @@ bool ImGUI::isRunning()
     return !glfwWindowShouldClose(m_Window);
 }
 
-void ImGUI::addElement(std::unique_ptr<IGUIElement> element)
+void ImGUI::addElement(std::unique_ptr<IGUIElement>&& element)
 {
-    //m_Elements.push_back(element);
+    m_Elements.emplace_back(std::move(element));
+}
+
+std::unique_ptr<IGUIElementsFactory> ImGUI::getElementFactory()
+{
+    return std::make_unique<ImGUIElementsFactory>();
 }
 
 void ImGUI::imGuiRender()
@@ -240,4 +249,35 @@ void ImGUI::imGuiRender()
     }
 
     ImGui::End();
+}
+
+void ImGUI::openSaveWindow()
+{
+    ImGuiFileDialog::Instance()->OpenDialog("SaveFileDlgKey", "Save File", ".txt", ".");
+}
+
+void ImGUI::openLoadWindow()
+{
+    ImGuiFileDialog::Instance()->OpenDialog("LoadFileDlgKey", "Load File", ".txt", ".");
+}
+
+void ImGUI::fileWindowRender()
+{
+    // display
+    if (ImGuiFileDialog::Instance()->Display(ImGuiFileDialog::Instance()->GetOpenedKey()))
+    {
+        // action if OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            // action
+            if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
+                TextLoader::saveText(filePathName, Cryptography::getInstance().getOutputText());
+            else
+                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));
+        }
+        // close
+        ImGuiFileDialog::Instance()->Close();
+    }
 }

@@ -11,6 +11,7 @@ public:
 	virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
+	virtual const char* getName() override;
 private:
 	byte rc4_i, rc4_j;
 	byte rc4_s[256];
@@ -62,6 +63,11 @@ inline char Stream::encryptingFormula(char letter)
 inline char Stream::decryptingFormula(char letter)
 {
 	return 0;
+}
+
+inline const char* Stream::getName()
+{
+	return "Stream";
 }
 
 inline byte* Stream::getKey(const std::string_view passwd)

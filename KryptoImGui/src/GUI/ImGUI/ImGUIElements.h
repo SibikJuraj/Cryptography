@@ -55,11 +55,11 @@ public:
 class ImGUITextbox : public Textbox
 {
 public:
-	ImGUITextbox(const char* text, const ICommand& command)
-		: Textbox(text, command) {}
+	ImGUITextbox(const char* label, std::string& text)
+		: Textbox(label, text) {}
 	virtual void draw() override
 	{
-		ImGui::TextWrapped(m_Text);
+		ImGui::TextWrapped(m_Text.c_str());
 	}
 };
 
@@ -82,7 +82,7 @@ public:
 		{
 			ImPlot::SetupAxisFormat(ImAxis_X1, "%g");
 			ImPlot::SetupAxisTicks(ImAxis_X1, 0, m_Count - 1, m_Count);
-			ImPlot::PlotBars("", m_Data, m_Count);
+			//ImPlot::PlotBars("", m_Data, m_Count);
 			ImPlot::EndPlot();
 		}
 	}

@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <memory>
-#include "Commands/ICommand.h"
+#include "Commands/ICommands.h"
 
 class IGUIElement
 {
@@ -17,9 +17,9 @@ public:
 	{}
 	~Panel() = default;
 
-	void addElement(const IGUIElement& element) 
+	void addElement(std::unique_ptr<IGUIElement>&& element) 
 	{
-		//m_Elements.push_back(nullptr);
+		m_Elements.emplace_back(std::move(element));
 	}
 protected:
 	const char* m_Label;
@@ -66,13 +66,13 @@ protected:
 class Textbox : public IGUIElement
 {
 public:
-	Textbox(const char* text, const ICommand& command)
-		: m_Text{ text }, m_Command{ command.clone() }
+	Textbox(const char* label, std::string& text)
+		: m_Label{ label }, m_Text{ text }
 	{}
 	~Textbox() = default;
 protected:
-	const char* m_Text;
-	std::unique_ptr<ICommand> m_Command;
+	const char* m_Label;
+	std::string& m_Text;
 };
 
 class Plot : public IGUIElement

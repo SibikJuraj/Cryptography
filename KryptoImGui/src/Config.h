@@ -1,9 +1,15 @@
 #pragma once
 
-enum CipherMode
+namespace Config
 {
-	MODE_DECRYPT,
-	MODE_ENCRYPT
-};
+	constexpr int c_FontSize{ 18 };
 
-static CipherMode s_CipherMode{ MODE_DECRYPT };
+	enum CipherMode
+	{
+		MODE_DECRYPT,
+		MODE_ENCRYPT
+	};
+
+	static CipherMode s_CipherMode{ MODE_DECRYPT };
+}
+

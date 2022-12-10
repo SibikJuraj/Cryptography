@@ -10,6 +10,7 @@ public:
 	virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
+    virtual const char* getName() override;
 private:
 	int m_Counter;
 };
@@ -109,4 +110,9 @@ inline char Viegener::decryptingFormula(char letter)
         letter += alphabetLength;
 
     return !lower ? letter + 'A' : letter + 'a';
+}
+
+inline const char* Viegener::getName()
+{
+    return "Viegener";
 }

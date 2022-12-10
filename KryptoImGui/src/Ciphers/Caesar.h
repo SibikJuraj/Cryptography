@@ -9,6 +9,7 @@ public:
     virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
+	virtual const char* getName() override;
 };
 
 inline Caesar::Caesar()
@@ -56,4 +57,9 @@ inline char Caesar::decryptingFormula(char letter)
     if (letter < 0)
         letter += alphabetLength;
     return letter + 'A';
+}
+
+inline const char* Caesar::getName()
+{
+    return "Caesar";
 }

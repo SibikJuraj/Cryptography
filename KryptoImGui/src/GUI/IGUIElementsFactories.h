@@ -3,9 +3,9 @@
 #include <vector>
 #include <memory>
 
-#include "Commands/ICommand.h"
-#include "GUIElements.h"
+#include "Commands/ICommands.h"
 
+#include "GUIElements.h"
 class IGUIElementsFactory
 {
 public:
@@ -13,15 +13,15 @@ public:
 	virtual std::unique_ptr<Button> createButton(const char* label, const ICommand& command) = 0;
 	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items) = 0;
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) = 0;
-	virtual std::unique_ptr<Textbox> createTextbox(const char* text, const ICommand& command) = 0;
+	virtual std::unique_ptr<Textbox> createTextbox(const char* label, std::string& text) = 0;
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) = 0;
 };
 
 
-#include "ImGUI/ImGUIElements.h"
 /// <summary>
 /// ImGUI Elements Factory
 /// </summary>
+#include "ImGUI/ImGUIElements.h"
 class ImGUIElementsFactory : public IGUIElementsFactory
 {
 public:
@@ -45,9 +45,9 @@ public:
 		return std::make_unique<ImGUICheckbox>(label, value);
 	}
 
-	virtual std::unique_ptr<Textbox> createTextbox(const char* text, const ICommand& command) override
+	virtual std::unique_ptr<Textbox> createTextbox(const char* label, std::string& text) override
 	{
-		return std::make_unique<ImGUITextbox>(text);
+		return std::make_unique<ImGUITextbox>(label, text);
 	}
 
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) override

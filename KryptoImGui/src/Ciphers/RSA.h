@@ -17,6 +17,7 @@ public:
 	virtual std::string decrypt(const std::string_view input) override;
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
+    virtual const char* getName() override;
 
     static std::pair<int1024_t, int1024_t> findAB(int1024_t offset, int1024_t n, int1024_t a, bool& terminate);
     static bool isSquare(int1024_t x);
@@ -96,6 +97,11 @@ inline char RSA::encryptingFormula(char letter)
 inline char RSA::decryptingFormula(char letter)
 {
 	return 0;
+}
+
+inline const char* RSA::getName()
+{
+    return "RSA";
 }
 
 inline int1024_t RSA::modulo(int1024_t a, int1024_t b, int1024_t n) 

@@ -1,6 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <Text/TextLoader.h>
+
+class GUI;
 
 class ICommand
 {
@@ -54,4 +57,34 @@ public:
 	virtual void execute() override
 	{
 	}
+};
+
+class CommandOpenLoadWindow : public ICommand
+{
+public:
+	CommandOpenLoadWindow(GUI&& gui) : m_GUI{ gui } {}
+	~CommandOpenLoadWindow() = default;
+
+	virtual std::unique_ptr<ICommand> clone() const override
+	{
+		return std::make_unique<CommandOpenLoadWindow>(*this);
+	}
+	virtual void execute() override;
+private:
+	GUI& m_GUI;
+};
+
+class CommandOpenSaveWindow : public ICommand
+{
+public:
+	CommandOpenSaveWindow(GUI& gui) : m_GUI{ gui } {}
+	~CommandOpenSaveWindow() = default;
+
+	virtual std::unique_ptr<ICommand> clone() const override
+	{
+		return std::make_unique<CommandOpenSaveWindow>(*this);
+	}
+	virtual void execute() override;
+private:
+	GUI& m_GUI;
 };
