@@ -21,7 +21,6 @@ project "KryptoImGui"
 		"vendor/submodules/glm/glm/**.hpp",
 		"vendor/submodules/glm/glm/**.inl",
 		"vendor/submodules/ImGuiFileDialog/ImGuiFileDialog.cpp",
-		
 	}
 
 	defines

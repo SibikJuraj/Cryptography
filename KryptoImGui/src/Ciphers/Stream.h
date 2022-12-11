@@ -1,5 +1,6 @@
 #pragma once
 #include <Ciphers/Cipher.h>
+#include <Text/Class base64/base64.h>
 
 typedef unsigned char byte;
 
@@ -9,9 +10,10 @@ public:
 	Stream();
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
+	virtual const char* getName() override;
+protected:
 	virtual char encryptingFormula(char letter) override;
 	virtual char decryptingFormula(char letter) override;
-	virtual const char* getName() override;
 private:
 	byte rc4_i, rc4_j;
 	byte rc4_s[256];

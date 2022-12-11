@@ -37,8 +37,31 @@ public:
 class ImGUICombobox : public Combobox
 {
 public:
-	ImGUICombobox(const char* label, const std::vector<const char*>& items)
-		: Combobox(label, items) {}
+	ImGUICombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
+		: Combobox(label, items, selected, command) {}
+
+	virtual void draw() override
+	{
+		const char* curItem{ m_Items[m_Selected] };
+		if (ImGui::BeginCombo(m_Label, curItem))
+		{
+			for (int i{ 0 }; i < m_Items.size(); ++i)
+			{
+				bool is_selected = (curItem == m_Items[i]);
+				if (ImGui::Selectable(m_Items[i], is_selected))
+				{
+					m_Selected = i;
+					curItem = m_Items[m_Selected];
+					m_Command->execute();
+				}
+				if (is_selected)
+				{
+					ImGui::SetItemDefaultFocus();
+				}
+			}
+			ImGui::EndCombo();
+		}
+	}
 };
 
 class ImGUICheckbox : public Checkbox
@@ -84,35 +107,6 @@ public:
 			ImPlot::SetupAxisTicks(ImAxis_X1, 0, m_Count - 1, m_Count);
 			//ImPlot::PlotBars("", m_Data, m_Count);
 			ImPlot::EndPlot();
-		}
-	}
-};
-
-class ImGUIComboboxCipher : public ImGUICombobox
-{
-public:
-	ImGUIComboboxCipher(const char* label, const std::vector<const char*>& items)
-		: ImGUICombobox(label, items) {}
-	virtual void draw() override
-	{
-		const char* curItem{ m_Items[m_SelectedValue] };
-		if (ImGui::BeginCombo(m_Label, curItem))
-		{
-			for (int i{ 0 }; i < m_Items.size(); ++i)
-			{
-				bool is_selected = (curItem == m_Items[i]);
-				if (ImGui::Selectable(m_Items[i], is_selected))
-				{
-					m_SelectedValue = i;
-					curItem = m_Items[m_SelectedValue];
-					//CommandCipherCreate(m_SelectedValue).execute();
-				}
-				if (is_selected)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-			}
-			ImGui::EndCombo();
 		}
 	}
 };

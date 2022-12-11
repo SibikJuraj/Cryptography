@@ -14,10 +14,10 @@ public:
 
 	virtual std::string encrypt(const std::string_view input) = 0;
 	virtual std::string decrypt(const std::string_view input) = 0;
-
+	virtual const char* getName() = 0;
+protected:
 	virtual char encryptingFormula(char letter) = 0;
 	virtual char decryptingFormula(char letter) = 0;
-	virtual const char* getName() = 0;
 };
 
 template<typename T>

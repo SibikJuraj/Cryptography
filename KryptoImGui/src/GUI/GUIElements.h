@@ -41,14 +41,15 @@ protected:
 class Combobox : public IGUIElement
 {
 public:
-	Combobox(const char* label, const std::vector<const char*>& items)
-		: m_Label{ label }, m_Items{ items }, m_SelectedValue{ 0 }
+	Combobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
+		: m_Label{ label }, m_Items{ items }, m_Selected{ selected }, m_Command{ command.clone() }
 	{}
 	~Combobox() = default;
 protected:
 	const char* m_Label;
 	const std::vector<const char*> m_Items;
-	int m_SelectedValue;
+	int& m_Selected;
+	std::unique_ptr<ICommand> m_Command;
 };
 
 class Checkbox : public IGUIElement

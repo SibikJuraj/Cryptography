@@ -11,7 +11,7 @@
 #include <Text/TextLoader.h>
 #include <PwdAuth.h>
 
-Cryptography::Cryptography(IGUIFactory& factory) :
+Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     m_InputText{std::make_unique<std::string>()}, m_OutputText{ std::make_unique<std::string>() }
 {
     registerCipher(new Caesar());
@@ -32,7 +32,7 @@ Cryptography::Cryptography(IGUIFactory& factory) :
     auto elementFactory{ m_GUI->getElementFactory() };
 
     auto panelCiphers{ elementFactory->createPanel("Main Panel") };
-    panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames)));
+    panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames, m_SelectedCipher)));
     panelCiphers->addElement(std::move(elementFactory->createButton("Decrypt", CommandCipherDecrypt())));
     panelCiphers->addElement(std::move(elementFactory->createButton("Encrypt", CommandCipherEncrypt())));
     
@@ -82,9 +82,24 @@ void Cryptography::setInputText(std::string&& text)
     *m_InputText = text;
 }
 
+const std::string& Cryptography::getInputText()
+{
+    return *m_InputText;
+}
+
+void Cryptography::setOutputText(std::string&& text)
+{
+    *m_OutputText = text;
+}
+
 const std::string& Cryptography::getOutputText()
 {
     return *m_OutputText;
+}
+
+Cipher& Cryptography::getCipher() const
+{
+    return *m_Ciphers[m_SelectedCipher];
 }
 
 void Cryptography::registerCipher(Cipher* cipher)

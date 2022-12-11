@@ -11,7 +11,7 @@ class IGUIElementsFactory
 public:
 	virtual std::unique_ptr<Panel> createPanel(const char* label) = 0;
 	virtual std::unique_ptr<Button> createButton(const char* label, const ICommand& command) = 0;
-	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items) = 0;
+	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command = CommandNull()) = 0;
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) = 0;
 	virtual std::unique_ptr<Textbox> createTextbox(const char* label, std::string& text) = 0;
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) = 0;
@@ -35,9 +35,9 @@ public:
 		return std::make_unique<ImGUIButton>(label, command);
 	}
 
-	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items) override
+	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command) override
 	{
-		return std::make_unique<ImGUIComboboxCipher>(label, items);
+		return std::make_unique<ImGUICombobox>(label, items, selected, command);
 	}
 
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) override

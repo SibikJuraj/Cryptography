@@ -10,9 +10,10 @@ public:
     Hill();
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
+    virtual const char* getName() override;
+protected:
     virtual char encryptingFormula(char letter) override;
     virtual char decryptingFormula(char letter) override;
-    virtual const char* getName() override;
 };
 
 inline Hill::Hill()

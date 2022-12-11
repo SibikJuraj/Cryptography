@@ -5,12 +5,32 @@
 
 class GUI;
 
+
+//TODO COMMANDY BY MALI BYT SHARED_PTR
 class ICommand
 {
 public:
 	virtual void execute() = 0;
 	virtual std::unique_ptr<ICommand> clone() const = 0 ;
 };
+
+class CommandNull : public ICommand
+{
+public:
+	CommandNull() = default;
+	~CommandNull() = default;
+
+	virtual std::unique_ptr<ICommand> clone() const override
+	{
+		return std::make_unique<CommandNull>(*this);
+	}
+	virtual void execute() override
+	{
+	}
+private:
+	int m_CipherID;
+};
+
 
 class CommandCipherCreate : public ICommand
 {
@@ -39,9 +59,7 @@ public:
 	{
 		return std::make_unique<CommandCipherDecrypt>(*this);
 	}
-	virtual void execute() override
-	{
-	}
+	virtual void execute() override;
 };
 
 class CommandCipherEncrypt : public ICommand
@@ -54,9 +72,7 @@ public:
 	{
 		return std::make_unique<CommandCipherEncrypt>(*this);
 	}
-	virtual void execute() override
-	{
-	}
+	virtual void execute() override;
 };
 
 class CommandOpenLoadWindow : public ICommand
