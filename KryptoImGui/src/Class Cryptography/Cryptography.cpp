@@ -63,29 +63,8 @@ Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
 
 void Cryptography::run()
 {
-    /*auto textVigenere{ TextLoader::loadText("texts/vigenere/text1_enc.txt") };
-    auto decryptedTextVigenere{ Viegener().decrypt(textVigenere) };
-    TextLoader::saveText("texts/vigenere/decoded/text1_dec.txt", decryptedTextVigenere);
-
-    auto textStream{ TextLoader::loadText("texts/stream/text1_enc.txt") };
-    auto decryptedTextStream{ Stream().decrypt(textStream) };
-    TextLoader::saveText("texts/stream/decoded/text1_dec.txt", decryptedTextStream); */
-
-    /*auto textHill{ TextLoader::loadText("texts/hill/text3_enc.txt") };
-    auto decryptedTextHill{ Hill({ 3, 7, 20, 17, 24, 17, 0, 9, 0 }).decrypt(textHill) };
-    TextLoader::saveText("texts/hill/decoded/text3_dec.txt", decryptedTextHill);*/
-
-    /*auto textMD5{ TextLoader::loadText("texts/md5/shadow1.txt") };
-    auto decryptedTextMD5{ PwdAuth::decrypt(textMD5) };
-    TextLoader::saveText("texts/md5/decoded/shadow1_pwd.txt", decryptedTextMD5, true);*/
-
-    /*RSA rsa;
-    rsa.decrypt("");*/
-    
     while (m_GUI->isRunning())
-    {
         m_GUI->render();
-    }
 }
 
 void Cryptography::setInputText(std::string&& text)
