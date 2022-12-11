@@ -16,14 +16,13 @@ public:
 	~Cryptography() = default;
 	void run();
 
-	Cipher<>& getCipher() const;
-
 	void setInputText(std::string&& text);
 	const std::string& getInputText();
 	void setOutputText(std::string&& text);
 	const std::string& getOutputText();
 
 	GUI& getGUI() const;
+	Cipher<>& getCipher() const;
 private:
 	Cryptography(IGUIFactory& factory);
 	void registerCipher(std::unique_ptr<Cipher<>>&& cipher);
