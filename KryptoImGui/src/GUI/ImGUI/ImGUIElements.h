@@ -5,6 +5,7 @@
 
 #include <vector>
 #include "GUI/GUIElements.h"
+#include "Text/Class base64/base64.h"
 
 class ImGUIPanel : public Panel
 {
@@ -84,6 +85,31 @@ public:
 	{
 		ImGui::TextWrapped(m_Text.c_str());
 	}
+};
+
+class ImGUIInputInt : public InputInt
+{
+public:
+	ImGUIInputInt(const char* label, int& value, const ICommand& command, const std::pair<int, int> range)
+		: m_LastVal{ value }, InputInt(label, value, command, range)  {}
+	~ImGUIInputInt() = default;
+
+	virtual void draw() override
+	{
+		if (m_Value < m_Range.first)
+			m_Value = m_Range.first;
+		if (m_Value > m_Range.second)
+			m_Value = m_Range.second;
+
+		if (m_LastVal != m_Value)
+		{
+			m_Command->execute();
+			m_LastVal = m_Value;
+		}
+		ImGui::InputInt(m_Label, &m_Value);
+	}
+private:
+	int m_LastVal;
 };
 
 class ImGUIPlot : public Plot

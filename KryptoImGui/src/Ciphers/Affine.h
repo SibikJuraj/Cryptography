@@ -1,12 +1,13 @@
 #pragma once
 #include <Ciphers/Cipher.h>
 
-class Affine : public CipherCore<int>
+class Affine : public Cipher<int>
 {
 public:
 	Affine();
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
+    virtual std::string update(const std::string_view input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -14,8 +15,21 @@ protected:
 };
 
 Affine::Affine()
-    : CipherCore(std::vector<int>(2))
+    : Cipher(std::vector<int>(2))
 {
+}
+
+inline std::string Affine::update(const std::string_view input)
+{
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+    {
+        if (m_CipherMode == MODE_DECRYPT)
+            output += decryptingFormula(input[i]);
+        else
+            output += encryptingFormula(input[i]);
+    }
+    return output;
 }
 
 inline std::string Affine::encrypt(const std::string_view input)
@@ -25,6 +39,7 @@ inline std::string Affine::encrypt(const std::string_view input)
 
 inline std::string Affine::decrypt(const std::string_view input)
 {
+    m_CipherMode = MODE_DECRYPT;
     std::string_view rawText{ input };
 
     std::string output{};

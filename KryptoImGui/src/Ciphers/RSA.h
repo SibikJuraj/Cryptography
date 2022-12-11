@@ -9,12 +9,13 @@
 
 using namespace boost::multiprecision;
 
-class RSA : public CipherCore<int>
+class RSA : public Cipher<int>
 {
 public:
 	RSA();
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
+    virtual std::string update(const std::string_view input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -27,8 +28,13 @@ private:
 };
 
 inline RSA::RSA()
-	: CipherCore(std::vector<int>(2))
+	: Cipher(std::vector<int>(2))
 {
+}
+
+inline std::string RSA::update(const std::string_view input)
+{
+    return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
 inline std::string RSA::encrypt(const std::string_view input)
@@ -38,6 +44,7 @@ inline std::string RSA::encrypt(const std::string_view input)
 
 inline std::string RSA::decrypt(const std::string_view input)
 {
+    m_CipherMode = MODE_DECRYPT;
     /*int1024_t p{ getBigPrime() };
     int1024_t q{ getBigPrime() };
     int1024_t e{ 65'537 };
@@ -52,9 +59,26 @@ inline std::string RSA::decrypt(const std::string_view input)
 
     int offset{ 0 };
     bool termL{ false };
-    int1024_t n{ "16812615098258879" };
-    int1024_t e{ 65537 };
-    int1024_t y{ "1990249581724467" };
+
+    int valIdx{ 0 };
+    std::vector<std::string> values(3);
+    for (char letter : input)
+    {
+        if (letter == '\n')
+        {
+            break;
+        }
+        if (letter == ':')
+        {
+            ++valIdx;
+            continue;
+        }
+        
+        values[valIdx] += letter;
+    }
+    int1024_t n{ values[0] };
+    int1024_t e{ values[1] };
+    int1024_t y{ values[2] };
 
     int1024_t a = (int1024_t)sqrt(n) + 1;
     for (int i = offset; i < offset + fSL.size(); ++i)
@@ -77,17 +101,18 @@ inline std::string RSA::decrypt(const std::string_view input)
     int1024_t p = ab.first + ab.second;
     int1024_t q = ab.first - ab.second;
 
-    if (p * q == n)
-        std::cout << p << " * " << q << " = " << n << '\n';
+    std::string output{};
+    output += "p = " + p.str() + '\n';
+    output += "q = " + q.str() + '\n';
 
     int1024_t phi_n{ (p - 1) * (q - 1) };
     auto d = boost::integer::mod_inverse(e, phi_n);
-    std::cout << "Private key is: " << d << '\n';
+    output += "Private key = " + d.str() + '\n';
 
     auto x{ modulo(y, d, n) };
+    output += "Message = " + x.str() + '\n';
 
-    std::cout << "Message is: " << x;
-    return {};
+    return output;
 }
 
 inline char RSA::encryptingFormula(char letter)

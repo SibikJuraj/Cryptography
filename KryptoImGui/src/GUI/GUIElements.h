@@ -21,6 +21,11 @@ public:
 	{
 		m_Elements.emplace_back(std::move(element));
 	}
+
+	void clear()
+	{
+		m_Elements.clear();
+	}
 protected:
 	const char* m_Label;
 	std::vector<std::unique_ptr<IGUIElement>> m_Elements;
@@ -35,7 +40,7 @@ public:
 	~Button() = default;
 protected:
 	const char* m_Label;
-	std::unique_ptr<ICommand> m_Command;
+	std::shared_ptr<ICommand> m_Command;
 };
 
 class Combobox : public IGUIElement
@@ -49,7 +54,7 @@ protected:
 	const char* m_Label;
 	const std::vector<const char*> m_Items;
 	int& m_Selected;
-	std::unique_ptr<ICommand> m_Command;
+	std::shared_ptr<ICommand> m_Command;
 };
 
 class Checkbox : public IGUIElement
@@ -74,6 +79,21 @@ public:
 protected:
 	const char* m_Label;
 	std::string& m_Text;
+};
+
+
+class InputInt : public IGUIElement
+{
+public:
+	InputInt(const char* label, int& value, const ICommand& command, const std::pair<int, int> range)
+		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }, m_Range{ range }
+	{}
+	~InputInt() = default;
+protected:
+	const char* m_Label;
+	int& m_Value;
+	std::pair<int ,int> m_Range;
+	std::shared_ptr<ICommand> m_Command;
 };
 
 class Plot : public IGUIElement

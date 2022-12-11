@@ -16,21 +16,22 @@ public:
 	~Cryptography() = default;
 	void run();
 
-	Cipher& getCipher() const;
+	Cipher<>& getCipher() const;
 
 	void setInputText(std::string&& text);
 	const std::string& getInputText();
 	void setOutputText(std::string&& text);
 	const std::string& getOutputText();
 
+	GUI& getGUI() const;
 private:
 	Cryptography(IGUIFactory& factory);
-	void registerCipher(Cipher* cipher);
+	void registerCipher(Cipher<>* cipher);
 
 	std::unique_ptr<GUI> m_GUI;
 	std::unique_ptr<std::string> m_InputText;
 	std::unique_ptr<std::string> m_OutputText;
-	std::vector<std::unique_ptr<Cipher>> m_Ciphers;
+	std::vector<std::unique_ptr<Cipher<>>> m_Ciphers;
 
 	int m_SelectedCipher;
 };

@@ -53,7 +53,7 @@ ImGUI::ImGUI(int width, int height)
     ImGuiIO& io{ ImGui::GetIO() };
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
-    io.Fonts->AddFontFromFileTTF("vendor\\submodules\\imgui\\misc\\fonts\\arialbd.ttf", Config::c_FontSize);
+    io.Fonts->AddFontFromFileTTF("vendor\\submodules\\imgui\\misc\\fonts\\arialbd.ttf", c_FontSize);
 
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init("#version 330");

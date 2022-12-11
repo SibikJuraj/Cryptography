@@ -2,12 +2,13 @@
 #include <Ciphers/Cipher.h>
 #include "Kasiski.h"
 
-class Viegener : public CipherCore<int>
+class Vigenere : public Cipher<int>
 {
 public:
-	Viegener();
+	Vigenere();
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
+    virtual std::string update(const std::string_view input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -16,18 +17,40 @@ private:
 	int m_Counter;
 };
 
-inline Viegener::Viegener()
-    : CipherCore(std::vector<int>{}), m_Counter{ 0 }
+inline Vigenere::Vigenere()
+    : Cipher(std::vector<int>(1)), m_Counter{ 0 }
 {
 }
 
-inline std::string Viegener::encrypt(const std::string_view input)
+inline std::string Vigenere::update(const std::string_view input)
+{
+    m_Counter = 0;
+    const AnalysisOfSKLang language{};
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+    {
+        if (m_CipherMode == MODE_DECRYPT)
+            output += decryptingFormula(input[i]);
+        else
+            output += encryptingFormula(input[i]);
+    }
+    output += "\n\nPassword: ";
+    for (int i{ 0 }; i < m_Keys.size(); ++i)
+        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65);
+    output += " length: " + std::to_string(m_Keys.size());
+
+    return output;
+}
+
+inline std::string Vigenere::encrypt(const std::string_view input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Viegener::decrypt(const std::string_view input)
+inline std::string Vigenere::decrypt(const std::string_view input)
 {
+    m_CipherMode = MODE_DECRYPT;
+
     m_Counter = 0;
     int passLength{ 0 };
     const AnalysisOfSKLang language{};
@@ -92,12 +115,12 @@ inline std::string Viegener::decrypt(const std::string_view input)
     return output;
 }
 
-inline char Viegener::encryptingFormula(char letter)
+inline char Vigenere::encryptingFormula(char letter)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline char Viegener::decryptingFormula(char letter)
+inline char Vigenere::decryptingFormula(char letter)
 {
     if (!Text::isLetter(letter))
         return letter;
@@ -113,7 +136,7 @@ inline char Viegener::decryptingFormula(char letter)
     return !lower ? letter + 'A' : letter + 'a';
 }
 
-inline const char* Viegener::getName()
+inline const char* Vigenere::getName()
 {
-    return "Viegener";
+    return "Vigenere";
 }

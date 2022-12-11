@@ -1,25 +1,26 @@
 #include <iostream>
 #include <utility>
 #include "Cryptography.h"
+#include <Text/TextLoader.h>
 
 #include <Ciphers/Caesar.h>
 #include <Ciphers/Affine.h>
-#include <Ciphers/Viegener.h>
+#include <Ciphers/Vigenere.h>
 #include <Ciphers/Hill.h>
 #include <Ciphers/Stream.h>
 #include <Ciphers/RSA.h>
-#include <Text/TextLoader.h>
-#include <PwdAuth.h>
+#include <Ciphers/PwdAuth.h>
 
 Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     m_InputText{std::make_unique<std::string>()}, m_OutputText{ std::make_unique<std::string>() }
 {
     registerCipher(new Caesar());
     registerCipher(new Affine());
-    registerCipher(new Viegener());
+    registerCipher(new Vigenere());
     registerCipher(new Stream());
     registerCipher(new Hill());
     registerCipher(new RSA());
+    registerCipher(new PwdAuth());
 
     std::vector<const char*> cipherNames;
 
@@ -31,10 +32,20 @@ Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     m_GUI = factory.createGUI(1600, 900);
     auto elementFactory{ m_GUI->getElementFactory() };
 
+    auto panelCipherParameters{ elementFactory->createPanel("Cipher parameters") };
+
+    auto decryptContainer{ std::make_shared<CommandContainer>() };
+    decryptContainer->addElement(std::make_shared<CommandCipherDecrypt>());
+    decryptContainer->addElement(std::make_shared<CommandCipherSettings>(*panelCipherParameters));
+
+    auto encryptContainer{ std::make_shared<CommandContainer>() };
+    encryptContainer->addElement(std::make_shared<CommandCipherEncrypt>());
+    encryptContainer->addElement(std::make_shared<CommandCipherSettings>(*panelCipherParameters));
+
     auto panelCiphers{ elementFactory->createPanel("Main Panel") };
-    panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames, m_SelectedCipher)));
-    panelCiphers->addElement(std::move(elementFactory->createButton("Decrypt", CommandCipherDecrypt())));
-    panelCiphers->addElement(std::move(elementFactory->createButton("Encrypt", CommandCipherEncrypt())));
+    panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames, m_SelectedCipher, CommandCipherSettings(*panelCipherParameters))));
+    panelCiphers->addElement(std::move(elementFactory->createButton("Decrypt", std::move(*decryptContainer))));
+    panelCiphers->addElement(std::move(elementFactory->createButton("Encrypt", std::move(*encryptContainer))));
     
     auto panelInputText{ elementFactory->createPanel("Input Text") };
     panelInputText->addElement(std::move(elementFactory->createButton("Load File", CommandOpenLoadWindow(std::move(*m_GUI)))));
@@ -43,11 +54,11 @@ Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     auto panelOutputText{ elementFactory->createPanel("Output Text") };
     panelOutputText->addElement(std::move(elementFactory->createButton("Save File", CommandOpenSaveWindow(std::move(*m_GUI)))));
     panelOutputText->addElement(std::move(elementFactory->createTextbox("Output Text", *m_OutputText)));
-
-
+    
     m_GUI->addElement(std::move(panelCiphers));
     m_GUI->addElement(std::move(panelInputText));
     m_GUI->addElement(std::move(panelOutputText));
+    m_GUI->addElement(std::move(panelCipherParameters));
 }
 
 void Cryptography::run()
@@ -97,12 +108,17 @@ const std::string& Cryptography::getOutputText()
     return *m_OutputText;
 }
 
-Cipher& Cryptography::getCipher() const
+Cipher<>& Cryptography::getCipher() const
 {
     return *m_Ciphers[m_SelectedCipher];
 }
 
-void Cryptography::registerCipher(Cipher* cipher)
+GUI& Cryptography::getGUI() const
+{
+    return *m_GUI;
+}
+
+void Cryptography::registerCipher(Cipher<>* cipher)
 {
     m_Ciphers.emplace_back(std::move(cipher));
 }

@@ -8,46 +8,38 @@
 #include <Text/Text.h>
 #include <Text/AnalysisOfLang.h>
 
-class Cipher {
+template<typename T = int>
+class Cipher 
+{
 public:
-	Cipher() = default;
+	Cipher(std::vector<T> keys) : m_Keys{ keys }, m_CipherMode{ MODE_DECRYPT } {}
 
 	virtual std::string encrypt(const std::string_view input) = 0;
 	virtual std::string decrypt(const std::string_view input) = 0;
+	virtual std::string update(const std::string_view input) = 0;
 	virtual const char* getName() = 0;
-protected:
-	virtual char encryptingFormula(char letter) = 0;
-	virtual char decryptingFormula(char letter) = 0;
-};
-
-template<typename T>
-class CipherCore : public Cipher
-{
-public:
-	CipherCore(std::vector<T> keys);
 
 	void setKey(int index, T value);
 	int getKey(int index);
 	std::vector<T>& getKeys();
 protected:
+	virtual char encryptingFormula(char letter) = 0;
+	virtual char decryptingFormula(char letter) = 0;
+
 	std::vector<T> m_Keys;
+	CipherMode m_CipherMode;
 };
 
-template <typename T>
-inline CipherCore<T>::CipherCore(std::vector<T> keys)
-	: m_Keys{ keys }
-{
-}
 
 template <typename T>
-inline void CipherCore<T>::setKey(int index, T value)
+inline void Cipher<T>::setKey(int index, T value)
 {
 	if (index >= 0 && index < m_Keys.size())
 		m_Keys[index] = value;
 }
 
 template <typename T>
-inline int CipherCore<T>::getKey(int index)
+inline int Cipher<T>::getKey(int index)
 {
 	if (index >= 0 && index < m_Keys.size())
 		return m_Keys[index];
@@ -55,7 +47,7 @@ inline int CipherCore<T>::getKey(int index)
 }
 
 template <typename T>
-inline std::vector<T>& CipherCore<T>::getKeys()
+inline std::vector<T>& Cipher<T>::getKeys()
 {
 	return m_Keys;
 }

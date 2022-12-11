@@ -1,15 +1,15 @@
 #pragma once
 #include <Ciphers/Cipher.h>
-#include <Text/Class base64/base64.h>
 
 typedef unsigned char byte;
 
-class Stream : public CipherCore<int>
+class Stream : public Cipher<int>
 {
 public:
 	Stream();
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
+	virtual std::string update(const std::string_view input) override;
 	virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -27,8 +27,23 @@ private:
 };
 
 inline Stream::Stream() 
-	: CipherCore(std::vector<int>(2))
+	: Cipher(std::vector<int>(1))
 {
+}
+
+inline std::string Stream::update(const std::string_view input)
+{
+	std::string output{ };
+	output.resize(input.size());
+
+	decrypt(std::to_string(m_Keys[0])+ '\0', input, output);
+	auto letterCount{ Text::letterCount(output) };
+
+	output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
+
+	output += "\nPassword : " + std::to_string(m_Keys[0]);
+
+	return output;
 }
 
 inline std::string Stream::encrypt(const std::string_view input)
@@ -38,6 +53,8 @@ inline std::string Stream::encrypt(const std::string_view input)
 
 inline std::string Stream::decrypt(const std::string_view input)
 {
+	m_CipherMode = MODE_DECRYPT;
+
 	std::string output{ };
 	output.resize(input.size());
 
@@ -50,6 +67,7 @@ inline std::string Stream::decrypt(const std::string_view input)
 		{
 			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
 
+			m_Keys[0] = i;
 			output += "\nPassword : " + std::to_string(i);
 			break;
 		}

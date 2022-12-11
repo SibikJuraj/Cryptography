@@ -3,13 +3,14 @@
 #include <matrix.h>
 #include <matrix_operation.h>
 
-class Hill : public CipherCore<int>
+class Hill : public Cipher<int>
 {
 public:
     Hill(std::vector<int> code);
     Hill();
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
+    virtual std::string update(const std::string_view input) override;
     virtual const char* getName() override;
 protected:
     virtual char encryptingFormula(char letter) override;
@@ -17,13 +18,18 @@ protected:
 };
 
 inline Hill::Hill()
-    : CipherCore(std::vector<int>())
+    : Hill({ 3, 7, 20, 17, 24, 17, 0, 9, 0 })
 {
 }
 
 inline Hill::Hill(std::vector<int> code)
-    : CipherCore(code)
+    : Cipher(code)
 {
+}
+
+inline std::string Hill::update(const std::string_view input)
+{
+    return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
 inline std::string Hill::encrypt(const std::string_view input)
@@ -33,6 +39,7 @@ inline std::string Hill::encrypt(const std::string_view input)
 
 inline std::string Hill::decrypt(const std::string_view input)
 {
+    m_CipherMode = MODE_DECRYPT;
     int dimension{ static_cast<int>(std::sqrt(m_Keys.size())) };
     Matrix<double> matA(dimension, dimension);
     for (int i{ 0 }; i < matA.cols(); ++i)

@@ -1,17 +1,17 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include <Text/TextLoader.h>
 
 class GUI;
+class Panel;
 
-
-//TODO COMMANDY BY MALI BYT SHARED_PTR
 class ICommand
 {
 public:
 	virtual void execute() = 0;
-	virtual std::unique_ptr<ICommand> clone() const = 0 ;
+	virtual std::shared_ptr<ICommand> clone() const = 0 ;
 };
 
 class CommandNull : public ICommand
@@ -20,33 +20,71 @@ public:
 	CommandNull() = default;
 	~CommandNull() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
+	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_unique<CommandNull>(*this);
+		return std::make_shared<CommandNull>(*this);
 	}
 	virtual void execute() override
 	{
 	}
-private:
-	int m_CipherID;
 };
 
-
-class CommandCipherCreate : public ICommand
+class CommandContainer : public ICommand
 {
 public:
-	CommandCipherCreate(int cipherID) : m_CipherID{ cipherID } {}
-	~CommandCipherCreate() = default;
+	CommandContainer() : m_Elements{ std::vector<std::shared_ptr<ICommand>>() } {}
+	~CommandContainer() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
-	{ 
-		return std::make_unique<CommandCipherCreate>(*this);
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandContainer>(*this);
 	}
+
 	virtual void execute() override
 	{
+		for (int i{ 0 }; i < m_Elements.size(); ++i)
+			m_Elements[i]->execute();
+	}
+
+	void addElement(std::shared_ptr<ICommand>&& element)
+	{
+		m_Elements.emplace_back(std::move(element));
+	}
+
+	void clear()
+	{
+		m_Elements.clear();
 	}
 private:
-	int m_CipherID;
+	std::vector<std::shared_ptr<ICommand>> m_Elements;
+};
+
+class CommandCipherSettings : public ICommand
+{
+public:
+	CommandCipherSettings(Panel& panel) : m_Panel{ panel } {}
+	~CommandCipherSettings() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{ 
+		return std::make_shared<CommandCipherSettings>(*this);
+	}
+	virtual void execute() override;
+private:
+	Panel& m_Panel;
+};
+
+class CommandUpdateText : public ICommand
+{
+public:
+	CommandUpdateText() = default;
+	~CommandUpdateText() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandUpdateText>(*this);
+	}
+	virtual void execute() override;
 };
 
 class CommandCipherDecrypt : public ICommand
@@ -55,9 +93,9 @@ public:
 	CommandCipherDecrypt() = default;
 	~CommandCipherDecrypt() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
+	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_unique<CommandCipherDecrypt>(*this);
+		return std::make_shared<CommandCipherDecrypt>(*this);
 	}
 	virtual void execute() override;
 };
@@ -68,9 +106,9 @@ public:
 	CommandCipherEncrypt() = default;
 	~CommandCipherEncrypt() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
+	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_unique<CommandCipherEncrypt>(*this);
+		return std::make_shared<CommandCipherEncrypt>(*this);
 	}
 	virtual void execute() override;
 };
@@ -81,9 +119,9 @@ public:
 	CommandOpenLoadWindow(GUI&& gui) : m_GUI{ gui } {}
 	~CommandOpenLoadWindow() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
+	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_unique<CommandOpenLoadWindow>(*this);
+		return std::make_shared<CommandOpenLoadWindow>(*this);
 	}
 	virtual void execute() override;
 private:
@@ -96,9 +134,9 @@ public:
 	CommandOpenSaveWindow(GUI& gui) : m_GUI{ gui } {}
 	~CommandOpenSaveWindow() = default;
 
-	virtual std::unique_ptr<ICommand> clone() const override
+	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_unique<CommandOpenSaveWindow>(*this);
+		return std::make_shared<CommandOpenSaveWindow>(*this);
 	}
 	virtual void execute() override;
 private:

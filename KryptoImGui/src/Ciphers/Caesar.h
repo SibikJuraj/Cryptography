@@ -1,12 +1,13 @@
 #pragma once
 #include <Ciphers/Cipher.h>
 
-class Caesar : public CipherCore<int>
+class Caesar : public Cipher<int>
 {
 public:
 	Caesar();
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
+    virtual std::string update(const std::string_view input) override;
 	virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -14,8 +15,21 @@ protected:
 };
 
 inline Caesar::Caesar()
-    : CipherCore(std::vector<int>(1))
+    : Cipher(std::vector<int>(1))
 {
+}
+
+inline std::string Caesar::update(const std::string_view input)
+{
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+    {
+        if (m_CipherMode == MODE_DECRYPT)
+            output += decryptingFormula(input[i]);
+        else
+            output += encryptingFormula(input[i]);
+    }
+    return output;
 }
 
 inline std::string Caesar::encrypt(const std::string_view input)
@@ -25,6 +39,7 @@ inline std::string Caesar::encrypt(const std::string_view input)
 
 inline std::string Caesar::decrypt(const std::string_view input)
 {
+    m_CipherMode = MODE_DECRYPT;
     double max{ -1.0 };
     int alphabetLength{ 26 };
     AnalysisOfText analysis{ input };

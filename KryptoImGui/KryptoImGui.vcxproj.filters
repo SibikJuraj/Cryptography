@@ -81,7 +81,7 @@
     <ClInclude Include="src\Ciphers\Stream.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ciphers\Viegener.h">
+    <ClInclude Include="src\Ciphers\Vigenere.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
     <ClInclude Include="src\Class Cryptography\Cryptography.h">
@@ -90,7 +90,7 @@
     <ClInclude Include="src\Config.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\PwdAuth.h">
+    <ClInclude Include="src\Ciphers\PwdAuth.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Text\AnalysisOfLang.h">
