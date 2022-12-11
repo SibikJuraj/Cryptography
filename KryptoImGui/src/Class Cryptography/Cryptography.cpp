@@ -14,13 +14,13 @@
 Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     m_InputText{std::make_unique<std::string>()}, m_OutputText{ std::make_unique<std::string>() }
 {
-    registerCipher(new Caesar());
-    registerCipher(new Affine());
-    registerCipher(new Vigenere());
-    registerCipher(new Stream());
-    registerCipher(new Hill());
-    registerCipher(new RSA());
-    registerCipher(new PwdAuth());
+    registerCipher(std::make_unique<Caesar>());
+    registerCipher(std::make_unique<Affine>());
+    registerCipher(std::make_unique<Vigenere>());
+    registerCipher(std::make_unique<Stream>());
+    registerCipher(std::make_unique<Hill>());
+    registerCipher(std::make_unique<RSA>());
+    registerCipher(std::make_unique<PwdAuth>());
 
     std::vector<const char*> cipherNames;
 
@@ -118,7 +118,7 @@ GUI& Cryptography::getGUI() const
     return *m_GUI;
 }
 
-void Cryptography::registerCipher(Cipher<>* cipher)
+void Cryptography::registerCipher(std::unique_ptr<Cipher<>>&& cipher)
 {
     m_Ciphers.emplace_back(std::move(cipher));
 }

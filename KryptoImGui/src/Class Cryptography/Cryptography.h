@@ -26,12 +26,11 @@ public:
 	GUI& getGUI() const;
 private:
 	Cryptography(IGUIFactory& factory);
-	void registerCipher(Cipher<>* cipher);
+	void registerCipher(std::unique_ptr<Cipher<>>&& cipher);
 
 	std::unique_ptr<GUI> m_GUI;
 	std::unique_ptr<std::string> m_InputText;
 	std::unique_ptr<std::string> m_OutputText;
 	std::vector<std::unique_ptr<Cipher<>>> m_Ciphers;
-
 	int m_SelectedCipher;
 };
