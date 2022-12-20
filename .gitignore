@@ -361,10 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/KryptoImGui/KryptoImGui.vcxproj
-/bin-obj/Debug-windows-x86_64/KryptoImGui
-/KryptoImGui/vendor/submodules/GLFW/bin-obj/Debug-windows-x86_64/GLFW
-/KryptoImGui/vendor/submodules/imgui/bin-obj/Debug-windows-x86_64/imgui
-/KryptoImGui/vendor/submodules/imgui/imgui.vcxproj
-/KryptoImGui/vendor/submodules/Glad/bin-obj/Debug-windows-x86_64/Glad
-/KryptoImGui/vendor/submodules/imgui/imgui.vcxproj.filters
+/Cryptography/Cryptography.vcxproj
+/bin-obj/Debug-windows-x86_64/Cryptography
+/Cryptography/vendor/submodules/GLFW/bin-obj/Debug-windows-x86_64/GLFW
+/Cryptography/vendor/submodules/imgui/bin-obj/Debug-windows-x86_64/imgui
+/Cryptography/vendor/submodules/imgui/imgui.vcxproj
+/Cryptography/vendor/submodules/Glad/bin-obj/Debug-windows-x86_64/Glad
+/Cryptography/vendor/submodules/imgui/imgui.vcxproj.filters
+/bin-obj/Release-windows-x86_64/Cryptography
