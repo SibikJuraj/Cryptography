@@ -112,6 +112,19 @@ private:
 	int m_LastVal;
 };
 
+class ImGUIInputText : public InputText
+{
+public:
+	ImGUIInputText(const char* label, char* value, size_t size, const ICommand& command)
+		: InputText(label, value, size, command) {}
+	~ImGUIInputText() = default;
+
+	virtual void draw() override
+	{
+		ImGui::InputTextMultiline(m_Label, m_Value, m_Size);
+	}
+};
+
 class ImGUIPlot : public Plot
 {
 public:

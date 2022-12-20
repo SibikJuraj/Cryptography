@@ -33,7 +33,6 @@ ImGUI::ImGUI(int width, int height)
         glfwTerminate();
         return; //-1;
     }
-
     glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1); //Enable vsync
 
@@ -82,6 +81,8 @@ void ImGUI::render()
 
     for (std::unique_ptr<IGUIElement>& element : m_Elements)
         element->draw();
+
+    ImGui::InputTextMultiline("V", new char[10], 10);
 
     ImGui::Render();
     int display_w, display_h;

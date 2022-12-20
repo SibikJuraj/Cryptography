@@ -40,15 +40,15 @@ void CommandCipherSettings::execute()
 		                        "Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
 		    };
 	for (int i{ 0 }; i < cipher.getKeys().size(); ++i)
-		m_Panel.addElement(app.getGUI().getElementFactory()->createInputInt(keyNames[i], cipher.getKeys()[i], CommandUpdateText()));
+		m_Panel.addElement(app.getGUI().getElementFactory()->createInputText(keyNames[i], "", 500));
 }
 
 void CommandOpenLoadWindow::execute()
 {
-	m_GUI.openLoadWindow();
+	Cryptography::getInstance().getGUI().openLoadWindow();
 }
 
 void CommandOpenSaveWindow::execute()
 {
-	m_GUI.openSaveWindow();
+	Cryptography::getInstance().getGUI().openSaveWindow();
 }

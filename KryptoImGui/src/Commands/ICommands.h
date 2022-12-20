@@ -116,7 +116,7 @@ public:
 class CommandOpenLoadWindow : public ICommand
 {
 public:
-	CommandOpenLoadWindow(GUI&& gui) : m_GUI{ gui } {}
+	CommandOpenLoadWindow() {}
 	~CommandOpenLoadWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -124,14 +124,12 @@ public:
 		return std::make_shared<CommandOpenLoadWindow>(*this);
 	}
 	virtual void execute() override;
-private:
-	GUI& m_GUI;
 };
 
 class CommandOpenSaveWindow : public ICommand
 {
 public:
-	CommandOpenSaveWindow(GUI& gui) : m_GUI{ gui } {}
+	CommandOpenSaveWindow() {}
 	~CommandOpenSaveWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -139,6 +137,4 @@ public:
 		return std::make_shared<CommandOpenSaveWindow>(*this);
 	}
 	virtual void execute() override;
-private:
-	GUI& m_GUI;
 };

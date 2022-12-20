@@ -15,6 +15,7 @@ public:
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) = 0;
 	virtual std::unique_ptr<Textbox> createTextbox(const char* label, std::string& text) = 0;
 	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command = CommandNull(), const std::pair<int, int> range = { INT_MIN, INT_MAX }) = 0;
+	virtual std::unique_ptr<InputText> createInputText(const char* label, char* value, size_t size,const ICommand& command = CommandNull()) = 0;
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) = 0;
 };
 
@@ -54,7 +55,11 @@ public:
 	{
 		return std::make_unique<ImGUIInputInt>(label, value, command, range);
 	}
-
+	virtual std::unique_ptr<InputText> createInputText(const char* label, char* value, size_t size, const ICommand& command) override
+	{
+		return std::make_unique<ImGUIInputText>(label, value, size, command);
+	}
+	
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) override
 	{
 		return std::make_unique<ImGUIPlotAnalysis>(label, data, count);

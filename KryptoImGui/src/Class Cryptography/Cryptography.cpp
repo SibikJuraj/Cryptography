@@ -48,11 +48,11 @@ Cryptography::Cryptography(IGUIFactory& factory) : m_SelectedCipher{ 0 },
     panelCiphers->addElement(std::move(elementFactory->createButton("Encrypt", std::move(*encryptContainer))));
     
     auto panelInputText{ elementFactory->createPanel("Input Text") };
-    panelInputText->addElement(std::move(elementFactory->createButton("Load File", CommandOpenLoadWindow(std::move(*m_GUI)))));
+    panelInputText->addElement(std::move(elementFactory->createButton("Load File", CommandOpenLoadWindow())));
     panelInputText->addElement(std::move(elementFactory->createTextbox("Input Text", *m_InputText)));
 
     auto panelOutputText{ elementFactory->createPanel("Output Text") };
-    panelOutputText->addElement(std::move(elementFactory->createButton("Save File", CommandOpenSaveWindow(std::move(*m_GUI)))));
+    panelOutputText->addElement(std::move(elementFactory->createButton("Save File", CommandOpenSaveWindow())));
     panelOutputText->addElement(std::move(elementFactory->createTextbox("Output Text", *m_OutputText)));
     
     m_GUI->addElement(std::move(panelCiphers));
