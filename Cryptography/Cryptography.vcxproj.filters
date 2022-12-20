@@ -10,8 +10,8 @@
     <Filter Include="src\Ciphers\Class MD5">
       <UniqueIdentifier>{75B285E9-E11E-41E4-AA12-D941163E634C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Class Application">
-      <UniqueIdentifier>{264BD267-92B7-8D62-5BAB-25C0C7D6AFCA}</UniqueIdentifier>
+    <Filter Include="src\Class Cryptography">
+      <UniqueIdentifier>{BE157295-AA0F-9BE7-937C-31F87F150154}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Commands">
       <UniqueIdentifier>{0E2916E8-FA8B-A58C-A311-DE428F53710F}</UniqueIdentifier>
@@ -75,6 +75,9 @@
     <ClInclude Include="src\Ciphers\Kasiski.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ciphers\PwdAuth.h">
+      <Filter>src\Ciphers</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ciphers\RSA.h">
       <Filter>src\Ciphers</Filter>
     </ClInclude>
@@ -85,13 +88,31 @@
       <Filter>src\Ciphers</Filter>
     </ClInclude>
     <ClInclude Include="src\Class Cryptography\Cryptography.h">
-      <Filter>src\Class Application</Filter>
+      <Filter>src\Class Cryptography</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Commands\ICommands.h">
+      <Filter>src\Commands</Filter>
     </ClInclude>
     <ClInclude Include="src\Config.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ciphers\PwdAuth.h">
-      <Filter>src</Filter>
+    <ClInclude Include="src\GUI\GUI.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\GUIElements.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\GUIFactories.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\IGUIElementsFactories.h">
+      <Filter>src\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ImGUI\ImGUI.h">
+      <Filter>src\GUI\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\ImGUI\ImGUIElements.h">
+      <Filter>src\GUI\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="src\Text\AnalysisOfLang.h">
       <Filter>src\Text</Filter>
@@ -1350,21 +1371,19 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\GUI\ImGUI\ImGUI.h" />
-    <ClInclude Include="src\GUI\GUI.h" />
-    <ClInclude Include="src\GUI\GUIFactories.h" />
-    <ClInclude Include="src\Commands\ICommands.h" />
-    <ClInclude Include="src\GUI\IGUIElementsFactories.h" />
-    <ClInclude Include="src\GUI\GUIElements.h" />
-    <ClInclude Include="src\GUI\ImGUI\ImGUIElements.h" />
-    <ClInclude Include="Commands.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">
       <Filter>src\Ciphers\Class MD5</Filter>
     </ClCompile>
     <ClCompile Include="src\Class Cryptography\Cryptography.cpp">
-      <Filter>src\Class Application</Filter>
+      <Filter>src\Class Cryptography</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Commands\ICommands.cpp">
+      <Filter>src\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\ImGUI\ImGUI.cpp">
+      <Filter>src\GUI\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiBuild.cpp">
       <Filter>src</Filter>
@@ -1378,7 +1397,5 @@
     <ClCompile Include="vendor\submodules\ImGuiFileDialog\ImGuiFileDialog.cpp">
       <Filter>vendor\submodules\ImGuiFileDialog</Filter>
     </ClCompile>
-    <ClCompile Include="src\GUI\ImGUI\ImGUI.cpp" />
-    <ClCompile Include="src\Commands\ICommands.cpp" />
   </ItemGroup>
 </Project>

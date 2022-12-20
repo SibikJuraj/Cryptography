@@ -1,4 +1,4 @@
-project "KryptoImGui"
+project "Cryptography"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -7,13 +7,13 @@ project "KryptoImGui"
 	objdir("%{wks.location}/bin-obj/" .. outputDir .. "/%{prj.name}")
 	
 	includeDir = {}
-	includeDir["GLFW"]  = "%{wks.location}/KryptoImGui/vendor/submodules/GLFW/include"
-	includeDir["Glad"]  = "%{wks.location}/KryptoImGui/vendor/submodules/Glad/include"
-	includeDir["imgui"] = "%{wks.location}/KryptoImGui/vendor/submodules/imgui"
-	includeDir["glm"]   = "%{wks.location}/KryptoImGui/vendor/submodules/glm"
-	includeDir["boost"]   = "%{wks.location}/KryptoImGui/vendor/submodules/boost/include"
-	includeDir["MatrixLib"] = "%{wks.location}/KryptoImGui/vendor/submodules/MatrixLib"
-	includeDir["ImGuiFileDialog"] = "%{wks.location}/KryptoImGui/vendor/submodules/ImGuiFileDialog"
+	includeDir["GLFW"]  = "%{wks.location}/Cryptography/vendor/submodules/GLFW/include"
+	includeDir["Glad"]  = "%{wks.location}/Cryptography/vendor/submodules/Glad/include"
+	includeDir["imgui"] = "%{wks.location}/Cryptography/vendor/submodules/imgui"
+	includeDir["glm"]   = "%{wks.location}/Cryptography/vendor/submodules/glm"
+	includeDir["boost"]   = "%{wks.location}/Cryptography/vendor/submodules/boost/include"
+	includeDir["MatrixLib"] = "%{wks.location}/Cryptography/vendor/submodules/MatrixLib"
+	includeDir["ImGuiFileDialog"] = "%{wks.location}/Cryptography/vendor/submodules/ImGuiFileDialog"
 	files 
 	{
 		"src/**.cpp",
