@@ -1,5 +1,4 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 #include "Kasiski.h"
 
 struct VigenereKey

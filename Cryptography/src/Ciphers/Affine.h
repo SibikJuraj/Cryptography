@@ -1,5 +1,4 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 
 struct AffineKey
 {
@@ -20,7 +19,7 @@ protected:
 	virtual char decryptingFormula(char letter) override;
 };
 
-Affine::Affine()
+inline Affine::Affine()
     : Cipher(AffineKey())
 {
 }

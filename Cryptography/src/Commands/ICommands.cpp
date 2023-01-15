@@ -1,23 +1,23 @@
 #include "ICommands.h"
 
-//#include <Class Cryptography/Cryptography.h>
+#include <Class Cryptography/Cryptography.h>
 
 void CommandCipherDecrypt::execute()
 {
-	/*auto& app{ Cryptography::getInstance() };
-	app.setOutputText(m_Cipher.decrypt(app.getInputText()));*/
+	auto& app{ Cryptography::getInstance() };
+	app.setOutputText(m_Cipher.decrypt(app.getInputText()));
 }
 
 void CommandCipherEncrypt::execute()
 {
-	/*auto& app{ Cryptography::getInstance() };
-	app.setOutputText(m_Cipher.encrypt(app.getInputText()));*/
+	auto& app{ Cryptography::getInstance() };
+	app.setOutputText(m_Cipher.encrypt(app.getInputText()));
 }
 
 void CommandUpdateText::execute()
 {
-	//auto& app{ Cryptography::getInstance() };
-	//app.setOutputText(m_Cipher.update(app.getInputText()));
+	auto& app{ Cryptography::getInstance() };
+	app.setOutputText(m_Cipher.update(app.getInputText()));
 }
 
 void CommandCipherSettings::execute()
@@ -40,10 +40,10 @@ void CommandCipherSettings::execute()
 
 void CommandOpenLoadWindow::execute()
 {
-	//Cryptography::getInstance().getGUI().openLoadWindow();
+	Cryptography::getInstance().getGUI().openLoadWindow();
 }
 
 void CommandOpenSaveWindow::execute()
 {
-	//Cryptography::getInstance().getGUI().openSaveWindow();
+	Cryptography::getInstance().getGUI().openSaveWindow();
 }

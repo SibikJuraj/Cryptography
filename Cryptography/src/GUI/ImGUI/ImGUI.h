@@ -14,6 +14,7 @@ public:
 	virtual bool isRunning() override;
 	virtual void addElement(std::unique_ptr<Panel>&& element) override;
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() override;
+	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() override;
 
 	virtual void openSaveWindow() override;
 	virtual void openLoadWindow() override;

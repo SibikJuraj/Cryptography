@@ -11,6 +11,8 @@
 #include <ImGuiFileDialog.h>
 #include <Config.h>
 
+#include "Class Cryptography/Cryptography.h"
+
 ImGUI::ImGUI(int width, int height) 
     : GUI(width, height)
 {
@@ -106,6 +108,11 @@ std::unique_ptr<CipherPanelFactory> ImGUI::getCipherPanelFactory()
     return std::make_unique<ImGUIPanelFactory>();
 }
 
+std::unique_ptr<IGUIElementsFactory> ImGUI::getElementFactory()
+{
+    return std::make_unique<ImGUIElementsFactory>();
+}
+
 void ImGUI::imGuiRender()
 {
     static bool dockspaceOpen = true;
@@ -174,10 +181,10 @@ void ImGUI::fileWindowRender()
             std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
             std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
             // action
-          /*  if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
+            if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
                 TextLoader::saveText(filePathName, Cryptography::getInstance().getOutputText());
             else
-                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));*/
+                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));
         }
         // close
         ImGuiFileDialog::Instance()->Close();

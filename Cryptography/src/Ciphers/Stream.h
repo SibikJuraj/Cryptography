@@ -1,5 +1,4 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 
 typedef unsigned char byte;
 

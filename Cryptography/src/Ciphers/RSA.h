@@ -1,5 +1,4 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 #include <bitset>
 #include <random>
 #include <future>
@@ -188,7 +187,7 @@ inline std::pair<int1024_t, int1024_t> RSA::findAB(int1024_t offset, int1024_t n
     return { 0, 0 };
 }
 
-int256_t gcd(int256_t a, int256_t b)
+inline int256_t gcd(int256_t a, int256_t b)
 {
 
     if ((a == 0) || (b == 0))
@@ -213,7 +212,7 @@ int256_t gcd(int256_t a, int256_t b)
 
 
 
-uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
+inline uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
     int64_t res = 0;
 
     while (a != 0) {
@@ -227,7 +226,7 @@ uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
     return res;
 }
 
-uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
+inline uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
     uint64_t x = 1;
 
     a %= n;
@@ -242,7 +241,7 @@ uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
     return x % n;
 }
 
-std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+inline std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                                     31, 37, 41, 43, 47, 53, 59, 61, 67,
                                     71, 73, 79, 83, 89, 97, 101, 103,
                                     107, 109, 113, 127, 131, 137, 139,
@@ -254,7 +253,7 @@ std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
 
 // going through all 64 bits and placing randomly 0s and 1s
 // setting first and last bit to 1 to get 64 odd number
-uint64_t getRandom64() {
+inline uint64_t getRandom64() {
     // the value need to be 63 bits because you can not using 64 bit values do a^2 which is needed
     constexpr int bits = 63;
     std::bitset<bits> a;
@@ -273,7 +272,7 @@ uint64_t getRandom64() {
     return a.to_ullong();
 }
 
-uint64_t getLowLevelPrime() {
+inline uint64_t getLowLevelPrime() {
     while (true) {
         uint64_t candidate = getRandom64();
         bool is_prime = true;
@@ -291,7 +290,7 @@ uint64_t getLowLevelPrime() {
     }
 }
 
-bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2) {
+inline bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2) {
     if (powMod(a, evenC, to_test) == 1)
         return false;
 
@@ -304,7 +303,7 @@ bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2)
     return true;
 }
 
-bool MillerRabinTest(uint64_t to_test) {
+inline bool MillerRabinTest(uint64_t to_test) {
     constexpr int accuracy = 20;
 
     int max_div_2 = 0;
@@ -330,7 +329,7 @@ bool MillerRabinTest(uint64_t to_test) {
     return true;
 }
 
-uint64_t getBigPrime() {
+inline uint64_t getBigPrime() {
     while (true) {
         uint64_t candidate = getLowLevelPrime();
         if (MillerRabinTest(candidate))

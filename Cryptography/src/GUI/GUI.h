@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "CipherPanels/CipherPanelFactory.h"
+#include "IGUIElementsFactories.h"
 
 class GUI
 {
@@ -14,6 +15,7 @@ public:
 	virtual bool isRunning() = 0;
 	virtual void addElement(std::unique_ptr<Panel>&& element) = 0;
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() = 0;
+	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() = 0;
 
 	virtual void openSaveWindow() = 0;
 	virtual void openLoadWindow() = 0;

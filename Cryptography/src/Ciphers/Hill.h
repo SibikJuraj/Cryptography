@@ -1,5 +1,4 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 #include <matrix.h>
 #include <matrix_operation.h>
 
@@ -7,7 +6,7 @@ struct HillKey
 {
     std::vector<int> keys;
 
-    HillKey(std::vector<int> pKeys) 
+    HillKey(std::vector<int> pKeys)
         : keys{ pKeys } {}
 };
 
