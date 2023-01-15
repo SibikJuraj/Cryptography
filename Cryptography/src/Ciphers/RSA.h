@@ -9,7 +9,13 @@
 
 using namespace boost::multiprecision;
 
-class RSA : public Cipher<int>
+struct RSAKey
+{
+    int1024_t priKey[2];
+    int1024_t pubKey[2];
+};
+
+class RSA : public Cipher<RSAKey>
 {
 public:
 	RSA();
@@ -28,7 +34,7 @@ private:
 };
 
 inline RSA::RSA()
-	: Cipher(std::vector<int>(2))
+	: Cipher(RSAKey())
 {
 }
 

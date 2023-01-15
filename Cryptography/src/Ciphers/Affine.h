@@ -1,7 +1,13 @@
 #pragma once
 #include <Ciphers/Cipher.h>
 
-class Affine : public Cipher<int>
+struct AffineKey
+{
+    int k1;
+    int k2;
+};
+
+class Affine : public Cipher<AffineKey>
 {
 public:
 	Affine();
@@ -15,7 +21,7 @@ protected:
 };
 
 Affine::Affine()
-    : Cipher(std::vector<int>(2))
+    : Cipher(AffineKey())
 {
 }
 
@@ -58,8 +64,8 @@ inline char Affine::decryptingFormula(char letter)
     letter -= 'A';
     int alphabetLength{ 26 };
     if (alphabetLength == 26)
-        if (m_Keys[0] % 2 == 1 && m_Keys[0] != 13)
-            letter = (m_Keys[0] * (letter - m_Keys[1])) % alphabetLength;
+        if (m_CipherKey.k1 % 2 == 1 && m_CipherKey.k1 != 13)
+            letter = (m_CipherKey.k1 * (letter - m_CipherKey.k2)) % alphabetLength;
 
     if (letter < 0)
         letter += alphabetLength;

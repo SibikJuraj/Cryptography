@@ -4,6 +4,7 @@
 #include <implot.h>
 
 #include <vector>
+#include <string>
 #include "GUI/GUIElements.h"
 #include "Text/Class base64/base64.h"
 

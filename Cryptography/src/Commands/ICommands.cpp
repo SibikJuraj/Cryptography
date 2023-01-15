@@ -1,33 +1,28 @@
 #include "ICommands.h"
 
-#include <GUI/GUI.h>
-#include <GUI/GUIElements.h>
-#include <Class Cryptography/Cryptography.h>
+//#include <Class Cryptography/Cryptography.h>
 
 void CommandCipherDecrypt::execute()
 {
-	auto& app{ Cryptography::getInstance() };
-	auto& cipher{ app.getCipher() };
-	app.setOutputText(cipher.decrypt(app.getInputText()));
+	/*auto& app{ Cryptography::getInstance() };
+	app.setOutputText(m_Cipher.decrypt(app.getInputText()));*/
 }
 
 void CommandCipherEncrypt::execute()
 {
-	auto& app{ Cryptography::getInstance() };
-	auto& cipher{ app.getCipher() };
-	app.setOutputText(cipher.encrypt(app.getInputText()));
+	/*auto& app{ Cryptography::getInstance() };
+	app.setOutputText(m_Cipher.encrypt(app.getInputText()));*/
 }
 
 void CommandUpdateText::execute()
 {
-	auto& app{ Cryptography::getInstance() };
-	auto& cipher{ app.getCipher() };
-	app.setOutputText(cipher.update(app.getInputText()));
+	//auto& app{ Cryptography::getInstance() };
+	//app.setOutputText(m_Cipher.update(app.getInputText()));
 }
 
 void CommandCipherSettings::execute()
 {
-	m_Panel.clear();
+	/*m_Panel.clear();
 
 	auto& app{ Cryptography::getInstance() };
 	auto& cipher{ app.getCipher() };
@@ -40,15 +35,15 @@ void CommandCipherSettings::execute()
 		                        "Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
 		    };
 	for (int i{ 0 }; i < cipher.getKeys().size(); ++i)
-		m_Panel.addElement(app.getGUI().getElementFactory()->createInputText(keyNames[i], "", 500));
+		m_Panel.addElement(app.getGUI().getElementFactory()->createInputText(keyNames[i], "", 500));*/
 }
 
 void CommandOpenLoadWindow::execute()
 {
-	Cryptography::getInstance().getGUI().openLoadWindow();
+	//Cryptography::getInstance().getGUI().openLoadWindow();
 }
 
 void CommandOpenSaveWindow::execute()
 {
-	Cryptography::getInstance().getGUI().openSaveWindow();
+	//Cryptography::getInstance().getGUI().openSaveWindow();
 }

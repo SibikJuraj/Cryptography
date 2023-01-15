@@ -3,10 +3,18 @@
 #include <matrix.h>
 #include <matrix_operation.h>
 
-class Hill : public Cipher<int>
+struct HillKey
+{
+    std::vector<int> keys;
+
+    HillKey(std::vector<int> pKeys) 
+        : keys{ pKeys } {}
+};
+
+class Hill : public Cipher<HillKey>
 {
 public:
-    Hill(std::vector<int> code);
+    Hill(HillKey key);
     Hill();
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
@@ -18,12 +26,12 @@ protected:
 };
 
 inline Hill::Hill()
-    : Hill({ 3, 7, 20, 17, 24, 17, 0, 9, 0 })
+    : Hill(HillKey({ 3, 7, 20, 17, 24, 17, 0, 9, 0 }))
 {
 }
 
-inline Hill::Hill(std::vector<int> code)
-    : Cipher(code)
+inline Hill::Hill(HillKey key)
+    : Cipher(key)
 {
 }
 
@@ -40,7 +48,7 @@ inline std::string Hill::encrypt(const std::string_view input)
 inline std::string Hill::decrypt(const std::string_view input)
 {
     m_CipherMode = MODE_DECRYPT;
-    int dimension{ static_cast<int>(std::sqrt(m_Keys.size())) };
+    int dimension{ static_cast<int>(std::sqrt(m_CipherKey.keys.size())) };
     Matrix<double> matA(dimension, dimension);
     for (int i{ 0 }; i < matA.cols(); ++i)
     {
@@ -71,7 +79,7 @@ inline std::string Hill::decrypt(const std::string_view input)
     {
         for (int j{ 0 }; j < matC.rows(); ++j)
         {
-            matC(i, j) = m_Keys[(i * matC.rows()) + j];
+            matC(i, j) = m_CipherKey.keys[(i * matC.rows()) + j];
         }
     }
     auto matF{ matmul(matC, matB).modulo(moduloValue)};
@@ -117,7 +125,7 @@ inline char Hill::encryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };
-    letter = (letter + m_Keys[0]) % alphabetLength;
+    letter = (letter + m_CipherKey.keys[0]) % alphabetLength;
 
     if (letter < 0)
         letter += alphabetLength;
@@ -128,7 +136,7 @@ inline char Hill::decryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };
-    letter = (letter - m_Keys[0]) % alphabetLength;
+    letter = (letter - m_CipherKey.keys[0]) % alphabetLength;
 
     if (letter < 0)
         letter += alphabetLength;

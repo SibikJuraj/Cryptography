@@ -2,10 +2,9 @@
 
 #include <memory>
 #include <vector>
-#include <Text/TextLoader.h>
 
-class GUI;
 class Panel;
+class ICipher;
 
 class ICommand
 {
@@ -62,7 +61,9 @@ private:
 class CommandCipherSettings : public ICommand
 {
 public:
-	CommandCipherSettings(Panel& panel) : m_Panel{ panel } {}
+	CommandCipherSettings(Panel& panel, ICipher& cipher) 
+		: m_Panel{ panel } , m_Cipher{ cipher } 
+	{}
 	~CommandCipherSettings() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -72,12 +73,15 @@ public:
 	virtual void execute() override;
 private:
 	Panel& m_Panel;
+	ICipher& m_Cipher;
 };
 
 class CommandUpdateText : public ICommand
 {
 public:
-	CommandUpdateText() = default;
+	CommandUpdateText(ICipher& cipher)
+		: m_Cipher{ cipher }
+	{}
 	~CommandUpdateText() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -85,12 +89,16 @@ public:
 		return std::make_shared<CommandUpdateText>(*this);
 	}
 	virtual void execute() override;
+private:
+	ICipher& m_Cipher;
 };
 
 class CommandCipherDecrypt : public ICommand
 {
 public:
-	CommandCipherDecrypt() = default;
+	CommandCipherDecrypt(ICipher& cipher) 
+		: m_Cipher{ cipher } 
+	{}
 	~CommandCipherDecrypt() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -98,12 +106,16 @@ public:
 		return std::make_shared<CommandCipherDecrypt>(*this);
 	}
 	virtual void execute() override;
+private:
+	ICipher& m_Cipher;
 };
 
 class CommandCipherEncrypt : public ICommand
 {
 public:
-	CommandCipherEncrypt() = default;
+	CommandCipherEncrypt(ICipher& cipher)
+		: m_Cipher{ cipher }
+	{}
 	~CommandCipherEncrypt() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
@@ -111,6 +123,8 @@ public:
 		return std::make_shared<CommandCipherEncrypt>(*this);
 	}
 	virtual void execute() override;
+private:
+	ICipher& m_Cipher;
 };
 
 class CommandOpenLoadWindow : public ICommand

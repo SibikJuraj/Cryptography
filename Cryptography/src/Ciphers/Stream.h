@@ -3,7 +3,12 @@
 
 typedef unsigned char byte;
 
-class Stream : public Cipher<int>
+struct StreamKey
+{
+	int seed;
+};
+
+class Stream : public Cipher<StreamKey>
 {
 public:
 	Stream();
@@ -18,7 +23,7 @@ private:
 	byte rc4_i, rc4_j;
 	byte rc4_s[256];
 	byte rc4_k[256];
-
+	
 	byte* getKey(const std::string_view passwd);
 	void rc4_init(const byte* key);
 	byte rc4_rand();
@@ -27,7 +32,7 @@ private:
 };
 
 inline Stream::Stream() 
-	: Cipher(std::vector<int>(1))
+	: Cipher(StreamKey())
 {
 }
 
@@ -36,12 +41,12 @@ inline std::string Stream::update(const std::string_view input)
 	std::string output{ };
 	output.resize(input.size());
 
-	decrypt(std::to_string(m_Keys[0])+ '\0', input, output);
+	decrypt(std::to_string(m_CipherKey.seed)+ '\0', input, output);
 	auto letterCount{ Text::letterCount(output) };
 
 	output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
 
-	output += "\nPassword : " + std::to_string(m_Keys[0]);
+	output += "\nPassword : " + std::to_string(m_CipherKey.seed);
 
 	return output;
 }
@@ -67,7 +72,7 @@ inline std::string Stream::decrypt(const std::string_view input)
 		{
 			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
 
-			m_Keys[0] = i;
+			m_CipherKey.seed = i;
 			output += "\nPassword : " + std::to_string(i);
 			break;
 		}

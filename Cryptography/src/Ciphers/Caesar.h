@@ -1,7 +1,12 @@
 #pragma once
 #include <Ciphers/Cipher.h>
 
-class Caesar : public Cipher<int>
+struct CaesarKey
+{
+    int k1;
+};
+
+class Caesar : public Cipher<CaesarKey>
 {
 public:
 	Caesar();
@@ -15,7 +20,7 @@ protected:
 };
 
 inline Caesar::Caesar()
-    : Cipher(std::vector<int>(1))
+    : Cipher(CaesarKey())
 {
 }
 
@@ -48,7 +53,7 @@ inline std::string Caesar::decrypt(const std::string_view input)
         if (max < analysis[i])
         {
             max = analysis[i];
-            m_Keys[0] = i;
+            m_CipherKey.k1 = i;
         }
     }
 
@@ -68,7 +73,7 @@ inline char Caesar::decryptingFormula(char letter)
 {
     letter -= 'A';
     int alphabetLength{ 26 };
-    letter = (letter - m_Keys[0]) % alphabetLength;
+    letter = (letter - m_CipherKey.k1) % alphabetLength;
 
     if (letter < 0)
         letter += alphabetLength;

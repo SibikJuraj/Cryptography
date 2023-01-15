@@ -1371,6 +1371,9 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\CipherPanels\CipherPanelFactory.h" />
+    <ClInclude Include="src\GUI\CipherPanels\CipherPanel.h" />
+    <ClInclude Include="src\GUI\ImGUI\ImGUICipherPanel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">

@@ -9,9 +9,7 @@
 
 #include <vector>
 #include <ImGuiFileDialog.h>
-#include <Text/TextLoader.h>
-
-#include <Class Cryptography/Cryptography.h>
+#include <Config.h>
 
 ImGUI::ImGUI(int width, int height) 
     : GUI(width, height)
@@ -79,10 +77,8 @@ void ImGUI::render()
     imGuiRender();
     fileWindowRender();
 
-    for (std::unique_ptr<IGUIElement>& element : m_Elements)
+    for (auto& element : m_Elements)
         element->draw();
-
-    ImGui::InputTextMultiline("V", new char[10], 10);
 
     ImGui::Render();
     int display_w, display_h;
@@ -100,14 +96,14 @@ bool ImGUI::isRunning()
     return !glfwWindowShouldClose(m_Window);
 }
 
-void ImGUI::addElement(std::unique_ptr<IGUIElement>&& element)
+void ImGUI::addElement(std::unique_ptr<Panel>&& element)
 {
     m_Elements.emplace_back(std::move(element));
 }
 
-std::unique_ptr<IGUIElementsFactory> ImGUI::getElementFactory()
+std::unique_ptr<CipherPanelFactory> ImGUI::getCipherPanelFactory()
 {
-    return std::make_unique<ImGUIElementsFactory>();
+    return std::make_unique<ImGUIPanelFactory>();
 }
 
 void ImGUI::imGuiRender()
@@ -178,10 +174,10 @@ void ImGUI::fileWindowRender()
             std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
             std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
             // action
-            if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
+          /*  if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
                 TextLoader::saveText(filePathName, Cryptography::getInstance().getOutputText());
             else
-                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));
+                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));*/
         }
         // close
         ImGuiFileDialog::Instance()->Close();

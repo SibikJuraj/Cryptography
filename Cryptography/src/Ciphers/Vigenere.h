@@ -2,7 +2,15 @@
 #include <Ciphers/Cipher.h>
 #include "Kasiski.h"
 
-class Vigenere : public Cipher<int>
+struct VigenereKey
+{
+    std::vector<int> keys;
+
+    VigenereKey(std::vector<int> pKeys)
+        : keys{ pKeys } {}
+};
+
+class Vigenere : public Cipher<VigenereKey>
 {
 public:
 	Vigenere();
@@ -18,7 +26,7 @@ private:
 };
 
 inline Vigenere::Vigenere()
-    : Cipher(std::vector<int>(1)), m_Counter{ 0 }
+    : Cipher(VigenereKey(std::vector<int>())), m_Counter{ 0 }
 {
 }
 
@@ -35,9 +43,10 @@ inline std::string Vigenere::update(const std::string_view input)
             output += encryptingFormula(input[i]);
     }
     output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_Keys.size(); ++i)
-        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65);
-    output += " length: " + std::to_string(m_Keys.size());
+    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
+        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength()
+            : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65);
+    output += " length: " + std::to_string(m_CipherKey.keys.size());
 
     return output;
 }
@@ -78,11 +87,11 @@ inline std::string Vigenere::decrypt(const std::string_view input)
             passLength = potentialPassLength;
         }
     }
-    m_Keys.resize(passLength);
+    m_CipherKey.keys.resize(passLength);
 
     std::vector<std::string> outputParts{ Text::sliceText(input, passLength) };
     // Euklidova vzdialenost
-    for (int k{ 0 }; k < m_Keys.size(); ++k)
+    for (int k{ 0 }; k < m_CipherKey.keys.size(); ++k)
     {
         AnalysisOfText outputAnalysis{ outputParts[k] };
 
@@ -98,7 +107,7 @@ inline std::string Vigenere::decrypt(const std::string_view input)
             if (dist < minDist)
             {
                 minDist = dist;
-                m_Keys[k] = j;
+                m_CipherKey.keys[k] = j;
             }
             outputAnalysis.rotateLetters();
         }
@@ -108,9 +117,9 @@ inline std::string Vigenere::decrypt(const std::string_view input)
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);
     output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_Keys.size(); ++i)
-        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65 );
-    output += " length: " + std::to_string(m_Keys.size());
+    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
+        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength() : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65 );
+    output += " length: " + std::to_string(m_CipherKey.keys.size());
 
     return output;
 }
@@ -127,8 +136,8 @@ inline char Vigenere::decryptingFormula(char letter)
     bool lower{ Text::toUpperCase(letter) };
     letter -= 'A';
     int alphabetLength{ 26 };
-    letter = (letter - m_Keys[m_Counter]) % alphabetLength;
-    m_Counter = ++m_Counter % m_Keys.size();
+    letter = (letter - m_CipherKey.keys[m_Counter]) % alphabetLength;
+    m_Counter = ++m_Counter % m_CipherKey.keys.size();
 
     if (letter < 0)
         letter += alphabetLength;
