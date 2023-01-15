@@ -115,12 +115,19 @@ public:
 		encryptContainer->addElement(std::make_shared<CommandCipherEncrypt>(m_Cipher));
 		//encryptContainer->addElement(std::make_shared<CommandCipherSettings>(*panelCipherParameters));
 
+		auto tryFindKeyContainer{ std::make_shared<CommandContainer>() };
+		tryFindKeyContainer->addElement(std::make_shared<CommandCipherTryFindKey>(m_Cipher));
+
+
 		auto panelCiphers{ elementFactory.createPanel("Main Panel") };
 		//panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames, m_SelectedCipher, CommandCipherSettings(*panelCipherParameters))));
 		panelCiphers->addElement(std::move(elementFactory.createButton("Decrypt", std::move(*decryptContainer))));
 		panelCiphers->addElement(std::move(elementFactory.createButton("Encrypt", std::move(*encryptContainer))));
+		panelCiphers->addElement(std::move(elementFactory.createButton("Try Find Key", std::move(*tryFindKeyContainer))));
 
 		addElement(std::move(panelCiphers));
+		//addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher.getKey().keys)));
+		//addElement(elementFactory.createButton("Remove", );
 
 		/*auto panels{ initCipherPanel() };
 		for (auto& el : panels)
@@ -128,6 +135,20 @@ public:
 	}
 	virtual void draw() override
 	{
+		auto elementFactory{ ImGUIElementsFactory() };
+		const char* keyNames[]{ "Key 1", "Key 2", "Key 3", "Key 4", "Key 5",
+								"Key 6", "Key 7", "Key 8", "Key 9", "Key 10",
+								"Key 11", "Key 12", "Key 13", "Key 14", "Key 15",
+								"Key 16", "Key 17", "Key 18", "Key 19", "Key 20",
+								"Key 21", "Key 22", "Key 23", "Key 24", "Key 25",
+								"Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
+		};
+		if (m_Cipher.getKey().keys.size() != m_Elements.size() - 1)
+		{
+			for (int i{ 0 }; i < m_Cipher.getKey().keys.size(); ++i)
+				addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher)));
+		}
+
 		ImGui::Begin(m_Label);
 
 		for (int i{ 0 }; i < m_Elements.size(); ++i)

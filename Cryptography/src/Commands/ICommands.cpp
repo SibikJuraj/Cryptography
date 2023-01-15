@@ -14,6 +14,17 @@ void CommandCipherEncrypt::execute()
 	app.setOutputText(m_Cipher.encrypt(app.getInputText()));
 }
 
+void CommandCipherTryFindKey::execute()
+{
+	auto& app{ Cryptography::getInstance() };
+	m_Cipher.tryFindKey(app.getInputText());
+}
+
+void CommandAddInputInt::execute()
+{
+	m_Value.push_back(0);
+}
+
 void CommandUpdateText::execute()
 {
 	auto& app{ Cryptography::getInstance() };

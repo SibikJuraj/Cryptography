@@ -51,7 +51,7 @@ public:
 		return std::make_unique<ImGUITextbox>(label, text);
 	}
 
-	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command, const std::pair<int, int> range) override
+	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command = CommandNull(), const std::pair<int, int> range = { INT_MIN, INT_MAX }) override
 	{
 		return std::make_unique<ImGUIInputInt>(label, value, command, range);
 	}

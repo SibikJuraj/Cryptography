@@ -12,6 +12,10 @@ public:
     virtual std::string encrypt(const std::string_view input) override;
     virtual std::string decrypt(const std::string_view input) override;
     virtual std::string update(const std::string_view input) override;
+    virtual bool tryFindKey(const std::string_view input) override
+    {
+        return false;
+    }
 	virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -25,15 +29,7 @@ inline Caesar::Caesar()
 
 inline std::string Caesar::update(const std::string_view input)
 {
-    std::string output{};
-    for (int i{ 0 }; i < input.size(); ++i)
-    {
-        if (m_CipherMode == MODE_DECRYPT)
-            output += decryptingFormula(input[i]);
-        else
-            output += encryptingFormula(input[i]);
-    }
-    return output;
+    return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
 inline std::string Caesar::encrypt(const std::string_view input)
@@ -83,3 +79,4 @@ inline const char* Caesar::getName()
 {
     return "Caesar";
 }
+

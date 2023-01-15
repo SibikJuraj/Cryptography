@@ -21,6 +21,10 @@ public:
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
     virtual std::string update(const std::string_view input) override;
+    virtual bool tryFindKey(const std::string_view input) override
+    {
+        return false;
+    }
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;

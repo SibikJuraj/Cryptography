@@ -93,6 +93,40 @@ private:
 	ICipher& m_Cipher;
 };
 
+class CommandAddInputInt : public ICommand
+{
+public:
+	CommandAddInputInt(std::vector<int>& val)
+		: m_Value{ val }
+	{}
+	~CommandAddInputInt() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandAddInputInt>(*this);
+	}
+	virtual void execute() override;
+private:
+	std::vector<int>& m_Value;
+};
+
+class CommandCipherTryFindKey : public ICommand
+{
+public:
+	CommandCipherTryFindKey(ICipher& cipher)
+		: m_Cipher{ cipher }
+	{}
+	~CommandCipherTryFindKey() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandCipherTryFindKey>(*this);
+	}
+	virtual void execute() override;
+private:
+	ICipher& m_Cipher;
+};
+
 class CommandCipherDecrypt : public ICommand
 {
 public:

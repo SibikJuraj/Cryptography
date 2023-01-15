@@ -16,6 +16,7 @@ public:
 	virtual std::string encrypt(const std::string_view input) override;
 	virtual std::string decrypt(const std::string_view input) override;
     virtual std::string update(const std::string_view input) override;
+    virtual bool tryFindKey(const std::string_view input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -31,23 +32,7 @@ inline Vigenere::Vigenere()
 
 inline std::string Vigenere::update(const std::string_view input)
 {
-    m_Counter = 0;
-    const AnalysisOfSKLang language{};
-    std::string output{};
-    for (int i{ 0 }; i < input.size(); ++i)
-    {
-        if (m_CipherMode == MODE_DECRYPT)
-            output += decryptingFormula(input[i]);
-        else
-            output += encryptingFormula(input[i]);
-    }
-    output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
-        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength()
-            : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65);
-    output += " length: " + std::to_string(m_CipherKey.keys.size());
-
-    return output;
+    return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
 inline std::string Vigenere::encrypt(const std::string_view input)
@@ -58,8 +43,48 @@ inline std::string Vigenere::encrypt(const std::string_view input)
 inline std::string Vigenere::decrypt(const std::string_view input)
 {
     m_CipherMode = MODE_DECRYPT;
-
+    const AnalysisOfSKLang language{};
     m_Counter = 0;
+
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+        output += decryptingFormula(input[i]);
+    output += "\n\nPassword: ";
+    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
+        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength() : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65 );
+    output += " length: " + std::to_string(m_CipherKey.keys.size());
+
+    return output;
+}
+
+inline char Vigenere::encryptingFormula(char letter)
+{
+    throw std::logic_error("Not implemented");
+}
+
+inline char Vigenere::decryptingFormula(char letter)
+{
+    if (!Text::isLetter(letter))
+        return letter;
+    bool lower{ Text::toUpperCase(letter) };
+    letter -= 'A';
+    int alphabetLength{ 26 };
+    letter = (letter - m_CipherKey.keys[m_Counter]) % alphabetLength;
+    m_Counter = ++m_Counter % m_CipherKey.keys.size();
+
+    if (letter < 0)
+        letter += alphabetLength;
+
+    return !lower ? letter + 'A' : letter + 'a';
+}
+
+inline const char* Vigenere::getName()
+{
+    return "Vigenere";
+}
+
+inline bool Vigenere::tryFindKey(const std::string_view input)
+{
     int passLength{ 0 };
     const AnalysisOfSKLang language{};
 
@@ -111,40 +136,5 @@ inline std::string Vigenere::decrypt(const std::string_view input)
             outputAnalysis.rotateLetters();
         }
     }
-
-    std::string output{};
-    for (int i{ 0 }; i < input.size(); ++i)
-        output += decryptingFormula(input[i]);
-    output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
-        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength() : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65 );
-    output += " length: " + std::to_string(m_CipherKey.keys.size());
-
-    return output;
-}
-
-inline char Vigenere::encryptingFormula(char letter)
-{
-    throw std::logic_error("Not implemented");
-}
-
-inline char Vigenere::decryptingFormula(char letter)
-{
-    if (!Text::isLetter(letter))
-        return letter;
-    bool lower{ Text::toUpperCase(letter) };
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter - m_CipherKey.keys[m_Counter]) % alphabetLength;
-    m_Counter = ++m_Counter % m_CipherKey.keys.size();
-
-    if (letter < 0)
-        letter += alphabetLength;
-
-    return !lower ? letter + 'A' : letter + 'a';
-}
-
-inline const char* Vigenere::getName()
-{
-    return "Vigenere";
+    return true;
 }
