@@ -5,6 +5,7 @@
 #include <deque>
 #include <boost/integer/mod_inverse.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include "Cipher.h"
 
 using namespace boost::multiprecision;
 

@@ -82,6 +82,8 @@ void ImGUI::render()
     for (auto& element : m_Elements)
         element->draw();
 
+    m_CipherPanels[Cryptography::getInstance().getCurrentCipher()]->draw();
+
     ImGui::Render();
     int display_w, display_h;
     glfwGetFramebufferSize(m_Window, &display_w, &display_h);
@@ -101,6 +103,11 @@ bool ImGUI::isRunning()
 void ImGUI::addElement(std::unique_ptr<Panel>&& element)
 {
     m_Elements.emplace_back(std::move(element));
+}
+
+void ImGUI::addCipherPanel(std::unique_ptr<CipherPanel>&& panel)
+{
+    m_CipherPanels.emplace_back(std::move(panel));
 }
 
 std::unique_ptr<CipherPanelFactory> ImGUI::getCipherPanelFactory()
@@ -159,6 +166,7 @@ void ImGUI::imGuiRender()
 
     ImGui::End();
 }
+
 
 void ImGUI::openSaveWindow()
 {

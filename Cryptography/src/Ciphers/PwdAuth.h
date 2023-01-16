@@ -7,6 +7,7 @@
 #include <Ciphers/Class MD5/md5.h>
 #include <Text/TextLoader.h>
 #include <deque>
+#include "Cipher.h"
 
 const std::string c_Lower = "abcdefghijklmnopqrstuvwxyz";
 const std::string c_Alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

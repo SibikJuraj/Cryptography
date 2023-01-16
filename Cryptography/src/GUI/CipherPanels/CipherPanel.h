@@ -10,72 +10,110 @@
 
 #include "GUI/GUIElements.h"
 
-class CaesarPanel : public Panel
+
+class CipherPanel : public Panel
+{
+public:
+	CipherPanel(const char* label)
+		: Panel(label)
+	{}
+	virtual const char* getCipherName() = 0;
+};
+
+class CaesarPanel : public CipherPanel
 {
 public:
 	CaesarPanel()
-		: Panel("CaesarPanel"), m_Cipher{ Caesar() }
+		: CipherPanel("CaesarPanel"), m_Cipher{ Caesar() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	Caesar m_Cipher;
 };
 
-class AffinePanel : public Panel
+class AffinePanel : public CipherPanel
 {
 public:
 	AffinePanel()
-		: Panel("AffinePanel"), m_Cipher{ Affine() }
+		: CipherPanel("AffinePanel"), m_Cipher{ Affine() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	Affine m_Cipher;
 };
 
-class VigenerePanel : public Panel
+class VigenerePanel : public CipherPanel
 {
 public:
 	VigenerePanel()
-		: Panel("VigenerePanel"), m_Cipher{ Vigenere() }
+		: CipherPanel("VigenerePanel"), m_Cipher{ Vigenere() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	Vigenere m_Cipher;
 };
 
-class HillPanel : public Panel
+class HillPanel : public CipherPanel
 {
 public:
 	HillPanel()
-		: Panel("HillPanel") {}/*, m_Cipher{ Hill() }
+		: CipherPanel("HillPanel"), m_Cipher{ Caesar() }
 	{}
+		virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
-	Hill m_Cipher;*/
+	Caesar m_Cipher;
 };
 
-class StreamPanel : public Panel
+class StreamPanel : public CipherPanel
 {
 public:
 	StreamPanel()
-		: Panel("StreamPanel"), m_Cipher{ Stream() }
+		: CipherPanel("StreamPanel"), m_Cipher{ Stream() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	Stream m_Cipher;
 };
 
-class RSAPanel : public Panel
+class RSAPanel : public CipherPanel
 {
 public:
 	RSAPanel()
-		: Panel("RSAPanel"), m_Cipher{ RSA() }
+		: CipherPanel("RSAPanel"), m_Cipher{ RSA() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	RSA m_Cipher;
 };
 
-class PwdAuthPanel : public Panel
+class PwdAuthPanel : public CipherPanel
 {
 public:
 	PwdAuthPanel()
-		: Panel("PwdAuthPanel"), m_Cipher{ PwdAuth() }
+		: CipherPanel("PwdAuthPanel"), m_Cipher{ PwdAuth() }
 	{}
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	PwdAuth m_Cipher;
 };
