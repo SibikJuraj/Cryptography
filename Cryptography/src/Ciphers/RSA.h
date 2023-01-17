@@ -15,14 +15,14 @@ struct RSAKey
     int1024_t pubKey[2];
 };
 
-class RSA : public Cipher<RSAKey>
+class RSA : public Cipher<RSAKey, std::string>
 {
 public:
 	RSA();
-	virtual std::string encrypt(const std::string_view input) override;
-	virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
-    virtual bool tryFindKey(const std::string_view input) override
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
     {
         return false;
     }
@@ -42,17 +42,17 @@ inline RSA::RSA()
 {
 }
 
-inline std::string RSA::update(const std::string_view input)
+inline std::string RSA::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string RSA::encrypt(const std::string_view input)
+inline std::string RSA::encrypt(const std::string& input)
 {
 	throw std::logic_error("Not implemented");
 }
 
-inline std::string RSA::decrypt(const std::string_view input)
+inline std::string RSA::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
     /*int1024_t p{ getBigPrime() };

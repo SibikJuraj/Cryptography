@@ -6,14 +6,14 @@ struct CaesarKey
     int k1;
 };
 
-class Caesar : public Cipher<CaesarKey>
+class Caesar : public Cipher<CaesarKey, std::string>
 {
 public:
 	Caesar();
-    virtual std::string encrypt(const std::string_view input) override;
-    virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
-    virtual bool tryFindKey(const std::string_view input) override
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
     {
         return false;
     }
@@ -28,17 +28,17 @@ inline Caesar::Caesar()
 {
 }
 
-inline std::string Caesar::update(const std::string_view input)
+inline std::string Caesar::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Caesar::encrypt(const std::string_view input)
+inline std::string Caesar::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Caesar::decrypt(const std::string_view input)
+inline std::string Caesar::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
     double max{ -1.0 };

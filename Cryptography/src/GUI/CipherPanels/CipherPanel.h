@@ -10,17 +10,28 @@
 
 #include "GUI/GUIElements.h"
 
-
-class CipherPanel : public Panel
+class ICipherPanel : public Panel
 {
 public:
-	CipherPanel(const char* label)
+	ICipherPanel(const char* label)
 		: Panel(label)
 	{}
 	virtual const char* getCipherName() = 0;
 };
 
-class CaesarPanel : public CipherPanel
+template <typename T>
+class CipherPanel : public ICipherPanel
+{
+public:
+	CipherPanel(const char* label)
+		: ICipherPanel(label)
+	{}
+protected:
+	T m_CipherInput;
+	T m_CipherOutput;
+};
+
+class CaesarPanel : public CipherPanel<std::string>
 {
 public:
 	CaesarPanel()
@@ -34,7 +45,7 @@ protected:
 	Caesar m_Cipher;
 };
 
-class AffinePanel : public CipherPanel
+class AffinePanel : public CipherPanel<std::string>
 {
 public:
 	AffinePanel()
@@ -48,7 +59,7 @@ protected:
 	Affine m_Cipher;
 };
 
-class VigenerePanel : public CipherPanel
+class VigenerePanel : public CipherPanel<std::string>
 {
 public:
 	VigenerePanel()
@@ -62,7 +73,7 @@ protected:
 	Vigenere m_Cipher;
 };
 
-class HillPanel : public CipherPanel
+class HillPanel : public CipherPanel<std::string>
 {
 public:
 	HillPanel()
@@ -76,7 +87,7 @@ protected:
 	Caesar m_Cipher;
 };
 
-class StreamPanel : public CipherPanel
+class StreamPanel : public CipherPanel<std::string>
 {
 public:
 	StreamPanel()
@@ -90,7 +101,7 @@ protected:
 	Stream m_Cipher;
 };
 
-class RSAPanel : public CipherPanel
+class RSAPanel : public CipherPanel<std::string>
 {
 public:
 	RSAPanel()
@@ -104,7 +115,7 @@ protected:
 	RSA m_Cipher;
 };
 
-class PwdAuthPanel : public CipherPanel
+class PwdAuthPanel : public CipherPanel<std::string>
 {
 public:
 	PwdAuthPanel()

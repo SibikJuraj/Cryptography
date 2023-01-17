@@ -13,15 +13,14 @@ public:
 	virtual void render() override;
 	virtual bool isRunning() override;
 	virtual void addElement(std::unique_ptr<Panel>&& element) override;
-	virtual void addCipherPanel(std::unique_ptr<CipherPanel>&& panel) override;
+	virtual void addCipherPanel(std::unique_ptr<ICipherPanel>&& panel) override;
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() override;
 	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() override;
 
-	virtual void openSaveWindow() override;
-	virtual void openLoadWindow() override;
+	virtual void openSaveWindow(std::string& output) override;
+	virtual void openLoadWindow(std::string& input) override;
 private:
 	GLFWwindow* m_Window;
 
 	void imGuiRender();
-	void fileWindowRender();
 };

@@ -77,7 +77,6 @@ void ImGUI::render()
     ImGui::NewFrame();
 
     imGuiRender();
-    fileWindowRender();
 
     for (auto& element : m_Elements)
         element->draw();
@@ -105,7 +104,7 @@ void ImGUI::addElement(std::unique_ptr<Panel>&& element)
     m_Elements.emplace_back(std::move(element));
 }
 
-void ImGUI::addCipherPanel(std::unique_ptr<CipherPanel>&& panel)
+void ImGUI::addCipherPanel(std::unique_ptr<ICipherPanel>&& panel)
 {
     m_CipherPanels.emplace_back(std::move(panel));
 }
@@ -168,33 +167,12 @@ void ImGUI::imGuiRender()
 }
 
 
-void ImGUI::openSaveWindow()
+void ImGUI::openSaveWindow(std::string& output)
 {
     ImGuiFileDialog::Instance()->OpenDialog("SaveFileDlgKey", "Save File", ".txt", ".");
 }
 
-void ImGUI::openLoadWindow()
+void ImGUI::openLoadWindow(std::string& input)
 {
     ImGuiFileDialog::Instance()->OpenDialog("LoadFileDlgKey", "Load File", ".txt", ".");
-}
-
-void ImGUI::fileWindowRender()
-{
-    // display
-    if (ImGuiFileDialog::Instance()->Display(ImGuiFileDialog::Instance()->GetOpenedKey()))
-    {
-        // action if OK
-        if (ImGuiFileDialog::Instance()->IsOk())
-        {
-            std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-            // action
-            if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
-                TextLoader::saveText(filePathName, Cryptography::getInstance().getOutputText());
-            else
-                Cryptography::getInstance().setInputText(TextLoader::loadText(filePathName));
-        }
-        // close
-        ImGuiFileDialog::Instance()->Close();
-    }
 }

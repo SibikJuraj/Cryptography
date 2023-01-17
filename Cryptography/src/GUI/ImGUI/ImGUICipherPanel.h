@@ -6,17 +6,42 @@
 #include "GUI/IGUIElementsFactories.h"
 #include "GUI/ImGUI/ImGUIElements.h"
 
-inline std::unique_ptr<Panel> createMainPanel(ICipher& cipher)
+template <typename K, typename T>
+inline std::unique_ptr<Panel> createMainPanel(Cipher<K, T>& cipher, T& cipherInput, T& cipherOutput)
 {
 	auto elementFactory{ ImGUIElementsFactory() };
 
 	auto panelCiphers{ elementFactory.createPanel("Main Panel") };
 
-	panelCiphers->addElement(elementFactory.createButton("Decrypt", CommandCipherDecrypt(cipher)));
-	panelCiphers->addElement(elementFactory.createButton("Encrypt", CommandCipherEncrypt(cipher)));
-	panelCiphers->addElement(elementFactory.createButton("Try Find Key", CommandCipherTryFindKey(cipher)));
+	panelCiphers->addElement(elementFactory.createButton("Decrypt", CommandCipherDecrypt(cipher, cipherInput, cipherOutput)));
+	panelCiphers->addElement(elementFactory.createButton("Encrypt", CommandCipherEncrypt(cipher, cipherInput, cipherOutput)));
+	panelCiphers->addElement(elementFactory.createButton("Try Find Key", CommandCipherTryFindKey(cipher, cipherInput)));
 
 	return panelCiphers;
+}
+
+template <typename T>
+inline std::unique_ptr<Panel> createCipherInputPanel(T& cipherInput)
+{
+	auto elementFactory{ ImGUIElementsFactory() };
+
+	auto panelInputText{ elementFactory.createPanel("Input Text") };
+	panelInputText->addElement(std::move(elementFactory.createButton("Load File", CommandOpenLoadWindow(cipherInput))));
+	panelInputText->addElement(std::move(elementFactory.createTextbox("Input Text", cipherInput)));
+
+	return panelInputText;
+}
+
+template <typename T>
+inline std::unique_ptr<Panel> createCipherOutputPanel(T& cipherOutput)
+{
+	auto elementFactory{ ImGUIElementsFactory() };
+
+	auto panelOutputText{ elementFactory.createPanel("Output Text") };
+	panelOutputText->addElement(std::move(elementFactory.createButton("Save File", CommandOpenSaveWindow(cipherOutput))));
+	panelOutputText->addElement(std::move(elementFactory.createTextbox("Output Text", cipherOutput)));
+
+	return panelOutputText;
 }
 
 class ImGUICaesarPanel : public CaesarPanel
@@ -24,18 +49,13 @@ class ImGUICaesarPanel : public CaesarPanel
 public:
 	ImGUICaesarPanel() : CaesarPanel()
 	{
+		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createCipherInputPanel(m_CipherInput));
+		addElement(createCipherOutputPanel(m_CipherOutput));
+		addElement(std::make_unique<ImGUIFileLoaderPanel>("File Loader", m_CipherInput, m_CipherOutput));
+
 		auto elementFactory{ ImGUIElementsFactory() };
-
-		addElement(createMainPanel(m_Cipher));
-
-		//addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher.getKey().keys)));
-		//addElement(elementFactory.createButton("Remove", );
-
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
-
-		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher)));
+		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 
@@ -55,18 +75,14 @@ class ImGUIAffinePanel : public AffinePanel
 public:
 	ImGUIAffinePanel() : AffinePanel()
 	{
+		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createCipherInputPanel(m_CipherInput));
+		addElement(createCipherOutputPanel(m_CipherOutput));
+		addElement(std::make_unique<ImGUIFileLoaderPanel>("File Loader", m_CipherInput, m_CipherOutput));
+
 		auto elementFactory{ ImGUIElementsFactory() };
-
-		addElement(createMainPanel(m_Cipher));
-		//addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher.getKey().keys)));
-		//addElement(elementFactory.createButton("Remove", );
-
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
-
-		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher)));
-		addElement(elementFactory.createInputInt("Key 2", m_Cipher.getKey().k2, CommandUpdateText(m_Cipher)));
+		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputInt("Key 2", m_Cipher.getKey().k2, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 	virtual void draw() override
@@ -87,7 +103,11 @@ public:
 	{
 		auto elementFactory{ ImGUIElementsFactory() };
 
-		addElement(createMainPanel(m_Cipher));
+		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createCipherInputPanel(m_CipherInput));
+		addElement(createCipherOutputPanel(m_CipherOutput));
+		addElement(std::make_unique<ImGUIFileLoaderPanel>("File Loader", m_CipherInput, m_CipherOutput));
+
 		//addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher.getKey().keys)));
 		//addElement(elementFactory.createButton("Remove", );
 		
@@ -103,7 +123,7 @@ public:
 								"Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
 		};
 		for (int i{ 0 }; i < m_Cipher.getKey().keys.size(); ++i)
-			m_KeyPanel.addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher)));
+			m_KeyPanel.addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 	virtual void draw() override
@@ -120,7 +140,7 @@ public:
 		{
 			m_KeyPanel.clear();
 			for (int i{ 0 }; i < m_Cipher.getKey().keys.size(); ++i)
-				m_KeyPanel.addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher)));
+				m_KeyPanel.addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
 		}
 
 		ImGui::Begin(m_Label);
@@ -141,9 +161,6 @@ class ImGUIHillPanel : public HillPanel
 public:
 	ImGUIHillPanel() : HillPanel()
 	{
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
 	}
 	virtual void draw() override
 	{
@@ -161,9 +178,6 @@ class ImGUIStreamPanel : public StreamPanel
 public:
 	ImGUIStreamPanel() : StreamPanel()
 	{
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
 	}
 	virtual void draw() override
 	{
@@ -181,9 +195,6 @@ class ImGUIRSAPanel : public RSAPanel
 public:
 	ImGUIRSAPanel() : RSAPanel()
 	{
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
 	}
 	virtual void draw() override
 	{
@@ -201,9 +212,6 @@ class ImGUIPwdAuthPanel : public PwdAuthPanel
 public:
 	ImGUIPwdAuthPanel() : PwdAuthPanel()
 	{
-		/*auto panels{ initCipherPanel() };
-		for (auto& el : panels)
-			addElement(std::move(el));*/
 	}
 	virtual void draw() override
 	{

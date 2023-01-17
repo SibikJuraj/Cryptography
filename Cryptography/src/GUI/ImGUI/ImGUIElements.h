@@ -7,6 +7,7 @@
 #include <string>
 #include "GUI/GUIElements.h"
 #include "Text/Class base64/base64.h"
+#include <ImGuiFileDialog.h>
 
 class ImGUIPanel : public Panel
 {
@@ -22,6 +23,39 @@ public:
 
 		ImGui::End();
 	}
+};
+
+
+class ImGUIFileLoaderPanel : public ImGUIPanel
+{
+public:
+	ImGUIFileLoaderPanel(const char* label, std::string& input, std::string& output) 
+		: ImGUIPanel(label), m_Input{ input }, m_Output{ output }
+	{}
+
+	virtual void draw() override
+	{
+		// display
+		if (ImGuiFileDialog::Instance()->Display(ImGuiFileDialog::Instance()->GetOpenedKey()))
+		{
+			// action if OK
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+				std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+				// action
+				if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
+					TextLoader::saveText(filePathName, m_Output);
+				else
+					m_Input = TextLoader::loadText(filePathName);
+			}
+			// close
+			ImGuiFileDialog::Instance()->Close();
+		}
+	}
+private:
+	std::string& m_Input;
+	std::string& m_Output;
 };
 
 class ImGUIButton : public Button

@@ -16,14 +16,14 @@ struct PwdAuthKey
 {};
 
 
-class PwdAuth : public Cipher<PwdAuthKey>
+class PwdAuth : public Cipher<PwdAuthKey, std::string>
 {
 public:
     PwdAuth();
-    virtual std::string encrypt(const std::string_view input) override;
-    virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
-    virtual bool tryFindKey(const std::string_view input) override
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
     {
         return false;
     }
@@ -94,17 +94,17 @@ inline PwdAuth::PwdAuth()
 {
 }
 
-inline std::string PwdAuth::update(const std::string_view input)
+inline std::string PwdAuth::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string PwdAuth::encrypt(const std::string_view input)
+inline std::string PwdAuth::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string PwdAuth::decrypt(const std::string_view input)
+inline std::string PwdAuth::decrypt(const std::string& input)
 {
     std::vector<std::string> values(3);
     int valIdx{ 0 };

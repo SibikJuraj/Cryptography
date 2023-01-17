@@ -14,15 +14,16 @@ public:
 	virtual void render() = 0;
 	virtual bool isRunning() = 0;
 	virtual void addElement(std::unique_ptr<Panel>&& element) = 0;
-	virtual void addCipherPanel(std::unique_ptr<CipherPanel>&& panel) = 0;
+	virtual void addCipherPanel(std::unique_ptr<ICipherPanel>&& panel) = 0;
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() = 0;
 	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() = 0;
 
-	virtual void openSaveWindow() = 0;
-	virtual void openLoadWindow() = 0;
+	//TODO PREROBIT
+	virtual void openSaveWindow(std::string& output) = 0;
+	virtual void openLoadWindow(std::string& input) = 0;
 protected:
 	std::vector<std::unique_ptr<Panel>> m_Elements;
-	std::vector<std::unique_ptr<CipherPanel>> m_CipherPanels;
+	std::vector<std::unique_ptr<ICipherPanel>> m_CipherPanels;
 	int m_Width;
 	int m_Height;
 };

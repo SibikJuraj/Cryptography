@@ -4,7 +4,9 @@
 #include <vector>
 
 class Panel;
-class ICipher;
+
+template <typename K, typename T>
+class Cipher;
 
 class ICommand
 {
@@ -58,41 +60,6 @@ private:
 	std::vector<std::shared_ptr<ICommand>> m_Elements;
 };
 
-class CommandCipherSettings : public ICommand
-{
-public:
-	CommandCipherSettings(Panel& panel, ICipher& cipher) 
-		: m_Panel{ panel } , m_Cipher{ cipher } 
-	{}
-	~CommandCipherSettings() = default;
-
-	virtual std::shared_ptr<ICommand> clone() const override
-	{ 
-		return std::make_shared<CommandCipherSettings>(*this);
-	}
-	virtual void execute() override;
-private:
-	Panel& m_Panel;
-	ICipher& m_Cipher;
-};
-
-class CommandUpdateText : public ICommand
-{
-public:
-	CommandUpdateText(ICipher& cipher)
-		: m_Cipher{ cipher }
-	{}
-	~CommandUpdateText() = default;
-
-	virtual std::shared_ptr<ICommand> clone() const override
-	{
-		return std::make_shared<CommandUpdateText>(*this);
-	}
-	virtual void execute() override;
-private:
-	ICipher& m_Cipher;
-};
-
 class CommandAddInputInt : public ICommand
 {
 public:
@@ -110,11 +77,35 @@ private:
 	std::vector<int>& m_Value;
 };
 
+template <typename K, typename T>
+class CommandUpdateText : public ICommand
+{
+public:
+	CommandUpdateText(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
+	{}
+	~CommandUpdateText() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandUpdateText>(*this);
+	}
+	virtual void execute() override
+	{
+		m_Cipher.update(m_Input);
+	}
+private:
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
+};
+
+template <typename K, typename T>
 class CommandCipherTryFindKey : public ICommand
 {
 public:
-	CommandCipherTryFindKey(ICipher& cipher)
-		: m_Cipher{ cipher }
+	CommandCipherTryFindKey(Cipher<K, T>& cipher, T& input)
+		: m_Cipher{ cipher }, m_Input{ input }
 	{}
 	~CommandCipherTryFindKey() = default;
 
@@ -122,16 +113,21 @@ public:
 	{
 		return std::make_shared<CommandCipherTryFindKey>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Cipher.tryFindKey(m_Input);
+	}
 private:
-	ICipher& m_Cipher;
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
 };
 
+template <typename K, typename T>
 class CommandCipherDecrypt : public ICommand
 {
 public:
-	CommandCipherDecrypt(ICipher& cipher) 
-		: m_Cipher{ cipher } 
+	CommandCipherDecrypt(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
 	{}
 	~CommandCipherDecrypt() = default;
 
@@ -139,16 +135,22 @@ public:
 	{
 		return std::make_shared<CommandCipherDecrypt>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Output = m_Cipher.decrypt(m_Input);
+	}
 private:
-	ICipher& m_Cipher;
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
 };
 
+template <typename K, typename T>
 class CommandCipherEncrypt : public ICommand
 {
 public:
-	CommandCipherEncrypt(ICipher& cipher)
-		: m_Cipher{ cipher }
+	CommandCipherEncrypt(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
 	{}
 	~CommandCipherEncrypt() = default;
 
@@ -156,33 +158,54 @@ public:
 	{
 		return std::make_shared<CommandCipherEncrypt>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Output = m_Cipher.encrypt(m_Input);
+	}
 private:
-	ICipher& m_Cipher;
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
 };
 
+template <typename T>
 class CommandOpenLoadWindow : public ICommand
 {
 public:
-	CommandOpenLoadWindow() {}
+	CommandOpenLoadWindow(T& input)
+		: m_Input{ input }
+	{}
 	~CommandOpenLoadWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
 		return std::make_shared<CommandOpenLoadWindow>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		Cryptography::getInstance().getGUI().openLoadWindow(m_Input);
+	}
+private:
+	T& m_Input;
 };
 
+template <typename T>
 class CommandOpenSaveWindow : public ICommand
 {
 public:
-	CommandOpenSaveWindow() {}
+	CommandOpenSaveWindow(T& output)
+		: m_Output{ output }
+	{}
 	~CommandOpenSaveWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
 		return std::make_shared<CommandOpenSaveWindow>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		Cryptography::getInstance().getGUI().openSaveWindow(m_Output);
+	}
+private:
+	T& m_Output;
 };

@@ -11,15 +11,15 @@ struct HillKey
         : keys{ pKeys } {}
 };
 
-class Hill : public Cipher<HillKey>
+class Hill : public Cipher<HillKey, std::string>
 {
 public:
     Hill(HillKey key);
     Hill();
-    virtual std::string encrypt(const std::string_view input) override;
-    virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
-    virtual bool tryFindKey(const std::string_view input) override
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
     {
         return false;
     }
@@ -39,17 +39,17 @@ inline Hill::Hill(HillKey key)
 {
 }
 
-inline std::string Hill::update(const std::string_view input)
+inline std::string Hill::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Hill::encrypt(const std::string_view input)
+inline std::string Hill::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Hill::decrypt(const std::string_view input)
+inline std::string Hill::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
     int dimension{ static_cast<int>(std::sqrt(m_CipherKey.keys.size())) };

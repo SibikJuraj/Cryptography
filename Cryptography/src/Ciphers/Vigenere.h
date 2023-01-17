@@ -10,14 +10,14 @@ struct VigenereKey
         : keys{ pKeys } {}
 };
 
-class Vigenere : public Cipher<VigenereKey>
+class Vigenere : public Cipher<VigenereKey, std::string>
 {
 public:
 	Vigenere();
-	virtual std::string encrypt(const std::string_view input) override;
-	virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
-    virtual bool tryFindKey(const std::string_view input) override;
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -31,17 +31,17 @@ inline Vigenere::Vigenere()
 {
 }
 
-inline std::string Vigenere::update(const std::string_view input)
+inline std::string Vigenere::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Vigenere::encrypt(const std::string_view input)
+inline std::string Vigenere::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Vigenere::decrypt(const std::string_view input)
+inline std::string Vigenere::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
     const AnalysisOfSKLang language{};
@@ -84,7 +84,7 @@ inline const char* Vigenere::getName()
     return "Vigenere";
 }
 
-inline bool Vigenere::tryFindKey(const std::string_view input)
+inline bool Vigenere::tryFindKey(const std::string& input)
 {
     int passLength{ 0 };
     const AnalysisOfSKLang language{};
