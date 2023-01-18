@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Ciphers/Cipher.h"
 #include "Ciphers/Caesar.h"
 #include "Ciphers/Affine.h"

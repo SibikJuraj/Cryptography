@@ -1,7 +1,8 @@
 #pragma once
-#include <matrix.h>
-#include <matrix_operation.h>
 #include "Cipher.h"
+
+//#include <matrix.h>
+//#include <matrix_operation.h>
 
 struct HillKey
 {
@@ -52,7 +53,7 @@ inline std::string Hill::encrypt(const std::string& input)
 inline std::string Hill::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
-    int dimension{ static_cast<int>(std::sqrt(m_CipherKey.keys.size())) };
+   /* int dimension{ static_cast<int>(std::sqrt(m_CipherKey.keys.size())) };
     Matrix<double> matA(dimension, dimension);
     for (int i{ 0 }; i < matA.cols(); ++i)
     {
@@ -116,13 +117,13 @@ inline std::string Hill::decrypt(const std::string& input)
                     output += Text::toChar(readMat(j, i));
             }
         }
-    }
+    }*/
 
     /*
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);
     */
-    return output;
+    return std::string();
 }
 
 inline char Hill::encryptingFormula(char letter)

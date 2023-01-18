@@ -7,7 +7,6 @@
 #include <string>
 #include <memory>
 #include "GUI/GUIElements.h"
-#include "Text/Class base64/base64.h"
 #include <ImGuiFileDialog.h>
 #include "FileLoaders/FileLoader.h"
 #include "../vendor/submodules/imgui/misc/cpp/imgui_stdlib.h"
