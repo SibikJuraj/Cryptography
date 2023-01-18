@@ -120,10 +120,10 @@
     <ClInclude Include="src\Text\Class base64\base64.h">
       <Filter>src\Text\Class base64</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text\Text.h">
+    <ClInclude Include="src\Text\TextUtils.h">
       <Filter>src\Text</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text\TextLoader.h">
+    <ClInclude Include="src\FileLoaders\StringLoader.h">
       <Filter>src\Text</Filter>
     </ClInclude>
     <ClInclude Include="vendor\submodules\glm\glm\common.hpp">
@@ -1371,6 +1371,10 @@
     <ClInclude Include="vendor\submodules\glm\glm\vector_relational.hpp">
       <Filter>vendor\submodules\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\GUI\CipherPanels\CipherPanelFactory.h" />
+    <ClInclude Include="src\GUI\CipherPanels\CipherPanel.h" />
+    <ClInclude Include="src\GUI\ImGUI\ImGUICipherPanel.h" />
+    <ClInclude Include="src\FileLoaders\FileLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ciphers\Class MD5\md5.cpp">
@@ -1378,9 +1382,6 @@
     </ClCompile>
     <ClCompile Include="src\Class Cryptography\Cryptography.cpp">
       <Filter>src\Class Cryptography</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Commands\ICommands.cpp">
-      <Filter>src\Commands</Filter>
     </ClCompile>
     <ClCompile Include="src\GUI\ImGUI\ImGUI.cpp">
       <Filter>src\GUI\ImGUI</Filter>

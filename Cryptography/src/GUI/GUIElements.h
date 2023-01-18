@@ -1,7 +1,9 @@
 #pragma once
 
+#include <string>
 #include <vector>
 #include <memory>
+
 #include "Commands/ICommands.h"
 
 class IGUIElement
@@ -46,13 +48,13 @@ protected:
 class Combobox : public IGUIElement
 {
 public:
-	Combobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
+	Combobox(const char* label, const std::vector<std::string> items, int& selected, const ICommand& command)
 		: m_Label{ label }, m_Items{ items }, m_Selected{ selected }, m_Command{ command.clone() }
 	{}
 	~Combobox() = default;
 protected:
 	const char* m_Label;
-	const std::vector<const char*> m_Items;
+	std::vector<std::string> m_Items;
 	int& m_Selected;
 	std::shared_ptr<ICommand> m_Command;
 };
@@ -96,17 +98,29 @@ protected:
 	std::shared_ptr<ICommand> m_Command;
 };
 
+class InputChar : public IGUIElement
+{
+public:
+	InputChar(const char* label, char& value, const ICommand& command)
+		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }
+	{}
+	~InputChar() = default;
+protected:
+	const char* m_Label;
+	char& m_Value;
+	std::shared_ptr<ICommand> m_Command;
+};
+
 class InputText : public IGUIElement
 {
 public:
-	InputText(const char* label, char* value, size_t size, const ICommand& command)
-		: m_Label{ label }, m_Value{ value }, m_Size{ size }, m_Command{ command.clone() }
+	InputText(const char* label, std::string& value, const ICommand& command)
+		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }
 	{}
 	~InputText() = default;
 protected:
 	const char* m_Label;
-	char* m_Value;
-	size_t m_Size;
+	std::string& m_Value;
 	std::shared_ptr<ICommand> m_Command;
 };
 

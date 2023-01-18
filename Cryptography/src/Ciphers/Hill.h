@@ -1,46 +1,56 @@
 #pragma once
-#include <Ciphers/Cipher.h>
-#include <matrix.h>
-#include <matrix_operation.h>
+#include "Cipher.h"
 
-class Hill : public Cipher<int>
+//#include <matrix.h>
+//#include <matrix_operation.h>
+
+struct HillKey
+{
+    std::vector<int> keys;
+
+    HillKey(std::vector<int> pKeys)
+        : keys{ pKeys } {}
+};
+
+class Hill : public Cipher<HillKey, std::string>
 {
 public:
-    Hill(std::vector<int> code);
+    Hill(HillKey key);
     Hill();
-    virtual std::string encrypt(const std::string_view input) override;
-    virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
+    {
+        return false;
+    }
     virtual const char* getName() override;
-protected:
-    virtual char encryptingFormula(char letter) override;
-    virtual char decryptingFormula(char letter) override;
 };
 
 inline Hill::Hill()
-    : Hill({ 3, 7, 20, 17, 24, 17, 0, 9, 0 })
+    : Hill(HillKey({ 3, 7, 20, 17, 24, 17, 0, 9, 0 }))
 {
 }
 
-inline Hill::Hill(std::vector<int> code)
-    : Cipher(code)
+inline Hill::Hill(HillKey key)
+    : Cipher(key)
 {
 }
 
-inline std::string Hill::update(const std::string_view input)
+inline std::string Hill::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Hill::encrypt(const std::string_view input)
+inline std::string Hill::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Hill::decrypt(const std::string_view input)
+inline std::string Hill::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
-    int dimension{ static_cast<int>(std::sqrt(m_Keys.size())) };
+   /* int dimension{ static_cast<int>(std::sqrt(m_CipherKey.keys.size())) };
     Matrix<double> matA(dimension, dimension);
     for (int i{ 0 }; i < matA.cols(); ++i)
     {
@@ -71,7 +81,7 @@ inline std::string Hill::decrypt(const std::string_view input)
     {
         for (int j{ 0 }; j < matC.rows(); ++j)
         {
-            matC(i, j) = m_Keys[(i * matC.rows()) + j];
+            matC(i, j) = m_CipherKey.keys[(i * matC.rows()) + j];
         }
     }
     auto matF{ matmul(matC, matB).modulo(moduloValue)};
@@ -104,35 +114,13 @@ inline std::string Hill::decrypt(const std::string_view input)
                     output += Text::toChar(readMat(j, i));
             }
         }
-    }
+    }*/
 
     /*
     for (int i{ 0 }; i < input.size(); ++i)
         output += decryptingFormula(input[i]);
     */
-    return output;
-}
-
-inline char Hill::encryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter + m_Keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
-}
-
-inline char Hill::decryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter - m_Keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
+    return std::string();
 }
 
 inline const char* Hill::getName()

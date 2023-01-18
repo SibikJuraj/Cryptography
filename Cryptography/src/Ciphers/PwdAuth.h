@@ -1,31 +1,33 @@
 #pragma once
 
-#include <Ciphers/Cipher.h>
-
 #include <string>
 #include <string_view>
 #include <vector>
 #include <future>
 #include <Ciphers/Class MD5/md5.h>
-#include <Text/TextLoader.h>
+#include <FileLoaders/StringLoader.h>
 #include <deque>
+#include "Cipher.h"
 
 const std::string c_Lower = "abcdefghijklmnopqrstuvwxyz";
 const std::string c_Alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
+struct PwdAuthKey
+{};
 
-class PwdAuth : public Cipher<int>
+
+class PwdAuth : public Cipher<PwdAuthKey, std::string>
 {
 public:
     PwdAuth();
-    virtual std::string encrypt(const std::string_view input) override;
-    virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override
+    {
+        return false;
+    }
     virtual const char* getName() override;
-protected:
-    virtual char encryptingFormula(char letter) override;
-    virtual char decryptingFormula(char letter) override;
-
 private:
     struct User
     {
@@ -54,8 +56,8 @@ private:
 
     static std::string randomRun(const std::vector<User>& users, int seed, bool lower, bool& terminate)
     {
-        srand(seed);
-        for (int i{ 0 }; i < 1'000; ++i)
+        srand(time(NULL));
+        for (int i{ 0 }; i < 2'000; ++i)
         {
             if (terminate)
                 break;
@@ -84,21 +86,21 @@ private:
 };
 
 inline PwdAuth::PwdAuth()
-    : Cipher(std::vector<int>(1))
+    : Cipher(PwdAuthKey())
 {
 }
 
-inline std::string PwdAuth::update(const std::string_view input)
+inline std::string PwdAuth::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string PwdAuth::encrypt(const std::string_view input)
+inline std::string PwdAuth::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string PwdAuth::decrypt(const std::string_view input)
+inline std::string PwdAuth::decrypt(const std::string& input)
 {
     std::vector<std::string> values(3);
     int valIdx{ 0 };
@@ -125,7 +127,8 @@ inline std::string PwdAuth::decrypt(const std::string_view input)
     User user{ values };
     users.push_back(user);
 
-    auto sk_names{ TextLoader::loadText("texts/md5/sk_names.txt") };
+
+    auto sk_names{ StringLoader().loadFile("texts/md5/sk_names.txt") };
     std::vector<std::string> names{};
     size_t pos = 0;
     while ((pos = sk_names.find(',')) != std::string::npos) {
@@ -161,18 +164,18 @@ inline std::string PwdAuth::decrypt(const std::string_view input)
     std::string pwd{ "aaaaaaa" };
     std::string lastPwd{ "aaaaaaa" };
 
-    std::deque<std::future<std::string>> fSL(5'000);
-    std::deque<std::future<std::string>> fSA(5'000);
+    std::deque<std::future<std::string>> fSL(10'000);
+    //std::deque<std::future<std::string>> fSA(10'000);
 
-    int offset{ 0'000 };
+    int offset{ 50'000 };
     bool termL{ false };
     bool termA{ false };
     for (int i = offset; i < offset + fSL.size(); ++i)
     {
         fSL[i - offset] = std::async(std::launch::async, randomRun, users, i, true, std::ref(termL));
-        fSA[i - offset] = std::async(std::launch::async, randomRun, users, i, false, std::ref(termA));
+        //fSA[i - offset] = std::async(std::launch::async, randomRun, users, i, false, std::ref(termA));
     }
-    while (fSL.size() > 0 || fSA.size() > 0)
+    while (fSL.size() > 0 /*|| fSA.size() > 0*/)
     {
         std::string o;
 
@@ -187,7 +190,7 @@ inline std::string PwdAuth::decrypt(const std::string_view input)
             }
             fSL.pop_front();
         }
-        if (fSA.size() > 0)
+        /*if (fSA.size() > 0)
         {
             o = fSA[0].get();
             if (o != "")
@@ -196,31 +199,9 @@ inline std::string PwdAuth::decrypt(const std::string_view input)
                 termA = true;
             }
             fSA.pop_front();
-        }
+        }*/
     }
     return output;
-}
-
-inline char PwdAuth::encryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter + m_Keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
-}
-
-inline char PwdAuth::decryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter - m_Keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
 }
 
 inline const char* PwdAuth::getName()

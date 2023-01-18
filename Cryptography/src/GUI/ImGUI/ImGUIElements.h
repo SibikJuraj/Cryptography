@@ -4,8 +4,12 @@
 #include <implot.h>
 
 #include <vector>
+#include <string>
+#include <memory>
 #include "GUI/GUIElements.h"
-#include "Text/Class base64/base64.h"
+#include <ImGuiFileDialog.h>
+#include "FileLoaders/FileLoader.h"
+#include "../vendor/submodules/imgui/misc/cpp/imgui_stdlib.h"
 
 class ImGUIPanel : public Panel
 {
@@ -23,6 +27,40 @@ public:
 	}
 };
 
+template <typename T>
+class ImGUIFileLoaderPanel : public ImGUIPanel
+{
+public:
+	ImGUIFileLoaderPanel(const char* label, T& input, T& output, std::unique_ptr<FileLoader<T>>&& fLoader)
+		: ImGUIPanel(label), m_Input{ input }, m_Output{ output }, m_FLoader{ std::move(fLoader) }
+	{}
+
+	virtual void draw() override
+	{
+		// display
+		if (ImGuiFileDialog::Instance()->Display(ImGuiFileDialog::Instance()->GetOpenedKey()))
+		{
+			// action if OK
+			if (ImGuiFileDialog::Instance()->IsOk())
+			{
+				std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+				std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+				// action
+				if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
+					m_FLoader->saveFile(filePathName, m_Output);
+				else
+					m_Input = m_FLoader->loadFile(filePathName);
+			}
+			// close
+			ImGuiFileDialog::Instance()->Close();
+		}
+	}
+private:
+	T& m_Input;
+	T& m_Output;
+	std::unique_ptr<FileLoader<T>> m_FLoader;
+};
+
 class ImGUIButton : public Button
 {
 public:
@@ -38,21 +76,21 @@ public:
 class ImGUICombobox : public Combobox
 {
 public:
-	ImGUICombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
+	ImGUICombobox(const char* label, const std::vector<std::string> items, int& selected, const ICommand& command)
 		: Combobox(label, items, selected, command) {}
 
 	virtual void draw() override
 	{
-		const char* curItem{ m_Items[m_Selected] };
+		auto curItem{ m_Items[m_Selected].c_str() };
 		if (ImGui::BeginCombo(m_Label, curItem))
 		{
 			for (int i{ 0 }; i < m_Items.size(); ++i)
 			{
 				bool is_selected = (curItem == m_Items[i]);
-				if (ImGui::Selectable(m_Items[i], is_selected))
+				if (ImGui::Selectable(m_Items[i].c_str(), is_selected))
 				{
 					m_Selected = i;
-					curItem = m_Items[m_Selected];
+					curItem = m_Items[m_Selected].c_str();
 					m_Command->execute();
 				}
 				if (is_selected)
@@ -112,16 +150,29 @@ private:
 	int m_LastVal;
 };
 
+class ImGUIInputChar : public InputChar
+{
+public:
+	ImGUIInputChar(const char* label, char& value, const ICommand& command)
+		: InputChar(label, value, command) {}
+	~ImGUIInputChar() = default;
+
+	virtual void draw() override
+	{
+		ImGui::InputText(m_Label, &m_Value, sizeof(char));
+	}
+};
+
 class ImGUIInputText : public InputText
 {
 public:
-	ImGUIInputText(const char* label, char* value, size_t size, const ICommand& command)
-		: InputText(label, value, size, command) {}
+	ImGUIInputText(const char* label, std::string& value, const ICommand& command)
+		: InputText(label, value, command) {}
 	~ImGUIInputText() = default;
 
 	virtual void draw() override
 	{
-		ImGui::InputTextMultiline(m_Label, m_Value, m_Size);
+		ImGui::InputText(m_Label, &m_Value);
 	}
 };
 

@@ -1,26 +1,29 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 #include <bitset>
 #include <random>
 #include <future>
 #include <deque>
 #include <boost/integer/mod_inverse.hpp>
 #include <boost/multiprecision/cpp_int.hpp>
+#include "Cipher.h"
 
 using namespace boost::multiprecision;
 
-class RSA : public Cipher<int>
+struct RSAKey
+{
+    std::string priKey[2];
+    std::string pubKey[2];
+};
+
+class RSA : public Cipher<RSAKey, std::string>
 {
 public:
 	RSA();
-	virtual std::string encrypt(const std::string_view input) override;
-	virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
-
 private:
     int1024_t modulo(int1024_t a, int1024_t b, int1024_t n);
     static std::pair<int1024_t, int1024_t> findAB(int1024_t offset, int1024_t n, int1024_t a, bool& terminate);
@@ -28,35 +31,24 @@ private:
 };
 
 inline RSA::RSA()
-	: Cipher(std::vector<int>(2))
+	: Cipher(RSAKey())
 {
 }
 
-inline std::string RSA::update(const std::string_view input)
+inline std::string RSA::update(const std::string& input)
 {
     return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string RSA::encrypt(const std::string_view input)
+inline std::string RSA::encrypt(const std::string& input)
 {
 	throw std::logic_error("Not implemented");
 }
 
-inline std::string RSA::decrypt(const std::string_view input)
+inline std::string RSA::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
-    /*int1024_t p{ getBigPrime() };
-    int1024_t q{ getBigPrime() };
-    int1024_t e{ 65'537 };
-
-    int1024_t n{ p * q };
-    int1024_t phi_n{ (p - 1) * (q - 1) };
-
-    std::cout << p << " * " << q << " = " << n << '\n';
-    std::cout << "GCD is " << gcd(e, phi_n) << '\n';*/
-
-    std::deque<std::future<std::pair<int1024_t, int1024_t>>> fSL(50'000);
-
+  
     int offset{ 0 };
     bool termL{ false };
 
@@ -76,53 +68,11 @@ inline std::string RSA::decrypt(const std::string_view input)
         
         values[valIdx] += letter;
     }
-    int1024_t n{ values[0] };
-    int1024_t e{ values[1] };
     int1024_t y{ values[2] };
 
-    int1024_t a = (int1024_t)sqrt(n) + 1;
-    for (int i = offset; i < offset + fSL.size(); ++i)
-    {
-        fSL[i - offset] = std::async(std::launch::async, findAB, i, n, a, std::ref(termL));
-    }
-    std::pair<int1024_t, int1024_t> ab;
-    while (fSL.size() > 0)
-    {
-        ab = fSL[0].get();
-        if (ab.first != 0 && ab.second != 0)
-        {
-            termL = true;
-            break;
-        }
-        fSL.pop_front();
-    }
-    fSL.clear();
-
-    int1024_t p = ab.first + ab.second;
-    int1024_t q = ab.first - ab.second;
-
-    std::string output{};
-    output += "p = " + p.str() + '\n';
-    output += "q = " + q.str() + '\n';
-
-    int1024_t phi_n{ (p - 1) * (q - 1) };
-    auto d = boost::integer::mod_inverse(e, phi_n);
-    output += "Private key = " + d.str() + '\n';
-
-    auto x{ modulo(y, d, n) };
-    output += "Message = " + x.str() + '\n';
+    std::string output{ modulo(y, int1024_t(m_CipherKey.priKey[0]), int1024_t(m_CipherKey.priKey[1])).str() };
 
     return output;
-}
-
-inline char RSA::encryptingFormula(char letter)
-{
-	return 0;
-}
-
-inline char RSA::decryptingFormula(char letter)
-{
-	return 0;
 }
 
 inline const char* RSA::getName()
@@ -182,7 +132,7 @@ inline std::pair<int1024_t, int1024_t> RSA::findAB(int1024_t offset, int1024_t n
     return { 0, 0 };
 }
 
-int256_t gcd(int256_t a, int256_t b)
+inline int256_t gcd(int256_t a, int256_t b)
 {
 
     if ((a == 0) || (b == 0))
@@ -207,7 +157,7 @@ int256_t gcd(int256_t a, int256_t b)
 
 
 
-uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
+inline uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
     int64_t res = 0;
 
     while (a != 0) {
@@ -221,7 +171,7 @@ uint64_t mulmod(uint64_t a, uint64_t b, uint64_t m) {
     return res;
 }
 
-uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
+inline uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
     uint64_t x = 1;
 
     a %= n;
@@ -236,7 +186,7 @@ uint64_t powMod(uint64_t a, uint64_t b, uint64_t n) {
     return x % n;
 }
 
-std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
+inline std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
                                     31, 37, 41, 43, 47, 53, 59, 61, 67,
                                     71, 73, 79, 83, 89, 97, 101, 103,
                                     107, 109, 113, 127, 131, 137, 139,
@@ -248,7 +198,7 @@ std::vector<int> first_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29,
 
 // going through all 64 bits and placing randomly 0s and 1s
 // setting first and last bit to 1 to get 64 odd number
-uint64_t getRandom64() {
+inline uint64_t getRandom64() {
     // the value need to be 63 bits because you can not using 64 bit values do a^2 which is needed
     constexpr int bits = 63;
     std::bitset<bits> a;
@@ -267,7 +217,7 @@ uint64_t getRandom64() {
     return a.to_ullong();
 }
 
-uint64_t getLowLevelPrime() {
+inline uint64_t getLowLevelPrime() {
     while (true) {
         uint64_t candidate = getRandom64();
         bool is_prime = true;
@@ -285,7 +235,7 @@ uint64_t getLowLevelPrime() {
     }
 }
 
-bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2) {
+inline bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2) {
     if (powMod(a, evenC, to_test) == 1)
         return false;
 
@@ -298,7 +248,7 @@ bool trialComposite(uint64_t a, uint64_t evenC, uint64_t to_test, int max_div_2)
     return true;
 }
 
-bool MillerRabinTest(uint64_t to_test) {
+inline bool MillerRabinTest(uint64_t to_test) {
     constexpr int accuracy = 20;
 
     int max_div_2 = 0;
@@ -324,10 +274,78 @@ bool MillerRabinTest(uint64_t to_test) {
     return true;
 }
 
-uint64_t getBigPrime() {
+inline uint64_t getBigPrime() {
     while (true) {
         uint64_t candidate = getLowLevelPrime();
         if (MillerRabinTest(candidate))
             return candidate;
     }
+}
+
+inline bool RSA::tryFindKey(const std::string& input)
+{
+    std::deque<std::future<std::pair<int1024_t, int1024_t>>> fSL(50'000);
+
+    int offset{ 0 };
+    bool termL{ false };
+
+    int valIdx{ 0 };
+    std::vector<std::string> values(3);
+    for (char letter : input)
+    {
+        if (letter == '\n')
+        {
+            break;
+        }
+        if (letter == ':')
+        {
+            ++valIdx;
+            continue;
+        }
+
+        values[valIdx] += letter;
+    }
+    int1024_t n{ values[0] };
+    int1024_t e{ values[1] };
+    int1024_t y{ values[2] };
+
+    m_CipherKey.pubKey[0] = e.str();
+    m_CipherKey.pubKey[1] = n.str();
+
+    int1024_t a = (int1024_t)sqrt(n) + 1;
+    for (int i = offset; i < offset + fSL.size(); ++i)
+    {
+        fSL[i - offset] = std::async(std::launch::async, findAB, i, n, a, std::ref(termL));
+    }
+    std::pair<int1024_t, int1024_t> ab;
+    while (fSL.size() > 0)
+    {
+        ab = fSL[0].get();
+        if (ab.first != 0 && ab.second != 0)
+        {
+            termL = true;
+            break;
+        }
+        fSL.pop_front();
+    }
+    fSL.clear();
+
+    int1024_t p = ab.first + ab.second;
+    int1024_t q = ab.first - ab.second;
+
+    std::string output{};
+    output += "p = " + p.str() + '\n';
+    output += "q = " + q.str() + '\n';
+
+    int1024_t phi_n{ (p - 1) * (q - 1) };
+    auto d = boost::integer::mod_inverse(e, phi_n);
+    output += "Private key = " + d.str() + '\n';
+
+    m_CipherKey.priKey[0] = d.str();
+    m_CipherKey.priKey[1] = n.str();
+
+    auto x{ modulo(y, d, n) };
+    output += "Message = " + x.str() + '\n';
+
+    return true;
 }

@@ -1,88 +1,66 @@
 #pragma once
-#include <Ciphers/Cipher.h>
+#include "Cipher.h"
+#include <Text/TextUtils.h>
 
 typedef unsigned char byte;
 
-class Stream : public Cipher<int>
+struct StreamKey
+{
+	int seed;
+};
+
+class Stream : public Cipher<StreamKey, std::string>
 {
 public:
 	Stream();
-	virtual std::string encrypt(const std::string_view input) override;
-	virtual std::string decrypt(const std::string_view input) override;
-	virtual std::string update(const std::string_view input) override;
+	virtual std::string encrypt(const std::string& input) override;
+	virtual std::string decrypt(const std::string& input) override;
+	virtual std::string update(const std::string& input) override;
+	virtual bool tryFindKey(const std::string& input) override;
 	virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
 private:
 	byte rc4_i, rc4_j;
 	byte rc4_s[256];
 	byte rc4_k[256];
-
-	byte* getKey(const std::string_view passwd);
+	
+	byte* initKey(const std::string& passwd);
 	void rc4_init(const byte* key);
 	byte rc4_rand();
-	void encrypt(const std::string_view passwd, const std::string_view plainText, std::string& cipherText);
-	void decrypt(const std::string_view passwd, const std::string_view cipherText, std::string& plainText);
 };
 
 inline Stream::Stream() 
-	: Cipher(std::vector<int>(1))
+	: Cipher(StreamKey())
 {
 }
 
-inline std::string Stream::update(const std::string_view input)
+inline std::string Stream::update(const std::string& input)
 {
-	std::string output{ };
-	output.resize(input.size());
-
-	decrypt(std::to_string(m_Keys[0])+ '\0', input, output);
-	auto letterCount{ Text::letterCount(output) };
-
-	output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
-
-	output += "\nPassword : " + std::to_string(m_Keys[0]);
-
-	return output;
+	return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Stream::encrypt(const std::string_view input)
+inline std::string Stream::encrypt(const std::string& input)
 {
 	throw std::logic_error("Not implemented");
 }
 
-inline std::string Stream::decrypt(const std::string_view input)
+inline std::string Stream::decrypt(const std::string& input)
 {
 	m_CipherMode = MODE_DECRYPT;
 
 	std::string output{ };
 	output.resize(input.size());
 
-	for (int i{ 100'000 }; i <= 999'999; ++i)
+	rc4_init(initKey(std::to_string(m_CipherKey.seed)));
+
+	for (int i{ 0 }; i < input.size(); ++i)
 	{
-		decrypt(std::to_string(i) + '\0', input, output);
-		auto letterCount{ Text::letterCount(output) };
-
-		if (letterCount > output.length() * 0.65)
-		{
-			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
-
-			m_Keys[0] = i;
-			output += "\nPassword : " + std::to_string(i);
-			break;
-		}
+		byte p = (byte)input[i];
+		byte r = rc4_rand();
+		byte c = p ^ r;
+		output[i] = c;
 	}
+
 	return output;
-}
-
-inline char Stream::encryptingFormula(char letter)
-{
-	return 0;
-}
-
-inline char Stream::decryptingFormula(char letter)
-{
-	return 0;
 }
 
 inline const char* Stream::getName()
@@ -90,7 +68,7 @@ inline const char* Stream::getName()
 	return "Stream";
 }
 
-inline byte* Stream::getKey(const std::string_view passwd)
+inline byte* Stream::initKey(const std::string& passwd)
 {
 	for (int i{ 0 }, j = { 0 }; i < 256; ++i)
 	{
@@ -133,22 +111,21 @@ inline byte Stream::rc4_rand()
 	return rc4_s[t];
 }
 
-inline void Stream::encrypt(const std::string_view passwd, const std::string_view plainText, std::string& cipherText)
+inline bool Stream::tryFindKey(const std::string& input)
 {
-	// nastav random seed - toto je hodnota kluca
-	rc4_init(getKey(passwd));
-
-	for (int i{ 0 }; i < plainText.size(); ++i)
+	for (int i{ 100'000 }; i <= 999'999; ++i)
 	{
-		byte p = (byte)plainText[i];
-		byte r = rc4_rand();
-		byte c = p ^ r;
-		cipherText[i] = c;
-	}
-}
+		m_CipherKey.seed = i;
+		std::string output{ decrypt(input) };
+		auto letterCount{ TextUtils::letterCount(output) };
 
-inline void Stream::decrypt(const std::string_view passwd, const std::string_view cipherText, std::string& plainText)
-{
-	// vzhladom na operaciu XOR je sifrovanie a desifrovanie uplne rovnake
-	encrypt(passwd, cipherText, plainText);
+		if (letterCount > output.length() * 0.65)
+		{
+			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
+
+			output += "\nPassword : " + std::to_string(i);
+			break;
+		}
+	}
+	return true;
 }

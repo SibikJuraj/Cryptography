@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "Commands/ICommands.h"
+class ICommand;
 
 #include "GUIElements.h"
 class IGUIElementsFactory
@@ -11,11 +11,12 @@ class IGUIElementsFactory
 public:
 	virtual std::unique_ptr<Panel> createPanel(const char* label) = 0;
 	virtual std::unique_ptr<Button> createButton(const char* label, const ICommand& command) = 0;
-	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command = CommandNull()) = 0;
+	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<std::string> items, int& selected, const ICommand& command = CommandNull()) = 0;
 	virtual std::unique_ptr<Checkbox> createCheckbox(const char* label, bool& value) = 0;
 	virtual std::unique_ptr<Textbox> createTextbox(const char* label, std::string& text) = 0;
 	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command = CommandNull(), const std::pair<int, int> range = { INT_MIN, INT_MAX }) = 0;
-	virtual std::unique_ptr<InputText> createInputText(const char* label, char* value, size_t size,const ICommand& command = CommandNull()) = 0;
+	virtual std::unique_ptr<InputChar> createInputChar(const char* label, char& value, const ICommand& command = CommandNull()) = 0;
+	virtual std::unique_ptr<InputText> createInputText(const char* label, std::string& value, const ICommand& command = CommandNull()) = 0;
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) = 0;
 };
 
@@ -36,7 +37,7 @@ public:
 		return std::make_unique<ImGUIButton>(label, command);
 	}
 
-	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command) override
+	virtual std::unique_ptr<Combobox> createCombobox(const char* label, const std::vector<std::string> items, int& selected, const ICommand& command) override
 	{
 		return std::make_unique<ImGUICombobox>(label, items, selected, command);
 	}
@@ -51,13 +52,18 @@ public:
 		return std::make_unique<ImGUITextbox>(label, text);
 	}
 
-	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command, const std::pair<int, int> range) override
+	virtual std::unique_ptr<InputInt> createInputInt(const char* label, int& value, const ICommand& command = CommandNull(), const std::pair<int, int> range = { INT_MIN, INT_MAX }) override
 	{
 		return std::make_unique<ImGUIInputInt>(label, value, command, range);
 	}
-	virtual std::unique_ptr<InputText> createInputText(const char* label, char* value, size_t size, const ICommand& command) override
+	virtual std::unique_ptr<InputChar> createInputChar(const char* label, char& value, const ICommand& command) override
 	{
-		return std::make_unique<ImGUIInputText>(label, value, size, command);
+		return std::make_unique<ImGUIInputChar>(label, value, command);
+	}
+
+	virtual std::unique_ptr<InputText> createInputText(const char* label, std::string& value, const ICommand& command) override
+	{
+		return std::make_unique<ImGUIInputText>(label, value, command);
 	}
 	
 	virtual std::unique_ptr<Plot> createPlot(const char* label, const char* data, int count) override

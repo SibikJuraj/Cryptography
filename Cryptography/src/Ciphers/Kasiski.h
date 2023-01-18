@@ -5,7 +5,7 @@
 
 namespace Kasiski
 {
-	bool compare_ints(const std::pair<int, int>& pair1,
+	inline bool compare_ints(const std::pair<int, int>& pair1,
 		const std::pair<int, int>& pair2)
 	{
 		int result{ 0 };
@@ -15,7 +15,7 @@ namespace Kasiski
 		return result;
 	}
 
-	bool compare_doubles(const std::pair<int, double>& pair1,
+	inline bool compare_doubles(const std::pair<int, double>& pair1,
 		const std::pair<int, double>& pair2)
 	{
 		int result{ 0 };
@@ -25,7 +25,7 @@ namespace Kasiski
 		return result;
 	}
 
-	std::vector<int> getPasswordLengths(const std::string_view text)
+	inline std::vector<int> getPasswordLengths(const std::string_view text)
 	{
 		std::vector<int> distances{};
 		std::string s{};

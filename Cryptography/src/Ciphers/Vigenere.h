@@ -1,57 +1,95 @@
 #pragma once
-#include <Ciphers/Cipher.h>
 #include "Kasiski.h"
+#include "Cipher.h"
+#include <Text/TextUtils.h>
+#include <Text/AnalysisOfLang.h>
 
-class Vigenere : public Cipher<int>
+struct VigenereKey
+{
+    std::vector<int> keys;
+
+    VigenereKey(std::vector<int> pKeys)
+        : keys{ pKeys } {}
+};
+
+class Vigenere : public Cipher<VigenereKey, std::string>
 {
 public:
 	Vigenere();
-	virtual std::string encrypt(const std::string_view input) override;
-	virtual std::string decrypt(const std::string_view input) override;
-    virtual std::string update(const std::string_view input) override;
+    virtual std::string encrypt(const std::string& input) override;
+    virtual std::string decrypt(const std::string& input) override;
+    virtual std::string update(const std::string& input) override;
+    virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
 private:
+	char encryptingFormula(char letter);
+	char decryptingFormula(char letter);
 	int m_Counter;
 };
 
 inline Vigenere::Vigenere()
-    : Cipher(std::vector<int>(1)), m_Counter{ 0 }
+    : Cipher(VigenereKey(std::vector<int>(1))), m_Counter{ 0 }
 {
 }
 
-inline std::string Vigenere::update(const std::string_view input)
+inline std::string Vigenere::update(const std::string& input)
 {
-    m_Counter = 0;
-    const AnalysisOfSKLang language{};
-    std::string output{};
-    for (int i{ 0 }; i < input.size(); ++i)
-    {
-        if (m_CipherMode == MODE_DECRYPT)
-            output += decryptingFormula(input[i]);
-        else
-            output += encryptingFormula(input[i]);
-    }
-    output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_Keys.size(); ++i)
-        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65);
-    output += " length: " + std::to_string(m_Keys.size());
-
-    return output;
+    return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
-inline std::string Vigenere::encrypt(const std::string_view input)
+inline std::string Vigenere::encrypt(const std::string& input)
 {
     throw std::logic_error("Not implemented");
 }
 
-inline std::string Vigenere::decrypt(const std::string_view input)
+inline std::string Vigenere::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
-
+    const AnalysisOfSKLang language{};
     m_Counter = 0;
+
+    std::string output{};
+    for (int i{ 0 }; i < input.size(); ++i)
+        output += decryptingFormula(input[i]);
+    output += "\n\nPassword: ";
+    for (int i{ 0 }; i < m_CipherKey.keys.size(); ++i)
+        output += (static_cast<char>((m_CipherKey.keys[i] < 0 ? m_CipherKey.keys[i] + language.getAlphabetLength() : m_CipherKey.keys[i]) % language.getAlphabetLength()) + 65 );
+    output += " length: " + std::to_string(m_CipherKey.keys.size());
+
+    return output;
+}
+
+inline char Vigenere::encryptingFormula(char letter)
+{
+    throw std::logic_error("Not implemented");
+}
+
+inline char Vigenere::decryptingFormula(char letter)
+{
+    if (!TextUtils::isLetter(letter))
+        return letter;
+    bool lower{ TextUtils::toUpperCase(letter) };
+    letter -= 'A';
+    int alphabetLength{ 26 };
+    letter = (letter - m_CipherKey.keys[m_Counter]) % alphabetLength;
+    m_Counter = ++m_Counter % m_CipherKey.keys.size();
+
+    if (letter < 0)
+        letter += alphabetLength;
+
+    return !lower ? letter + 'A' : letter + 'a';
+}
+
+inline const char* Vigenere::getName()
+{
+    return "Vigenere";
+}
+
+inline bool Vigenere::tryFindKey(const std::string& input)
+{
+    if (input.size() == 0)
+        return false;
+
     int passLength{ 0 };
     const AnalysisOfSKLang language{};
 
@@ -65,7 +103,7 @@ inline std::string Vigenere::decrypt(const std::string_view input)
         if (potentialPassLength == 0)
             break;
         ic = 0.0;
-        std::vector<std::string> outputParts{ Text::sliceText(input, potentialPassLength) };
+        std::vector<std::string> outputParts{ TextUtils::sliceText(input, potentialPassLength) };
 
         for (int k{ 0 }; k < outputParts.size(); ++k)
             ic += AnalysisOfText{ outputParts[k] }.getIC();
@@ -78,11 +116,11 @@ inline std::string Vigenere::decrypt(const std::string_view input)
             passLength = potentialPassLength;
         }
     }
-    m_Keys.resize(passLength);
+    m_CipherKey.keys.resize(passLength);
 
-    std::vector<std::string> outputParts{ Text::sliceText(input, passLength) };
+    std::vector<std::string> outputParts{ TextUtils::sliceText(input, passLength) };
     // Euklidova vzdialenost
-    for (int k{ 0 }; k < m_Keys.size(); ++k)
+    for (int k{ 0 }; k < m_CipherKey.keys.size(); ++k)
     {
         AnalysisOfText outputAnalysis{ outputParts[k] };
 
@@ -98,45 +136,10 @@ inline std::string Vigenere::decrypt(const std::string_view input)
             if (dist < minDist)
             {
                 minDist = dist;
-                m_Keys[k] = j;
+                m_CipherKey.keys[k] = j;
             }
             outputAnalysis.rotateLetters();
         }
     }
-
-    std::string output{};
-    for (int i{ 0 }; i < input.size(); ++i)
-        output += decryptingFormula(input[i]);
-    output += "\n\nPassword: ";
-    for (int i{ 0 }; i < m_Keys.size(); ++i)
-        output += (static_cast<char>((m_Keys[i] < 0 ? m_Keys[i] + language.getAlphabetLength() : m_Keys[i]) % language.getAlphabetLength()) + 65 );
-    output += " length: " + std::to_string(m_Keys.size());
-
-    return output;
-}
-
-inline char Vigenere::encryptingFormula(char letter)
-{
-    throw std::logic_error("Not implemented");
-}
-
-inline char Vigenere::decryptingFormula(char letter)
-{
-    if (!Text::isLetter(letter))
-        return letter;
-    bool lower{ Text::toUpperCase(letter) };
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter - m_Keys[m_Counter]) % alphabetLength;
-    m_Counter = ++m_Counter % m_Keys.size();
-
-    if (letter < 0)
-        letter += alphabetLength;
-
-    return !lower ? letter + 'A' : letter + 'a';
-}
-
-inline const char* Vigenere::getName()
-{
-    return "Vigenere";
+    return true;
 }

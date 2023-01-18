@@ -2,10 +2,12 @@
 
 #include <memory>
 #include <vector>
-#include <Text/TextLoader.h>
 
-class GUI;
+#include <ImGuiFileDialog.h>
 class Panel;
+
+template <typename K, typename T>
+class Cipher;
 
 class ICommand
 {
@@ -59,82 +61,169 @@ private:
 	std::vector<std::shared_ptr<ICommand>> m_Elements;
 };
 
-class CommandCipherSettings : public ICommand
+class CommandAddInputInt : public ICommand
 {
 public:
-	CommandCipherSettings(Panel& panel) : m_Panel{ panel } {}
-	~CommandCipherSettings() = default;
-
-	virtual std::shared_ptr<ICommand> clone() const override
-	{ 
-		return std::make_shared<CommandCipherSettings>(*this);
-	}
-	virtual void execute() override;
-private:
-	Panel& m_Panel;
-};
-
-class CommandUpdateText : public ICommand
-{
-public:
-	CommandUpdateText() = default;
-	~CommandUpdateText() = default;
+	CommandAddInputInt(std::vector<int>& val)
+		: m_Value{ val }
+	{}
+	~CommandAddInputInt() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_shared<CommandUpdateText>(*this);
+		return std::make_shared<CommandAddInputInt>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Value.push_back(0);
+	}
+private:
+	std::vector<int>& m_Value;
 };
 
+class CommandRemoveInputInt : public ICommand
+{
+public:
+	CommandRemoveInputInt(std::vector<int>& val)
+		: m_Value{ val }
+	{}
+	~CommandRemoveInputInt() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandRemoveInputInt>(*this);
+	}
+	virtual void execute() override
+	{
+		if (m_Value.size() > 1)
+			m_Value.pop_back();
+	}
+private:
+	std::vector<int>& m_Value;
+};
+
+template <typename K, typename T>
+class CommandCipherTryFindKey : public ICommand
+{
+public:
+	CommandCipherTryFindKey(Cipher<K, T>& cipher, T& input)
+		: m_Cipher{ cipher }, m_Input{ input }
+	{}
+	~CommandCipherTryFindKey() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandCipherTryFindKey>(*this);
+	}
+	virtual void execute() override
+	{
+		m_Cipher.tryFindKey(m_Input);
+	}
+private:
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+};
+
+template <typename K, typename T>
+class CommandCipherUpdate : public ICommand
+{
+public:
+	CommandCipherUpdate(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
+	{}
+	~CommandCipherUpdate() = default;
+
+	virtual std::shared_ptr<ICommand> clone() const override
+	{
+		return std::make_shared<CommandCipherUpdate>(*this);
+	}
+	virtual void execute() override
+	{
+		m_Output = m_Cipher.update(m_Input);
+	}
+private:
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
+};
+
+template <typename K, typename T>
 class CommandCipherDecrypt : public ICommand
 {
 public:
-	CommandCipherDecrypt() = default;
+	CommandCipherDecrypt(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
+	{}
 	~CommandCipherDecrypt() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
 		return std::make_shared<CommandCipherDecrypt>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Output = m_Cipher.decrypt(m_Input);
+	}
+private:
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
 };
 
+template <typename K, typename T>
 class CommandCipherEncrypt : public ICommand
 {
 public:
-	CommandCipherEncrypt() = default;
+	CommandCipherEncrypt(Cipher<K, T>& cipher, T& input, T& output)
+		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
+	{}
 	~CommandCipherEncrypt() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
 		return std::make_shared<CommandCipherEncrypt>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		m_Output = m_Cipher.encrypt(m_Input);
+	}
+private:
+	Cipher<K, T>& m_Cipher;
+	T& m_Input;
+	T& m_Output;
 };
 
-class CommandOpenLoadWindow : public ICommand
+
+class CommandOpenImGUISaveWindow : public ICommand
 {
 public:
-	CommandOpenLoadWindow() {}
-	~CommandOpenLoadWindow() = default;
+	CommandOpenImGUISaveWindow()
+	{}
+	~CommandOpenImGUISaveWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_shared<CommandOpenLoadWindow>(*this);
+		return std::make_shared<CommandOpenImGUISaveWindow>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		ImGuiFileDialog::Instance()->OpenDialog("SaveFileDlgKey", "Save File", ".txt", ".");
+	}
 };
 
-class CommandOpenSaveWindow : public ICommand
+class CommandOpenImGUILoadWindow : public ICommand
 {
 public:
-	CommandOpenSaveWindow() {}
-	~CommandOpenSaveWindow() = default;
+	CommandOpenImGUILoadWindow()
+	{}
+	~CommandOpenImGUILoadWindow() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_shared<CommandOpenSaveWindow>(*this);
+		return std::make_shared<CommandOpenImGUILoadWindow>(*this);
 	}
-	virtual void execute() override;
+	virtual void execute() override
+	{
+		ImGuiFileDialog::Instance()->OpenDialog("LoadFileDlgKey", "Load File", ".txt", ".");
+	}
 };
