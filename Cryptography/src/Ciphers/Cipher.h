@@ -25,9 +25,6 @@ public:
 protected:
 	K m_CipherKey;
 	CipherMode m_CipherMode;
-
-	virtual char encryptingFormula(char letter) = 0;
-	virtual char decryptingFormula(char letter) = 0;
 };
 
 template<typename K, typename T>

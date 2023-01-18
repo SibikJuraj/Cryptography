@@ -28,10 +28,6 @@ public:
         return false;
     }
     virtual const char* getName() override;
-protected:
-    virtual char encryptingFormula(char letter) override;
-    virtual char decryptingFormula(char letter) override;
-
 private:
     struct User
     {
@@ -206,16 +202,6 @@ inline std::string PwdAuth::decrypt(const std::string& input)
         }*/
     }
     return output;
-}
-
-inline char PwdAuth::encryptingFormula(char letter)
-{
-    throw std::logic_error("Not implemented");
-}
-
-inline char PwdAuth::decryptingFormula(char letter)
-{
-    throw std::logic_error("Not implemented");
 }
 
 inline const char* PwdAuth::getName()

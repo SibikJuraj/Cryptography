@@ -24,10 +24,6 @@ public:
     virtual std::string update(const std::string& input) override;
     virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
-
 private:
     int1024_t modulo(int1024_t a, int1024_t b, int1024_t n);
     static std::pair<int1024_t, int1024_t> findAB(int1024_t offset, int1024_t n, int1024_t a, bool& terminate);
@@ -77,16 +73,6 @@ inline std::string RSA::decrypt(const std::string& input)
     std::string output{ modulo(y, int1024_t(m_CipherKey.priKey[0]), int1024_t(m_CipherKey.priKey[1])).str() };
 
     return output;
-}
-
-inline char RSA::encryptingFormula(char letter)
-{
-	return 0;
-}
-
-inline char RSA::decryptingFormula(char letter)
-{
-	return 0;
 }
 
 inline const char* RSA::getName()

@@ -19,9 +19,6 @@ public:
         return false; 
     }
     virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
 };
 
 inline Affine::Affine()
@@ -46,26 +43,19 @@ inline std::string Affine::decrypt(const std::string& input)
 
     std::string output{};
     for (int i{ 0 }; i < rawText.size(); ++i)
-        output += decryptingFormula(rawText[i]);
+    {
+        auto letter{ rawText[i] };
+        letter -= 'A';
+        int alphabetLength{ 26 };
+        if (alphabetLength == 26)
+            if (m_CipherKey.k1 % 2 == 1 && m_CipherKey.k1 != 13)
+                letter = (m_CipherKey.k1 * (letter - m_CipherKey.k2)) % alphabetLength;
+
+        if (letter < 0)
+            letter += alphabetLength;
+        output += letter + 'A';
+    }
     return output;
-}
-
-inline char Affine::encryptingFormula(char letter)
-{
-    throw std::logic_error("Not implemented");
-}
-
-inline char Affine::decryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    if (alphabetLength == 26)
-        if (m_CipherKey.k1 % 2 == 1 && m_CipherKey.k1 != 13)
-            letter = (m_CipherKey.k1 * (letter - m_CipherKey.k2)) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
 }
 
 inline const char* Affine::getName()

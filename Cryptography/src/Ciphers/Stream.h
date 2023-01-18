@@ -17,9 +17,6 @@ public:
 	virtual std::string update(const std::string& input) override;
 	virtual bool tryFindKey(const std::string& input) override;
 	virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
 private:
 	byte rc4_i, rc4_j;
 	byte rc4_s[256];
@@ -63,16 +60,6 @@ inline std::string Stream::decrypt(const std::string& input)
 	}
 
 	return output;
-}
-
-inline char Stream::encryptingFormula(char letter)
-{
-	return 0;
-}
-
-inline char Stream::decryptingFormula(char letter)
-{
-	return 0;
 }
 
 inline const char* Stream::getName()

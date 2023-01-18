@@ -19,10 +19,9 @@ public:
     virtual std::string update(const std::string& input) override;
     virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
-protected:
-	virtual char encryptingFormula(char letter) override;
-	virtual char decryptingFormula(char letter) override;
 private:
+	char encryptingFormula(char letter);
+	char decryptingFormula(char letter);
 	int m_Counter;
 };
 

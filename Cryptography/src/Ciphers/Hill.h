@@ -25,9 +25,6 @@ public:
         return false;
     }
     virtual const char* getName() override;
-protected:
-    virtual char encryptingFormula(char letter) override;
-    virtual char decryptingFormula(char letter) override;
 };
 
 inline Hill::Hill()
@@ -124,28 +121,6 @@ inline std::string Hill::decrypt(const std::string& input)
         output += decryptingFormula(input[i]);
     */
     return std::string();
-}
-
-inline char Hill::encryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter + m_CipherKey.keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
-}
-
-inline char Hill::decryptingFormula(char letter)
-{
-    letter -= 'A';
-    int alphabetLength{ 26 };
-    letter = (letter - m_CipherKey.keys[0]) % alphabetLength;
-
-    if (letter < 0)
-        letter += alphabetLength;
-    return letter + 'A';
 }
 
 inline const char* Hill::getName()
