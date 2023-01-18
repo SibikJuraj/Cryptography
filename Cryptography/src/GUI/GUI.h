@@ -18,9 +18,6 @@ public:
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() = 0;
 	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() = 0;
 
-	//TODO PREROBIT
-	virtual void openSaveWindow(std::string& output) = 0;
-	virtual void openLoadWindow(std::string& input) = 0;
 protected:
 	std::vector<std::unique_ptr<Panel>> m_Elements;
 	std::vector<std::unique_ptr<ICipherPanel>> m_CipherPanels;

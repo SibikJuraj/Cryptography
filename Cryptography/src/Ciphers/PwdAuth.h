@@ -5,7 +5,7 @@
 #include <vector>
 #include <future>
 #include <Ciphers/Class MD5/md5.h>
-#include <Text/TextLoader.h>
+#include <FileLoaders/StringLoader.h>
 #include <deque>
 #include "Cipher.h"
 
@@ -131,7 +131,8 @@ inline std::string PwdAuth::decrypt(const std::string& input)
     User user{ values };
     users.push_back(user);
 
-    auto sk_names{ TextLoader::loadText("texts/md5/sk_names.txt") };
+
+    auto sk_names{ StringLoader().loadFile("texts/md5/sk_names.txt") };
     std::vector<std::string> names{};
     size_t pos = 0;
     while ((pos = sk_names.find(',')) != std::string::npos) {

@@ -17,8 +17,6 @@ public:
 	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() override;
 	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() override;
 
-	virtual void openSaveWindow(std::string& output) override;
-	virtual void openLoadWindow(std::string& input) override;
 private:
 	GLFWwindow* m_Window;
 

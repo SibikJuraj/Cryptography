@@ -13,17 +13,14 @@ Cryptography::Cryptography(IGUIFactory& factory)
     addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createCaesarPanel()));
     addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createAffinePanel()));
     addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createVigenerePanel()));
-    /*addCipher(std::move(cipherFactory->createHillPanel()));
-    addCipher(std::move(cipherFactory->createStreamPanel()));
-    addCipher(std::move(cipherFactory->createRSAPanel()));
-    addCipher(std::move(cipherFactory->createPwdAuthPanel()));*/
+    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createHillPanel()));
+    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createStreamPanel()));
+    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createRSAPanel()));
+    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createPwdAuthPanel()));
 
 
     auto panelCiphers{ elementFactory->createPanel("Ciphers") };
     panelCiphers->addElement(std::move(elementFactory->createCombobox("Cipher", cipherNames, m_CurrentCipher)));
-
-
-    
    
     m_GUI->addElement(std::move(panelCiphers));
 }

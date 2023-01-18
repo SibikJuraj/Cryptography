@@ -15,10 +15,7 @@ public:
 	virtual std::string encrypt(const std::string& input) override;
 	virtual std::string decrypt(const std::string& input) override;
 	virtual std::string update(const std::string& input) override;
-	virtual bool tryFindKey(const std::string& input) override
-	{
-		return false;
-	}
+	virtual bool tryFindKey(const std::string& input) override;
 	virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -28,11 +25,9 @@ private:
 	byte rc4_s[256];
 	byte rc4_k[256];
 	
-	byte* getKey(const std::string& passwd);
+	byte* initKey(const std::string& passwd);
 	void rc4_init(const byte* key);
 	byte rc4_rand();
-	void encrypt(const std::string& passwd, const std::string& plainText, std::string& cipherText);
-	void decrypt(const std::string& passwd, const std::string& cipherText, std::string& plainText);
 };
 
 inline Stream::Stream() 
@@ -42,17 +37,7 @@ inline Stream::Stream()
 
 inline std::string Stream::update(const std::string& input)
 {
-	std::string output{ };
-	output.resize(input.size());
-
-	decrypt(std::to_string(m_CipherKey.seed)+ '\0', input, output);
-	auto letterCount{ Text::letterCount(output) };
-
-	output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
-
-	output += "\nPassword : " + std::to_string(m_CipherKey.seed);
-
-	return output;
+	return m_CipherMode == MODE_DECRYPT ? decrypt(input) : encrypt(input);
 }
 
 inline std::string Stream::encrypt(const std::string& input)
@@ -67,20 +52,16 @@ inline std::string Stream::decrypt(const std::string& input)
 	std::string output{ };
 	output.resize(input.size());
 
-	for (int i{ 100'000 }; i <= 999'999; ++i)
+	rc4_init(initKey(std::to_string(m_CipherKey.seed)));
+
+	for (int i{ 0 }; i < input.size(); ++i)
 	{
-		decrypt(std::to_string(i) + '\0', input, output);
-		auto letterCount{ Text::letterCount(output) };
-
-		if (letterCount > output.length() * 0.65)
-		{
-			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
-
-			m_CipherKey.seed = i;
-			output += "\nPassword : " + std::to_string(i);
-			break;
-		}
+		byte p = (byte)input[i];
+		byte r = rc4_rand();
+		byte c = p ^ r;
+		output[i] = c;
 	}
+
 	return output;
 }
 
@@ -99,7 +80,7 @@ inline const char* Stream::getName()
 	return "Stream";
 }
 
-inline byte* Stream::getKey(const std::string& passwd)
+inline byte* Stream::initKey(const std::string& passwd)
 {
 	for (int i{ 0 }, j = { 0 }; i < 256; ++i)
 	{
@@ -142,22 +123,21 @@ inline byte Stream::rc4_rand()
 	return rc4_s[t];
 }
 
-inline void Stream::encrypt(const std::string& passwd, const std::string& plainText, std::string& cipherText)
+inline bool Stream::tryFindKey(const std::string& input)
 {
-	// nastav random seed - toto je hodnota kluca
-	rc4_init(getKey(passwd));
-
-	for (int i{ 0 }; i < plainText.size(); ++i)
+	for (int i{ 100'000 }; i <= 999'999; ++i)
 	{
-		byte p = (byte)plainText[i];
-		byte r = rc4_rand();
-		byte c = p ^ r;
-		cipherText[i] = c;
-	}
-}
+		m_CipherKey.seed = i;
+		std::string output{ decrypt(input) };
+		auto letterCount{ Text::letterCount(output) };
 
-inline void Stream::decrypt(const std::string& passwd, const std::string& cipherText, std::string& plainText)
-{
-	// vzhladom na operaciu XOR je sifrovanie a desifrovanie uplne rovnake
-	encrypt(passwd, cipherText, plainText);
+		if (letterCount > output.length() * 0.65)
+		{
+			output.erase(std::remove(output.begin(), output.end(), '\r'), output.end());
+
+			output += "\nPassword : " + std::to_string(i);
+			break;
+		}
+	}
+	return true;
 }

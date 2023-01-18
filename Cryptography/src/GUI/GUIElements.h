@@ -17,7 +17,10 @@ class Panel : public IGUIElement
 public:
 	Panel(const char* label) : m_Label{label}, m_Elements{ std::vector<std::unique_ptr<IGUIElement>>()}
 	{}
-	~Panel() = default;
+	~Panel() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 
 	void addElement(std::unique_ptr<IGUIElement>&& element) 
 	{
@@ -39,7 +42,10 @@ public:
 	Button(const char* label, const ICommand& command)
 		: m_Label{ label }, m_Command{ command.clone() }
 	{}
-	~Button() = default;
+	~Button() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	std::shared_ptr<ICommand> m_Command;
@@ -51,7 +57,10 @@ public:
 	Combobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
 		: m_Label{ label }, m_Items{ items }, m_Selected{ selected }, m_Command{ command.clone() }
 	{}
-	~Combobox() = default;
+	~Combobox() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	const std::vector<const char*> m_Items;
@@ -65,7 +74,10 @@ public:
 	Checkbox(const char* label, bool& value)
 		: m_Label{ label }, m_Value{ value }
 	{}
-	~Checkbox() = default;
+	~Checkbox() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	bool& m_Value;
@@ -77,7 +89,10 @@ public:
 	Textbox(const char* label, std::string& text)
 		: m_Label{ label }, m_Text{ text }
 	{}
-	~Textbox() = default;
+	~Textbox() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	std::string& m_Text;
@@ -90,7 +105,10 @@ public:
 	InputInt(const char* label, int& value, const ICommand& command, const std::pair<int, int> range)
 		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }, m_Range{ range }
 	{}
-	~InputInt() = default;
+	~InputInt() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	int& m_Value;
@@ -98,17 +116,19 @@ protected:
 	std::shared_ptr<ICommand> m_Command;
 };
 
-class InputText : public IGUIElement
+class InputChar : public IGUIElement
 {
 public:
-	InputText(const char* label, char* value, size_t size, const ICommand& command)
-		: m_Label{ label }, m_Value{ value }, m_Size{ size }, m_Command{ command.clone() }
+	InputChar(const char* label, char& value, const ICommand& command)
+		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }
 	{}
-	~InputText() = default;
+	~InputChar() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
-	char* m_Value;
-	size_t m_Size;
+	char& m_Value;
 	std::shared_ptr<ICommand> m_Command;
 };
 
@@ -118,7 +138,10 @@ public:
 	Plot(const char* label, const char* data, int count)
 		: m_Label{ label }, m_Data { data }, m_Count{ count }
 	{}
-	~Plot() = default;
+	~Plot() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
 protected:
 	const char* m_Label;
 	const char* m_Data;

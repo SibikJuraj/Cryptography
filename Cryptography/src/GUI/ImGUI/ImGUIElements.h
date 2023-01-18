@@ -5,9 +5,11 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #include "GUI/GUIElements.h"
 #include "Text/Class base64/base64.h"
 #include <ImGuiFileDialog.h>
+#include "FileLoaders/FileLoader.h"
 
 class ImGUIPanel : public Panel
 {
@@ -25,12 +27,12 @@ public:
 	}
 };
 
-
+template <typename T>
 class ImGUIFileLoaderPanel : public ImGUIPanel
 {
 public:
-	ImGUIFileLoaderPanel(const char* label, std::string& input, std::string& output) 
-		: ImGUIPanel(label), m_Input{ input }, m_Output{ output }
+	ImGUIFileLoaderPanel(const char* label, T& input, T& output, std::unique_ptr<FileLoader<T>>&& fLoader)
+		: ImGUIPanel(label), m_Input{ input }, m_Output{ output }, m_FLoader{ std::move(fLoader) }
 	{}
 
 	virtual void draw() override
@@ -45,17 +47,18 @@ public:
 				std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
 				// action
 				if (ImGuiFileDialog::Instance()->GetOpenedKey() == "SaveFileDlgKey")
-					TextLoader::saveText(filePathName, m_Output);
+					m_FLoader->saveFile(filePathName, m_Output);
 				else
-					m_Input = TextLoader::loadText(filePathName);
+					m_Input = m_FLoader->loadFile(filePathName);
 			}
 			// close
 			ImGuiFileDialog::Instance()->Close();
 		}
 	}
 private:
-	std::string& m_Input;
-	std::string& m_Output;
+	T& m_Input;
+	T& m_Output;
+	std::unique_ptr<FileLoader<T>> m_FLoader;
 };
 
 class ImGUIButton : public Button
@@ -147,16 +150,16 @@ private:
 	int m_LastVal;
 };
 
-class ImGUIInputText : public InputText
+class ImGUIInputChar : public InputChar
 {
 public:
-	ImGUIInputText(const char* label, char* value, size_t size, const ICommand& command)
-		: InputText(label, value, size, command) {}
-	~ImGUIInputText() = default;
+	ImGUIInputChar(const char* label, char& value, const ICommand& command)
+		: InputChar(label, value, command) {}
+	~ImGUIInputChar() = default;
 
 	virtual void draw() override
 	{
-		ImGui::InputTextMultiline(m_Label, m_Value, m_Size);
+		ImGui::InputText(m_Label, &m_Value, sizeof(char));
 	}
 };
 

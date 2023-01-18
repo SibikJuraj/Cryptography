@@ -27,7 +27,7 @@ private:
 };
 
 inline Vigenere::Vigenere()
-    : Cipher(VigenereKey(std::vector<int>())), m_Counter{ 0 }
+    : Cipher(VigenereKey(std::vector<int>(1))), m_Counter{ 0 }
 {
 }
 
@@ -86,6 +86,9 @@ inline const char* Vigenere::getName()
 
 inline bool Vigenere::tryFindKey(const std::string& input)
 {
+    if (input.size() == 0)
+        return false;
+
     int passLength{ 0 };
     const AnalysisOfSKLang language{};
 

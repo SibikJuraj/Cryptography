@@ -8,7 +8,6 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include <vector>
-#include <ImGuiFileDialog.h>
 #include <Config.h>
 
 #include "Class Cryptography/Cryptography.h"
@@ -23,7 +22,7 @@ ImGUI::ImGUI(int width, int height)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    m_Window = glfwCreateWindow(width, height, "Kryptografia a bezpecnost", NULL, NULL);
+    m_Window = glfwCreateWindow(width, height, "Cryptography", NULL, NULL);
 
     // glfw window creation
     // --------------------
@@ -164,15 +163,4 @@ void ImGUI::imGuiRender()
     }
 
     ImGui::End();
-}
-
-
-void ImGUI::openSaveWindow(std::string& output)
-{
-    ImGuiFileDialog::Instance()->OpenDialog("SaveFileDlgKey", "Save File", ".txt", ".");
-}
-
-void ImGUI::openLoadWindow(std::string& input)
-{
-    ImGuiFileDialog::Instance()->OpenDialog("LoadFileDlgKey", "Load File", ".txt", ".");
 }

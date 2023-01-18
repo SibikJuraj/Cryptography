@@ -22,10 +22,7 @@ public:
     virtual std::string encrypt(const std::string& input) override;
     virtual std::string decrypt(const std::string& input) override;
     virtual std::string update(const std::string& input) override;
-    virtual bool tryFindKey(const std::string& input) override
-    {
-        return false;
-    }
+    virtual bool tryFindKey(const std::string& input) override;
     virtual const char* getName() override;
 protected:
 	virtual char encryptingFormula(char letter) override;
@@ -55,18 +52,7 @@ inline std::string RSA::encrypt(const std::string& input)
 inline std::string RSA::decrypt(const std::string& input)
 {
     m_CipherMode = MODE_DECRYPT;
-    /*int1024_t p{ getBigPrime() };
-    int1024_t q{ getBigPrime() };
-    int1024_t e{ 65'537 };
-
-    int1024_t n{ p * q };
-    int1024_t phi_n{ (p - 1) * (q - 1) };
-
-    std::cout << p << " * " << q << " = " << n << '\n';
-    std::cout << "GCD is " << gcd(e, phi_n) << '\n';*/
-
-    std::deque<std::future<std::pair<int1024_t, int1024_t>>> fSL(50'000);
-
+  
     int offset{ 0 };
     bool termL{ false };
 
@@ -86,41 +72,10 @@ inline std::string RSA::decrypt(const std::string& input)
         
         values[valIdx] += letter;
     }
-    int1024_t n{ values[0] };
-    int1024_t e{ values[1] };
-    int1024_t y{ values[2] };
+   
+    int1024_t y{ input };
 
-    int1024_t a = (int1024_t)sqrt(n) + 1;
-    for (int i = offset; i < offset + fSL.size(); ++i)
-    {
-        fSL[i - offset] = std::async(std::launch::async, findAB, i, n, a, std::ref(termL));
-    }
-    std::pair<int1024_t, int1024_t> ab;
-    while (fSL.size() > 0)
-    {
-        ab = fSL[0].get();
-        if (ab.first != 0 && ab.second != 0)
-        {
-            termL = true;
-            break;
-        }
-        fSL.pop_front();
-    }
-    fSL.clear();
-
-    int1024_t p = ab.first + ab.second;
-    int1024_t q = ab.first - ab.second;
-
-    std::string output{};
-    output += "p = " + p.str() + '\n';
-    output += "q = " + q.str() + '\n';
-
-    int1024_t phi_n{ (p - 1) * (q - 1) };
-    auto d = boost::integer::mod_inverse(e, phi_n);
-    output += "Private key = " + d.str() + '\n';
-
-    auto x{ modulo(y, d, n) };
-    output += "Message = " + x.str() + '\n';
+    std::string output{ modulo(y, m_CipherKey.priKey[0], m_CipherKey.priKey[1]).str() };
 
     return output;
 }
@@ -340,4 +295,72 @@ inline uint64_t getBigPrime() {
         if (MillerRabinTest(candidate))
             return candidate;
     }
+}
+
+inline bool RSA::tryFindKey(const std::string& input)
+{
+    std::deque<std::future<std::pair<int1024_t, int1024_t>>> fSL(50'000);
+
+    int offset{ 0 };
+    bool termL{ false };
+
+    int valIdx{ 0 };
+    std::vector<std::string> values(3);
+    for (char letter : input)
+    {
+        if (letter == '\n')
+        {
+            break;
+        }
+        if (letter == ':')
+        {
+            ++valIdx;
+            continue;
+        }
+
+        values[valIdx] += letter;
+    }
+    int1024_t n{ values[0] };
+    int1024_t e{ values[1] };
+    int1024_t y{ values[2] };
+
+    m_CipherKey.pubKey[0] = e;
+    m_CipherKey.pubKey[1] = n;
+
+    int1024_t a = (int1024_t)sqrt(n) + 1;
+    for (int i = offset; i < offset + fSL.size(); ++i)
+    {
+        fSL[i - offset] = std::async(std::launch::async, findAB, i, n, a, std::ref(termL));
+    }
+    std::pair<int1024_t, int1024_t> ab;
+    while (fSL.size() > 0)
+    {
+        ab = fSL[0].get();
+        if (ab.first != 0 && ab.second != 0)
+        {
+            termL = true;
+            break;
+        }
+        fSL.pop_front();
+    }
+    fSL.clear();
+
+    int1024_t p = ab.first + ab.second;
+    int1024_t q = ab.first - ab.second;
+
+    std::string output{};
+    output += "p = " + p.str() + '\n';
+    output += "q = " + q.str() + '\n';
+
+    int1024_t phi_n{ (p - 1) * (q - 1) };
+    auto d = boost::integer::mod_inverse(e, phi_n);
+    output += "Private key = " + d.str() + '\n';
+
+    m_CipherKey.priKey[0] = d;
+    m_CipherKey.priKey[1] = n;
+
+    auto x{ modulo(y, d, n) };
+    output += "Message = " + x.str() + '\n';
+
+    return true;
 }
