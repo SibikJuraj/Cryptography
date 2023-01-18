@@ -16,7 +16,7 @@ public:
 	void run();
 	void setCurrentCipher(int&& cipher);
 	const int& getCurrentCipher();
-	void addCipher(std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel);
+	void addCipher(std::vector<std::string>& cipherNames, std::unique_ptr<ICipherPanel>&& panel);
 	GUI& getGUI() const;
 private:
 	Cryptography(IGUIFactory& factory);

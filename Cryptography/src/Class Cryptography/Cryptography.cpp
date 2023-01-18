@@ -7,7 +7,7 @@ Cryptography::Cryptography(IGUIFactory& factory)
     auto cipherFactory{ m_GUI->getCipherPanelFactory() };
     auto elementFactory{ m_GUI->getElementFactory() };
     
-    std::vector<const char*> cipherNames;
+    std::vector<std::string> cipherNames;
 
     //Here add new cipher panels
     addCipher(cipherNames, std::move(cipherFactory->createCaesarPanel()));
@@ -47,7 +47,7 @@ const int& Cryptography::getCurrentCipher()
     return m_CurrentCipher;
 }
 
-void Cryptography::addCipher(std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
+void Cryptography::addCipher(std::vector<std::string>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
 {
     cipherNames.push_back(panel->getCipherName());
     m_GUI->addCipherPanel(std::move(panel));

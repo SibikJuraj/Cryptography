@@ -76,21 +76,21 @@ public:
 class ImGUICombobox : public Combobox
 {
 public:
-	ImGUICombobox(const char* label, const std::vector<const char*>& items, int& selected, const ICommand& command)
+	ImGUICombobox(const char* label, const std::vector<std::string> items, int& selected, const ICommand& command)
 		: Combobox(label, items, selected, command) {}
 
 	virtual void draw() override
 	{
-		const char* curItem{ m_Items[m_Selected] };
+		auto curItem{ m_Items[m_Selected].c_str() };
 		if (ImGui::BeginCombo(m_Label, curItem))
 		{
 			for (int i{ 0 }; i < m_Items.size(); ++i)
 			{
 				bool is_selected = (curItem == m_Items[i]);
-				if (ImGui::Selectable(m_Items[i], is_selected))
+				if (ImGui::Selectable(m_Items[i].c_str(), is_selected))
 				{
 					m_Selected = i;
-					curItem = m_Items[m_Selected];
+					curItem = m_Items[m_Selected].c_str();
 					m_Command->execute();
 				}
 				if (is_selected)
