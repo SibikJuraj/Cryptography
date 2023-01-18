@@ -11,8 +11,8 @@ using namespace boost::multiprecision;
 
 struct RSAKey
 {
-    int1024_t priKey[2];
-    int1024_t pubKey[2];
+    std::string priKey[2];
+    std::string pubKey[2];
 };
 
 class RSA : public Cipher<RSAKey, std::string>
@@ -72,10 +72,9 @@ inline std::string RSA::decrypt(const std::string& input)
         
         values[valIdx] += letter;
     }
-   
-    int1024_t y{ input };
+    int1024_t y{ values[2] };
 
-    std::string output{ modulo(y, m_CipherKey.priKey[0], m_CipherKey.priKey[1]).str() };
+    std::string output{ modulo(y, int1024_t(m_CipherKey.priKey[0]), int1024_t(m_CipherKey.priKey[1])).str() };
 
     return output;
 }
@@ -324,8 +323,8 @@ inline bool RSA::tryFindKey(const std::string& input)
     int1024_t e{ values[1] };
     int1024_t y{ values[2] };
 
-    m_CipherKey.pubKey[0] = e;
-    m_CipherKey.pubKey[1] = n;
+    m_CipherKey.pubKey[0] = e.str();
+    m_CipherKey.pubKey[1] = n.str();
 
     int1024_t a = (int1024_t)sqrt(n) + 1;
     for (int i = offset; i < offset + fSL.size(); ++i)
@@ -356,8 +355,8 @@ inline bool RSA::tryFindKey(const std::string& input)
     auto d = boost::integer::mod_inverse(e, phi_n);
     output += "Private key = " + d.str() + '\n';
 
-    m_CipherKey.priKey[0] = d;
-    m_CipherKey.priKey[1] = n;
+    m_CipherKey.priKey[0] = d.str();
+    m_CipherKey.priKey[1] = n.str();
 
     auto x{ modulo(y, d, n) };
     output += "Message = " + x.str() + '\n';

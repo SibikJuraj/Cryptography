@@ -208,10 +208,10 @@ public:
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
 		auto elementFactory{ ImGUIElementsFactory() };
-		addElement(elementFactory.createInputInt("Key pub e", m_Cipher.getKey().pubKey[0], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputInt("Key pub n", m_Cipher.getKey().seed, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputInt("Key pri d", m_Cipher.getKey().seed, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputInt("Key pri n", m_Cipher.getKey().seed, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pub e", m_Cipher.getKey().pubKey[0], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pub n", m_Cipher.getKey().pubKey[1], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pri d", m_Cipher.getKey().priKey[0], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pri n", m_Cipher.getKey().priKey[1], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 	virtual void draw() override
@@ -230,6 +230,11 @@ class ImGUIPwdAuthPanel : public PwdAuthPanel
 public:
 	ImGUIPwdAuthPanel() : PwdAuthPanel()
 	{
+		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createCipherInputPanel(m_CipherInput));
+		addElement(createCipherOutputPanel(m_CipherOutput));
+		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
+
 	}
 	virtual void draw() override
 	{

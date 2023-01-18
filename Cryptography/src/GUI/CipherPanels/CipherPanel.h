@@ -3,7 +3,7 @@
 #include "Ciphers/Caesar.h"
 #include "Ciphers/Affine.h"
 #include "Ciphers/Vigenere.h"
-//#include "Ciphers/Hill.h"
+#include "Ciphers/Hill.h"
 #include "Ciphers/Stream.h"
 #include "Ciphers/RSA.h"
 #include "Ciphers/PwdAuth.h"
@@ -77,14 +77,14 @@ class HillPanel : public CipherPanel<std::string>
 {
 public:
 	HillPanel()
-		: CipherPanel("HillPanel"), m_Cipher{ Caesar() }
+		: CipherPanel("HillPanel"), m_Cipher{ Hill() }
 	{}
 		virtual const char* getCipherName() override
 	{
 		return m_Cipher.getName();
 	}
 protected:
-	Caesar m_Cipher;
+	Hill m_Cipher;
 };
 
 class StreamPanel : public CipherPanel<std::string>

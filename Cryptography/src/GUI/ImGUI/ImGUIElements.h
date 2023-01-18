@@ -10,6 +10,7 @@
 #include "Text/Class base64/base64.h"
 #include <ImGuiFileDialog.h>
 #include "FileLoaders/FileLoader.h"
+#include "../vendor/submodules/imgui/misc/cpp/imgui_stdlib.h"
 
 class ImGUIPanel : public Panel
 {
@@ -160,6 +161,19 @@ public:
 	virtual void draw() override
 	{
 		ImGui::InputText(m_Label, &m_Value, sizeof(char));
+	}
+};
+
+class ImGUIInputText : public InputText
+{
+public:
+	ImGUIInputText(const char* label, std::string& value, const ICommand& command)
+		: InputText(label, value, command) {}
+	~ImGUIInputText() = default;
+
+	virtual void draw() override
+	{
+		ImGui::InputText(m_Label, &m_Value);
 	}
 };
 

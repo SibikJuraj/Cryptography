@@ -132,6 +132,22 @@ protected:
 	std::shared_ptr<ICommand> m_Command;
 };
 
+class InputText : public IGUIElement
+{
+public:
+	InputText(const char* label, std::string& value, const ICommand& command)
+		: m_Label{ label }, m_Value{ value }, m_Command{ command.clone() }
+	{}
+	~InputText() {
+		delete m_Label;
+		m_Label = nullptr;
+	}
+protected:
+	const char* m_Label;
+	std::string& m_Value;
+	std::shared_ptr<ICommand> m_Command;
+};
+
 class Plot : public IGUIElement
 {
 public:
