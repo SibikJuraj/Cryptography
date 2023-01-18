@@ -10,13 +10,13 @@ Cryptography::Cryptography(IGUIFactory& factory)
     std::vector<const char*> cipherNames;
 
     //Here add new cipher panels
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createCaesarPanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createAffinePanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createVigenerePanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createHillPanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createStreamPanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createRSAPanel()));
-    addCipher(cipherFactory, cipherNames, std::move(cipherFactory->createPwdAuthPanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createCaesarPanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createAffinePanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createVigenerePanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createHillPanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createStreamPanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createRSAPanel()));
+    addCipher(cipherNames, std::move(cipherFactory->createPwdAuthPanel()));
 
 
     auto panelCiphers{ elementFactory->createPanel("Ciphers") };
@@ -47,7 +47,7 @@ const int& Cryptography::getCurrentCipher()
     return m_CurrentCipher;
 }
 
-void Cryptography::addCipher(std::unique_ptr<ICipherPanelFactory>& factory, std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
+void Cryptography::addCipher(std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
 {
     cipherNames.push_back(panel->getCipherName());
     m_GUI->addCipherPanel(std::move(panel));
