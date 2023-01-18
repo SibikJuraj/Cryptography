@@ -20,112 +20,76 @@ public:
 	virtual const char* getCipherName() = 0;
 };
 
-template <typename T>
+template <typename C, typename T>
 class CipherPanel : public ICipherPanel
 {
 public:
-	CipherPanel(const char* label)
-		: ICipherPanel(label)
+	CipherPanel(const char* label, C cipher)
+		: ICipherPanel(label), m_Cipher{cipher}
 	{}
+
+	virtual const char* getCipherName() override
+	{
+		return m_Cipher.getName();
+	}
 protected:
 	T m_CipherInput;
 	T m_CipherOutput;
+	C m_Cipher;
 };
 
-class CaesarPanel : public CipherPanel<std::string>
+class CaesarPanel : public CipherPanel<Caesar,std::string>
 {
 public:
 	CaesarPanel()
-		: CipherPanel("CaesarPanel"), m_Cipher{ Caesar() }
+		: CipherPanel("CaesarPanel", Caesar())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	Caesar m_Cipher;
 };
 
-class AffinePanel : public CipherPanel<std::string>
+class AffinePanel : public CipherPanel<Affine, std::string>
 {
 public:
 	AffinePanel()
-		: CipherPanel("AffinePanel"), m_Cipher{ Affine() }
+		: CipherPanel("AffinePanel", Affine())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	Affine m_Cipher;
 };
 
-class VigenerePanel : public CipherPanel<std::string>
+class VigenerePanel : public CipherPanel<Vigenere, std::string>
 {
 public:
 	VigenerePanel()
-		: CipherPanel("VigenerePanel"), m_Cipher{ Vigenere() }
+		: CipherPanel("VigenerePanel", Vigenere())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	Vigenere m_Cipher;
 };
 
-class HillPanel : public CipherPanel<std::string>
+class HillPanel : public CipherPanel<Hill, std::string>
 {
 public:
 	HillPanel()
-		: CipherPanel("HillPanel"), m_Cipher{ Hill() }
+		: CipherPanel("HillPanel", Hill())
 	{}
-		virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	Hill m_Cipher;
 };
 
-class StreamPanel : public CipherPanel<std::string>
+class StreamPanel : public CipherPanel<Stream, std::string>
 {
 public:
 	StreamPanel()
-		: CipherPanel("StreamPanel"), m_Cipher{ Stream() }
+		: CipherPanel("StreamPanel", Stream())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	Stream m_Cipher;
 };
 
-class RSAPanel : public CipherPanel<std::string>
+class RSAPanel : public CipherPanel<RSA, std::string>
 {
 public:
 	RSAPanel()
-		: CipherPanel("RSAPanel"), m_Cipher{ RSA() }
+		: CipherPanel("RSAPanel", RSA())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	RSA m_Cipher;
 };
 
-class PwdAuthPanel : public CipherPanel<std::string>
+class PwdAuthPanel : public CipherPanel<PwdAuth, std::string>
 {
 public:
 	PwdAuthPanel()
-		: CipherPanel("PwdAuthPanel"), m_Cipher{ PwdAuth() }
+		: CipherPanel("PwdAuthPanel", PwdAuth())
 	{}
-	virtual const char* getCipherName() override
-	{
-		return m_Cipher.getName();
-	}
-protected:
-	PwdAuth m_Cipher;
 };
