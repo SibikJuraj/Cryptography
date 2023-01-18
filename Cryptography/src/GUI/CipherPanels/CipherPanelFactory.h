@@ -2,7 +2,7 @@
 #include <memory>
 #include "CipherPanel.h"
 
-class CipherPanelFactory
+class ICipherPanelFactory
 {
 public:
 	virtual std::unique_ptr<CaesarPanel> createCaesarPanel() = 0;
@@ -18,7 +18,7 @@ public:
 /// ImGUI Cipher Panels Factory
 /// </summary>
 #include "GUI/ImGUI/ImGUICipherPanel.h"
-class ImGUIPanelFactory : public CipherPanelFactory
+class ImGUIPanelFactory : public ICipherPanelFactory
 {
 public:
 	virtual std::unique_ptr<CaesarPanel> createCaesarPanel() override

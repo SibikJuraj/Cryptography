@@ -1,5 +1,6 @@
 #pragma once
 #include "Cipher.h"
+#include <Text/AnalysisOfLang.h>
 
 struct CaesarKey
 {

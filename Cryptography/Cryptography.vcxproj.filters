@@ -120,7 +120,7 @@
     <ClInclude Include="src\Text\Class base64\base64.h">
       <Filter>src\Text\Class base64</Filter>
     </ClInclude>
-    <ClInclude Include="src\Text\Text.h">
+    <ClInclude Include="src\Text\TextUtils.h">
       <Filter>src\Text</Filter>
     </ClInclude>
     <ClInclude Include="src\FileLoaders\StringLoader.h">

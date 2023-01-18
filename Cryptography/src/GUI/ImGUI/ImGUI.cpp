@@ -98,7 +98,7 @@ bool ImGUI::isRunning()
     return !glfwWindowShouldClose(m_Window);
 }
 
-void ImGUI::addElement(std::unique_ptr<Panel>&& element)
+void ImGUI::addElement(std::unique_ptr<IGUIElement>&& element)
 {
     m_Elements.emplace_back(std::move(element));
 }
@@ -108,7 +108,7 @@ void ImGUI::addCipherPanel(std::unique_ptr<ICipherPanel>&& panel)
     m_CipherPanels.emplace_back(std::move(panel));
 }
 
-std::unique_ptr<CipherPanelFactory> ImGUI::getCipherPanelFactory()
+std::unique_ptr<ICipherPanelFactory> ImGUI::getCipherPanelFactory()
 {
     return std::make_unique<ImGUIPanelFactory>();
 }

@@ -12,9 +12,9 @@ public:
 
 	virtual void render() override;
 	virtual bool isRunning() override;
-	virtual void addElement(std::unique_ptr<Panel>&& element) override;
+	virtual void addElement(std::unique_ptr<IGUIElement>&& element) override;
 	virtual void addCipherPanel(std::unique_ptr<ICipherPanel>&& panel) override;
-	virtual std::unique_ptr<CipherPanelFactory> getCipherPanelFactory() override;
+	virtual std::unique_ptr<ICipherPanelFactory> getCipherPanelFactory() override;
 	virtual std::unique_ptr<IGUIElementsFactory> getElementFactory() override;
 
 private:

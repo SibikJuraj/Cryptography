@@ -20,76 +20,81 @@ public:
 	virtual const char* getCipherName() = 0;
 };
 
-template <typename C, typename T>
+template <typename K, typename T>
 class CipherPanel : public ICipherPanel
 {
 public:
-	CipherPanel(const char* label, C cipher)
+	CipherPanel(const char* label, Cipher<K, T>* cipher)
 		: ICipherPanel(label), m_Cipher{cipher}
 	{}
+	~CipherPanel()
+	{
+		delete m_Cipher;
+		m_Cipher = nullptr;
+	}
 
 	virtual const char* getCipherName() override
 	{
-		return m_Cipher.getName();
+		return m_Cipher->getName();
 	}
 protected:
 	T m_CipherInput;
 	T m_CipherOutput;
-	C m_Cipher;
+	Cipher<K, T>* m_Cipher;
 };
 
-class CaesarPanel : public CipherPanel<Caesar,std::string>
+class CaesarPanel : public CipherPanel<CaesarKey,std::string>
 {
 public:
 	CaesarPanel()
-		: CipherPanel("CaesarPanel", Caesar())
+		: CipherPanel("CaesarPanel", new Caesar())
 	{}
 };
 
-class AffinePanel : public CipherPanel<Affine, std::string>
+class AffinePanel : public CipherPanel<AffineKey, std::string>
 {
 public:
 	AffinePanel()
-		: CipherPanel("AffinePanel", Affine())
+		: CipherPanel("AffinePanel", new Affine())
 	{}
 };
 
-class VigenerePanel : public CipherPanel<Vigenere, std::string>
+class VigenerePanel : public CipherPanel<VigenereKey, std::string>
 {
 public:
 	VigenerePanel()
-		: CipherPanel("VigenerePanel", Vigenere())
+		: CipherPanel("VigenerePanel", new Vigenere())
 	{}
 };
 
-class HillPanel : public CipherPanel<Hill, std::string>
+class HillPanel : public CipherPanel<HillKey, std::string>
 {
 public:
 	HillPanel()
-		: CipherPanel("HillPanel", Hill())
+		: CipherPanel("HillPanel", new Hill())
 	{}
 };
 
-class StreamPanel : public CipherPanel<Stream, std::string>
+class StreamPanel : public CipherPanel<StreamKey, std::string>
 {
 public:
 	StreamPanel()
-		: CipherPanel("StreamPanel", Stream())
+		: CipherPanel("StreamPanel", new Stream())
 	{}
 };
 
-class RSAPanel : public CipherPanel<RSA, std::string>
+class RSAPanel : public CipherPanel<RSAKey, std::string>
 {
 public:
 	RSAPanel()
-		: CipherPanel("RSAPanel", RSA())
+		: CipherPanel("RSAPanel", new RSA())
 	{}
 };
 
-class PwdAuthPanel : public CipherPanel<PwdAuth, std::string>
+class PwdAuthPanel : public CipherPanel<PwdAuthKey, std::string>
 {
 public:
 	PwdAuthPanel()
-		: CipherPanel("PwdAuthPanel", PwdAuth())
+		: CipherPanel("PwdAuthPanel", new PwdAuth())
 	{}
 };

@@ -125,17 +125,17 @@ private:
 };
 
 template <typename K, typename T>
-class CommandUpdateText : public ICommand
+class CommandCipherUpdate : public ICommand
 {
 public:
-	CommandUpdateText(Cipher<K, T>& cipher, T& input, T& output)
+	CommandCipherUpdate(Cipher<K, T>& cipher, T& input, T& output)
 		: m_Cipher{ cipher }, m_Input{ input }, m_Output{ output }
 	{}
-	~CommandUpdateText() = default;
+	~CommandCipherUpdate() = default;
 
 	virtual std::shared_ptr<ICommand> clone() const override
 	{
-		return std::make_shared<CommandUpdateText>(*this);
+		return std::make_shared<CommandCipherUpdate>(*this);
 	}
 	virtual void execute() override
 	{
@@ -194,26 +194,7 @@ private:
 };
 
 
-class CommandOpenLoadWindow : public ICommand
-{
-public:
-	CommandOpenLoadWindow()
-	{}
-	~CommandOpenLoadWindow() = default;
-
-};
-
-class CommandOpenSaveWindow : public ICommand
-{
-public:
-	CommandOpenSaveWindow()
-	{}
-	~CommandOpenSaveWindow() = default;
-
-
-};
-
-class CommandOpenImGUISaveWindow : public CommandOpenSaveWindow
+class CommandOpenImGUISaveWindow : public ICommand
 {
 public:
 	CommandOpenImGUISaveWindow()
@@ -230,7 +211,7 @@ public:
 	}
 };
 
-class CommandOpenImGUILoadWindow : public CommandOpenLoadWindow
+class CommandOpenImGUILoadWindow : public ICommand
 {
 public:
 	CommandOpenImGUILoadWindow()

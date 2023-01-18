@@ -72,19 +72,6 @@ private:
 		++m_NumberOfLetters;
 	}
 
-	/*void removeLetter(char letter)
-	{
-		if (m_NumberOfLetters == 0)
-			return;
-
-		auto idx{ getIndex(letter) };
-		if (idx == -1 || m_LetterIC[idx].first == 0)
-			return;
-
-		--m_LetterIC[idx].first;
-		--m_NumberOfLetters;
-	}*/
-
 	void updateStatistics()
 	{
 		m_IC = 0;

@@ -1,6 +1,8 @@
 #pragma once
 #include "Kasiski.h"
 #include "Cipher.h"
+#include <Text/TextUtils.h>
+#include <Text/AnalysisOfLang.h>
 
 struct VigenereKey
 {
@@ -64,9 +66,9 @@ inline char Vigenere::encryptingFormula(char letter)
 
 inline char Vigenere::decryptingFormula(char letter)
 {
-    if (!Text::isLetter(letter))
+    if (!TextUtils::isLetter(letter))
         return letter;
-    bool lower{ Text::toUpperCase(letter) };
+    bool lower{ TextUtils::toUpperCase(letter) };
     letter -= 'A';
     int alphabetLength{ 26 };
     letter = (letter - m_CipherKey.keys[m_Counter]) % alphabetLength;
@@ -101,7 +103,7 @@ inline bool Vigenere::tryFindKey(const std::string& input)
         if (potentialPassLength == 0)
             break;
         ic = 0.0;
-        std::vector<std::string> outputParts{ Text::sliceText(input, potentialPassLength) };
+        std::vector<std::string> outputParts{ TextUtils::sliceText(input, potentialPassLength) };
 
         for (int k{ 0 }; k < outputParts.size(); ++k)
             ic += AnalysisOfText{ outputParts[k] }.getIC();
@@ -116,7 +118,7 @@ inline bool Vigenere::tryFindKey(const std::string& input)
     }
     m_CipherKey.keys.resize(passLength);
 
-    std::vector<std::string> outputParts{ Text::sliceText(input, passLength) };
+    std::vector<std::string> outputParts{ TextUtils::sliceText(input, passLength) };
     // Euklidova vzdialenost
     for (int k{ 0 }; k < m_CipherKey.keys.size(); ++k)
     {

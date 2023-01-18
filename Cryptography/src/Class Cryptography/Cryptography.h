@@ -12,12 +12,11 @@ public:
 		return instance;
 	}
 	~Cryptography() = default;
-	void run();
 
+	void run();
 	void setCurrentCipher(int&& cipher);
 	const int& getCurrentCipher();
-	void addCipher(std::unique_ptr<CipherPanelFactory>& factory, std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel);
-
+	void addCipher(std::unique_ptr<ICipherPanelFactory>& factory, std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel);
 	GUI& getGUI() const;
 private:
 	Cryptography(IGUIFactory& factory);

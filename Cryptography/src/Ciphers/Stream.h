@@ -1,5 +1,6 @@
 #pragma once
 #include "Cipher.h"
+#include <Text/TextUtils.h>
 
 typedef unsigned char byte;
 
@@ -116,7 +117,7 @@ inline bool Stream::tryFindKey(const std::string& input)
 	{
 		m_CipherKey.seed = i;
 		std::string output{ decrypt(input) };
-		auto letterCount{ Text::letterCount(output) };
+		auto letterCount{ TextUtils::letterCount(output) };
 
 		if (letterCount > output.length() * 0.65)
 		{

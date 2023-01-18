@@ -3,7 +3,7 @@
 #include <string_view>
 #include <vector>
 
-namespace Text
+namespace TextUtils
 {
     inline bool isLetter(char letter)
     {

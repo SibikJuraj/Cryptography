@@ -47,7 +47,7 @@ const int& Cryptography::getCurrentCipher()
     return m_CurrentCipher;
 }
 
-void Cryptography::addCipher(std::unique_ptr<CipherPanelFactory>& factory, std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
+void Cryptography::addCipher(std::unique_ptr<ICipherPanelFactory>& factory, std::vector<const char*>& cipherNames, std::unique_ptr<ICipherPanel>&& panel)
 {
     cipherNames.push_back(panel->getCipherName());
     m_GUI->addCipherPanel(std::move(panel));

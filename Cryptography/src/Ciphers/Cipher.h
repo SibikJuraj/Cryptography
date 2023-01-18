@@ -5,8 +5,6 @@
 #include <stdexcept>
 
 #include <Config.h>
-#include <Text/Text.h>
-#include <Text/AnalysisOfLang.h>
 
 template<typename K, typename T>
 class Cipher
@@ -15,7 +13,6 @@ public:
 	Cipher(K key) : m_CipherKey{ key }, m_CipherMode{ MODE_DECRYPT } {}
 
 	K& getKey();
-
 	virtual T encrypt(const T& input) = 0;
 	virtual T decrypt(const T& input) = 0;
 	virtual T update(const T& input) = 0;

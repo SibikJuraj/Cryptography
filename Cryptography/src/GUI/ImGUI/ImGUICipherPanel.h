@@ -49,13 +49,13 @@ class ImGUICaesarPanel : public CaesarPanel
 public:
 	ImGUICaesarPanel() : CaesarPanel()
 	{
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
 		auto elementFactory{ ImGUIElementsFactory() };
-		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputInt("Key 1", m_Cipher->getKey().k1, CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
 	}
 
 	virtual void draw() override
@@ -74,14 +74,14 @@ class ImGUIAffinePanel : public AffinePanel
 public:
 	ImGUIAffinePanel() : AffinePanel()
 	{
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
 		auto elementFactory{ ImGUIElementsFactory() };
-		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().k1, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputInt("Key 2", m_Cipher.getKey().k2, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputInt("Key 1", m_Cipher->getKey().k1, CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputInt("Key 2", m_Cipher->getKey().k2, CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
 	}
 	virtual void draw() override
 	{
@@ -101,13 +101,13 @@ public:
 	{
 		auto elementFactory{ ImGUIElementsFactory() };
 
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
-		addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher.getKey().keys)));
-		addElement(elementFactory.createButton("Remove", CommandRemoveInputInt(m_Cipher.getKey().keys)));
+		addElement(elementFactory.createButton("Add", CommandAddInputInt(m_Cipher->getKey().keys)));
+		addElement(elementFactory.createButton("Remove", CommandRemoveInputInt(m_Cipher->getKey().keys)));
 		
 		m_MainPanels = m_Elements.size();
 	}
@@ -122,15 +122,15 @@ public:
 								"Key 26", "Key 27", "Key 28", "Key 29", "Key 30",
 		};
 
-		if (m_Elements.size() != m_MainPanels + m_Cipher.getKey().keys.size())
+		if (m_Elements.size() != m_MainPanels + m_Cipher->getKey().keys.size())
 		{
 			for (int i = m_Elements.size(); i > m_MainPanels; --i)
 			{
 				m_Elements.pop_back();
 			}
-			for (int i = 0; i < m_Cipher.getKey().keys.size(); ++i)
+			for (int i = 0; i < m_Cipher->getKey().keys.size(); ++i)
 			{
-				addElement(elementFactory.createInputInt(keyNames[i], m_Cipher.getKey().keys[i], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+				addElement(elementFactory.createInputInt(keyNames[i], m_Cipher->getKey().keys[i], CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
 			}
 		}
 
@@ -152,7 +152,7 @@ public:
 	{
 		auto elementFactory{ ImGUIElementsFactory() };
 
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
@@ -177,13 +177,13 @@ class ImGUIStreamPanel : public StreamPanel
 public:
 	ImGUIStreamPanel() : StreamPanel()
 	{
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
 		auto elementFactory{ ImGUIElementsFactory() };
-		addElement(elementFactory.createInputInt("Key 1", m_Cipher.getKey().seed, CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputInt("Key 1", m_Cipher->getKey().seed, CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 	virtual void draw() override
@@ -202,16 +202,16 @@ class ImGUIRSAPanel : public RSAPanel
 public:
 	ImGUIRSAPanel() : RSAPanel()
 	{
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
 
 		auto elementFactory{ ImGUIElementsFactory() };
-		addElement(elementFactory.createInputText("Key pub e", m_Cipher.getKey().pubKey[0], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputText("Key pub n", m_Cipher.getKey().pubKey[1], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputText("Key pri d", m_Cipher.getKey().priKey[0], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
-		addElement(elementFactory.createInputText("Key pri n", m_Cipher.getKey().priKey[1], CommandUpdateText(m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pub e", m_Cipher->getKey().pubKey[0], CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pub n", m_Cipher->getKey().pubKey[1], CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pri d", m_Cipher->getKey().priKey[0], CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
+		addElement(elementFactory.createInputText("Key pri n", m_Cipher->getKey().priKey[1], CommandCipherUpdate(*m_Cipher, m_CipherInput, m_CipherOutput)));
 
 	}
 	virtual void draw() override
@@ -230,7 +230,7 @@ class ImGUIPwdAuthPanel : public PwdAuthPanel
 public:
 	ImGUIPwdAuthPanel() : PwdAuthPanel()
 	{
-		addElement(createMainPanel(m_Cipher, m_CipherInput, m_CipherOutput));
+		addElement(createMainPanel(*m_Cipher, m_CipherInput, m_CipherOutput));
 		addElement(createCipherInputPanel(m_CipherInput));
 		addElement(createCipherOutputPanel(m_CipherOutput));
 		addElement(std::make_unique<ImGUIFileLoaderPanel<std::string>>("File Loader", m_CipherInput, m_CipherOutput, std::make_unique<StringLoader>()));
